@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>ECHO SIERRA v7</title>
+<title>ECHO SIERRA v8</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100dvh;width:100vw;overflow:hidden;font-family:'SF Mono','Courier New',monospace;background:#000;color:#0f0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
@@ -118,7 +118,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   <div class="classified">■ CLASSIFIED ■</div>
   <div class="crest">▸ JOINT SPECIAL OPERATIONS COMMAND</div>
   <div class="title">ECHO<br>SIERRA</div>
-  <div class="subtitle">AUDIO FIELD TERMINAL v7</div>
+  <div class="subtitle">AUDIO FIELD TERMINAL v8</div>
   <input class="input" id="team-name" placeholder="CALLSIGN" maxlength="12" value="GHOST">
   <button class="btn" onclick="requestSensors()">UNLOCK SENSORS</button>
   <button class="btn" onclick="toTeamLobby('create')">CREATE TEAM</button>
@@ -182,6 +182,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
       <div class="op-title" id="mission-obj">RECOVER INTEL</div>
     </div>
     <div class="timer" id="timer">20:00</div>
+    <div class="team-score" id="team-score-display" style="font-size:10px;color:#030;letter-spacing:.1em;display:none">A:0 B:0</div>
   </div>
   <div class="compass-area">
     <div class="compass-ring" id="compass-ring">
@@ -205,6 +206,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   <div class="mission-footer">
     <div class="waypoint-list" id="wp-list"></div>
     <button class="btn ghost" onclick="takePhoto()" id="photo-btn" style="display:none;max-width:90px;font-size:9px">📷 CAPTURE</button>
+    <button class="btn danger" onclick="tagEnemy()" id="tag-btn" style="display:none;max-width:80px;font-size:9px">🎯 TAG</button>
     <button class="btn danger" onclick="abortMission()" style="max-width:50px;padding:4px;font-size:7px">ABORT</button>
   </div>
 </div>
@@ -230,11 +232,10 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   <button class="btn" onclick="location.reload()">NEW OP</button>
 </div>
 
-<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <script>
 "use strict";
 // ============================================================
-// ECHO SIERRA v7 — SUSPENSE SCORE · MUSICAL BREATHING · NOMINATIM
+// ECHO SIERRA v8 — MULTIPLAYER PVP · WEBSOCKET SIGNALING · NOMINATIM
 // ============================================================
 
 function D(m){ const el=document.getElementById('debug-bar'); if(el)el.textContent=m; console.log('[ES]',m); }
@@ -537,6 +538,14 @@ function updateNav(){
 
   if(d<20&&document.getElementById('photo-btn').style.display==='none'){document.getElementById('photo-btn').style.display='block';nz(.5,600,1.5,.03);speak('Target acquired.',.7);}
 
+  // Enemy tag check
+  if(state.isTeamMission){
+    const enemy=closestEnemy();
+    const tb=document.getElementById('tag-btn');
+    if(enemy&&tb.style.display==='none'){tb.style.display='block';tb.textContent=`🎯 TAG ${enemy.name}`;}
+    else if(!enemy&&tb.style.display!=='none'){tb.style.display='none';}
+  }
+
   const now=Date.now();const interval=d<50?6000:d<150?10000:15000;
   if(now-state.lastNavCall>interval&&d>15){state.lastNavCall=now;
     const urg=d<50?.7:d<150?.3:0;
@@ -562,25 +571,176 @@ function updateTMarkers(){
   const ctr=document.getElementById('teammate-markers');const ring=document.getElementById('compass-ring');
   if(!state.gpsLat||!ring||!Object.keys(teamPeers).length){ctr.innerHTML='';return;}
   const r=ring.getBoundingClientRect(),cx=r.width/2,cy=r.height/2,rad=r.width*.42;
-  ctr.innerHTML=Object.entries(teamPeers).filter(([_,p])=>p.lat&&p.lng).map(([_,p])=>{
-    const d=dist(state.gpsLat,state.gpsLng,p.lat,p.lng);if(d>500)return'';
+  ctr.innerHTML=Object.entries(teamPeers).filter(([_,p])=>p.lat&&p.lng).map(([pid,p])=>{
+    const d=dist(state.gpsLat,state.gpsLng,p.lat,p.lng);if(d>800)return'';
     const b=bearing(state.gpsLat,state.gpsLng,p.lat,p.lng),rel=((b-state.heading)+720)%360;
-    const rr=Math.min(d/500*rad,rad*.9),x=cx+Math.sin(rel*Math.PI/180)*rr,y=cy-Math.cos(rel*Math.PI/180)*rr;
-    const col=p.role==='scout'?'#0af':p.role==='sniper'?'#f0f':'#0f0';
-    return`<div class="teammate-marker" style="position:absolute;left:${x}px;top:${y}px;width:6px;height:6px;border-radius:50%;background:${col};box-shadow:0 0 6px ${col}" title="${p.name} · ${Math.round(d)}m"></div>`;
+    const rr=Math.min(d/800*rad,rad*.9),x=cx+Math.sin(rel*Math.PI/180)*rr,y=cy-Math.cos(rel*Math.PI/180)*rr;
+    const isTeammate=p.team===myTeam;
+    const col=isTeammate?(p.role==='scout'?'#0af':p.role==='sniper'?'#f0f':'#0f0'):'#f44';
+    const shape=isTeammate?'50%':'0%';
+    return `<div class="teammate-marker" style="position:absolute;left:${x}px;top:${y}px;width:7px;height:7px;border-radius:${shape};background:${col};box-shadow:0 0 6px ${col};border:${isTeammate?'none':'1px solid #f44'}" title="${isTeammate?'◆':'◇'} ${p.name} · ${Math.round(d)}m ${p.fuzzy?'(approx)':''}"></div>`;
   }).join('');
 }
 
-// ======== MULTIPLAYER ========
-let peer=null,teamPeers={},teamRole='operative',isTeamLeader=false,teamRoomCode='';
-const TP='echosierra-';
-function initPeer(){return new Promise((resolve,reject)=>{try{const id=TP+(isTeamLeader?teamRoomCode:crypto.randomUUID().slice(0,8));peer=new Peer(id,{host:'0.peerjs.com',port:443,secure:true,debug:0});peer.on('open',id=>{resolve(id);});peer.on('connection',c=>handleConn(c));peer.on('error',e=>{console.warn(e);reject(e);});}catch(e){reject(e)}});}
-function handleConn(c){c.on('open',()=>{teamPeers[c.peer]={conn:c,lat:null,lng:null,role:'operative',name:'UNKNOWN'};c.on('data',d=>handleTData(c.peer,d));c.on('close',()=>{delete teamPeers[c.peer];renderTmates();});c.send({type:'intro',name:state.teamName,role:teamRole,lat:state.gpsLat,lng:state.gpsLng});renderTmates();});}
-function handleTData(pid,d){if(!teamPeers[pid])return;if(d.type==='intro'){teamPeers[pid].name=d.name;teamPeers[pid].role=d.role;teamPeers[pid].lat=d.lat;teamPeers[pid].lng=d.lng;}else if(d.type==='position'){teamPeers[pid].lat=d.lat;teamPeers[pid].lng=d.lng;}else if(d.type==='wp-captured')captureWP(d.wpIndex);if(state.missionActive)updateTMarkers();}
-function broadcast(d){Object.values(teamPeers).forEach(p=>{if(p.conn&&p.conn.open)p.conn.send(d);});}
-function broadcastPos(){if(state.gpsLat)broadcast({type:'position',lat:state.gpsLat,lng:state.gpsLng});}
-function selectRole(r){teamRole=r;document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));document.getElementById('role-'+r)?.classList.add('selected');broadcast({type:'intro',name:state.teamName,role:teamRole,lat:state.gpsLat,lng:state.gpsLng});renderTmates();}
-function renderTmates(){const list=document.getElementById('teammate-list'),entries=[{name:state.teamName+' (YOU)',role:teamRole,online:true},...Object.values(teamPeers).map(p=>({name:p.name,role:p.role,online:true}))];list.innerHTML=entries.map(e=>`<div class="teammate"><span class="dot online"></span><span>${e.name}</span><span class="role-badge">${e.role.toUpperCase()}</span></div>`).join('');}
+// ======== MULTIPLAYER (WebSocket) ========
+const WS_URL = (() => {
+  // In production, connect through Cloudflare Tunnel
+  // In dev, connect to localhost
+  const prod = 'wss://waypoint-zero.swisschatbot.ch';
+  const dev = 'ws://localhost:8765';
+  return location.hostname === 'localhost' || location.hostname === '127.0.0.1' ? dev : prod;
+})();
+let ws = null, teamPeers = {}, teamRole = 'operative', isTeamLeader = false, teamRoomCode = '', myPlayerId = '', myTeam = '';
+let wsReconnectTimer = null;
+
+function wsConnect() {
+  return new Promise((resolve, reject) => {
+    try {
+      ws = new WebSocket(WS_URL);
+      ws.onopen = () => {
+        D('WS connected');
+        if (wsReconnectTimer) { clearTimeout(wsReconnectTimer); wsReconnectTimer = null; }
+      };
+      ws.onmessage = (e) => {
+        let msg;
+        try { msg = JSON.parse(e.data); } catch { return; }
+        handleWS(msg);
+      };
+      ws.onclose = () => {
+        D('WS closed — reconnecting...');
+        teamPeers = {};
+        if (state.missionActive) { /* auto-reconnect */ wsReconnectTimer = setTimeout(wsConnect, 3000); }
+      };
+      ws.onerror = (err) => { D('WS error'); reject(err); };
+      // resolve once we get room-state or error
+      const origHandler = ws.onmessage;
+      ws.onmessage = (e) => {
+        let msg;
+        try { msg = JSON.parse(e.data); } catch { return; }
+        if (msg.type === 'room-state') {
+          myPlayerId = msg.yourId;
+          myTeam = msg.yourTeam;
+          teamRoomCode = msg.roomCode;
+          // Build teamPeers from players list
+          teamPeers = {};
+          msg.players.forEach(p => {
+            if (p.id !== myPlayerId) {
+              teamPeers[p.id] = { name: p.name, role: p.role, team: p.team, lat: null, lng: null, heading: null };
+            }
+          });
+          ws.onmessage = origHandler;
+          renderTmates();
+          resolve();
+        } else if (msg.type === 'error') {
+          ws.onmessage = origHandler;
+          reject(new Error(msg.message));
+        }
+      };
+    } catch (e) { reject(e); }
+  });
+}
+
+function wsSend(msg) {
+  if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(msg));
+}
+
+function handleWS(msg) {
+  switch (msg.type) {
+    case 'player-joined': {
+      teamPeers[msg.id] = { name: msg.name, role: msg.role, team: msg.team, lat: null, lng: null, heading: null };
+      renderTmates();
+      if (state.missionActive) D('Player joined: ' + msg.name);
+      break;
+    }
+    case 'player-left': {
+      delete teamPeers[msg.playerId];
+      renderTmates();
+      if (state.missionActive) updateTMarkers();
+      break;
+    }
+    case 'positions': {
+      msg.positions.forEach(p => {
+        if (teamPeers[p.playerId]) {
+          teamPeers[p.playerId].lat = p.lat;
+          teamPeers[p.playerId].lng = p.lng;
+          teamPeers[p.playerId].heading = p.heading;
+          teamPeers[p.playerId].team = p.team;
+          teamPeers[p.playerId].fuzzy = p.fuzzy;
+        }
+      });
+      if (state.missionActive) updateTMarkers();
+      break;
+    }
+    case 'photo-result': {
+      D(`📷 ${msg.attackerName} tagged ${msg.victimName} — ${msg.distance}m`);
+      // Update scores
+      if (msg.scores) {
+        document.getElementById('team-score-display').textContent =
+          `A:${msg.scores.alpha} B:${msg.scores.bravo}`;
+      }
+      if (msg.victimId === myPlayerId) {
+        speak('You\'ve been compromised.', 0.9);
+        nz(0.6, 200, 2, 0.04);
+      } else if (msg.attackerId === myPlayerId) {
+        speak('Target neutralized.', 0.5);
+        nz(0.3, 1200, 0.8, 0.02);
+      }
+      break;
+    }
+    case 'waypoint-captured': {
+      if (msg.scores) {
+        document.getElementById('team-score-display').textContent =
+          `A:${msg.scores.alpha} B:${msg.scores.bravo}`;
+      }
+      // If teammate captured, mark it
+      if (msg.playerId !== myPlayerId && msg.wpIndex !== undefined) {
+        captureWP(msg.wpIndex);
+      }
+      break;
+    }
+    case 'mission-started': {
+      D('Mission started by leader');
+      break;
+    }
+    case 'error': {
+      D('WS ERROR: ' + msg.message);
+      break;
+    }
+  }
+}
+
+function broadcastPos() {
+  if (state.gpsLat) wsSend({ type: 'position', lat: state.gpsLat, lng: state.gpsLng, heading: state.heading });
+}
+
+function selectRole(r) {
+  teamRole = r;
+  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('role-' + r)?.classList.add('selected');
+  wsSend({ type: 'set-role', role: r });
+  renderTmates();
+}
+
+function renderTmates() {
+  const list = document.getElementById('teammate-list');
+  const entries = [
+    { name: state.teamName + ' (YOU)', role: teamRole, team: myTeam, online: true },
+    ...Object.values(teamPeers).map(p => ({
+      name: p.name,
+      role: p.role,
+      team: p.team,
+      online: true,
+    })),
+  ];
+  list.innerHTML = entries.map(e => {
+    const teamTag = e.team === myTeam ? '◆' : '◇';
+    return `<div class="teammate">
+      <span class="dot online"></span>
+      <span>${teamTag} ${e.name}</span>
+      <span class="role-badge">${e.role?.toUpperCase() || 'OPS'}</span>
+    </div>`;
+  }).join('');
+}
 
 // ======== FLOW ========
 let timerI,navI,tensionI,radioI,posI,breathI;
@@ -590,12 +750,14 @@ const tips=['Stay low. Watch six.','Freeze. Close.','Slow is smooth.','Check cor
 async function toTeamLobby(mode){
   state.teamName=document.getElementById('team-name').value.trim()||'GHOST';ensureCtx();
   switchScreen('screen-team');document.getElementById('team-deploy-btn').disabled=true;
-  if(mode==='create'){isTeamLeader=true;teamRoomCode=crypto.randomUUID().slice(0,4).toUpperCase();document.getElementById('room-code').textContent=teamRoomCode;document.getElementById('team-create-ui').style.display='flex';document.getElementById('team-join-ui').style.display='none';try{await initPeer();document.getElementById('team-deploy-btn').disabled=false;}catch(e){document.getElementById('room-code').textContent='ERROR';}}
+  if(mode==='create'){isTeamLeader=true;document.getElementById('team-create-ui').style.display='flex';document.getElementById('team-join-ui').style.display='none';
+    try{await wsConnect();wsSend({type:'create-room',name:state.teamName});document.getElementById('room-code').textContent=teamRoomCode;document.getElementById('team-deploy-btn').disabled=false;}catch(e){document.getElementById('room-code').textContent='ERROR';D('Create error: '+e.message);}}
   else{isTeamLeader=false;document.getElementById('team-create-ui').style.display='none';document.getElementById('team-join-ui').style.display='flex';}
 }
-async function joinTeam(){const code=document.getElementById('join-code').value.trim().toUpperCase();if(!code||code.length!==4)return;teamRoomCode=code;try{await initPeer();const conn=peer.connect(TP+code,{reliable:true});teamPeers[TP+code]={conn,lat:null,lng:null,role:'operative',name:'LEADER'};conn.on('open',()=>{conn.on('data',d=>handleTData(TP+code,d));conn.on('close',()=>{delete teamPeers[TP+code];renderTmates();});conn.send({type:'intro',name:state.teamName,role:teamRole,lat:state.gpsLat,lng:state.gpsLng});renderTmates();document.getElementById('team-deploy-btn').disabled=false;});}catch(e){alert('Failed.');}}
-function leaveTeam(){if(peer&&!peer.destroyed)peer.destroy();peer=null;teamPeers={};isTeamLeader=false;switchScreen('screen-lobby');}
-async function teamDeploy(){state.isTeamMission=true;broadcast({type:'mission-start'});showBriefing();}
+async function joinTeam(){const code=document.getElementById('join-code').value.trim().toUpperCase();if(!code||code.length!==4)return;
+  try{await wsConnect();wsSend({type:'join-room',roomCode:code,name:state.teamName});renderTmates();document.getElementById('team-deploy-btn').disabled=false;}catch(e){D('Join error: '+e.message);alert('Failed to join: '+e.message);}}
+function leaveTeam(){if(ws&&ws.readyState===WebSocket.OPEN){wsSend({type:'leave'});ws.close();}ws=null;teamPeers={};isTeamLeader=false;myPlayerId='';myTeam='';switchScreen('screen-lobby');}
+async function teamDeploy(){state.isTeamMission=true;wsSend({type:'mission-start'});showBriefing();}
 async function deploySolo(){state.teamName=document.getElementById('team-name').value.trim()||'GHOST';state.isTeamMission=false;showBriefing();}
 
 async function showBriefing(){
@@ -637,9 +799,12 @@ function deploy(){
   document.getElementById('mission-id').textContent=state.missionId;
   document.getElementById('timer').textContent='20:00';document.getElementById('timer').className='timer';
   document.getElementById('photo-btn').style.display='none';
+  document.getElementById('tag-btn').style.display='none';
   document.getElementById('breath-state').textContent='STEADY';document.getElementById('breath-state').style.color='#0a0';
   document.getElementById('breath-tip').textContent='';document.getElementById('breath-box').className='breath-box';
   document.getElementById('wp-list').innerHTML=state.waypoints.map((_,i)=>`<div class="wp-dot ${i===0?'current':''}" id="wp-dot-${i}">${i+1}</div>`).join('');
+  document.getElementById('team-score-display').style.display=state.isTeamMission?'block':'none';
+  if(state.isTeamMission)document.getElementById('team-score-display').textContent='A:0 B:0';
   switchScreen('screen-mission');
 
   timerI=setInterval(updateTimer,1000);
@@ -664,6 +829,26 @@ function updateTimer(){
   if(rem<=0)endMission(false);state.elapsed=1200-rem;
 }
 function captureWP(idx){if(idx>=state.waypoints.length||state.capturedRemotely.has(idx))return;state.capturedRemotely.add(idx);const dot=document.getElementById('wp-dot-'+idx);if(dot){dot.classList.add('done');dot.classList.remove('current');}if(idx===state.currentWP){state.currentWP++;if(state.currentWP>=state.waypoints.length){if(state.capturedRemotely.size+state.photos.length>=state.waypoints.length)endMission(true);}else{document.getElementById('wp-dot-'+state.currentWP)?.classList.add('current');document.getElementById('photo-btn').style.display='none';speak('Teammate confirmed.',.1);}}nz(.25,800,.7,.01);}
+function closestEnemy(){
+  if(!state.gpsLat||!Object.keys(teamPeers).length)return null;
+  let best=null,bestDist=Infinity;
+  for(const[pid,p]of Object.entries(teamPeers)){
+    if(p.team===myTeam||!p.lat)continue;
+    const d=dist(state.gpsLat,state.gpsLng,p.lat,p.lng);
+    if(d<bestDist){bestDist=d;best={id:pid,dist:d,name:p.name};}
+  }
+  if(best&&best.dist<PHOTO_RANGE)return best;
+  return null;
+}
+const PHOTO_RANGE=60;
+function tagEnemy(){
+  const enemy=closestEnemy();
+  if(!enemy){speak('No target in range.');return;}
+  ensureCtx();nz(.3,1500,.5,.015);
+  wsSend({type:'photo',targetPlayerId:enemy.id});
+  speak(`Tagging ${enemy.name}. ${Math.round(enemy.dist)}m.`,.7);
+  document.getElementById('tag-btn').style.display='none';
+}
 function takePhoto(){ensureCtx();switchScreen('screen-camera');const v=document.getElementById('camera-video');navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(s=>{v.srcObject=s;}).catch(()=>{const i=document.createElement('input');i.type='file';i.accept='image/*';i.capture='environment';i.onchange=e=>{const f=e.target.files[0];if(f)processPhoto(URL.createObjectURL(f));};i.click();});}
 function capturePhoto(){const v=document.getElementById('camera-video');const c=document.createElement('canvas');c.width=v.videoWidth||640;c.height=v.videoHeight||480;c.getContext('2d').drawImage(v,0,0);const d=c.toDataURL('image/jpeg',.8);const s=v.srcObject;if(s)s.getTracks().forEach(t=>t.stop());processPhoto(d);}
 function processPhoto(dataUrl){
@@ -675,10 +860,11 @@ function processPhoto(dataUrl){
     document.getElementById('wp-dot-'+state.currentWP).classList.add('done');
     document.getElementById('wp-dot-'+state.currentWP).classList.remove('current');
     state.currentWP++;setTension(0);nz(.4,500,1.5,.025);
-    broadcast({type:'wp-captured',wpIndex:state.currentWP-1});
+    wsSend({type:'waypoint-captured',wpIndex:state.currentWP-1});
     if(state.currentWP>=state.waypoints.length){endMission(true);}else{
       document.getElementById('wp-dot-'+state.currentWP).classList.add('current');
       document.getElementById('photo-btn').style.display='none';
+  document.getElementById('tag-btn').style.display='none';
       const next=state.waypoints[state.currentWP];
       speak(`Confirmed. ${next.name}.`,.2);
       setTimeout(()=>speak(next.intel,.1),1500);
