@@ -308,6 +308,17 @@ function initAudio() {
   sub.start();
   window._subGain = subGain;
   
+  // Heartbeat thump oscillator
+  const hbOsc = audioCtx.createOscillator();
+  const hbGain = audioCtx.createGain();
+  hbOsc.type = 'sine';
+  hbOsc.frequency.value = 40;
+  hbGain.gain.value = 0.001;
+  hbOsc.connect(hbGain);
+  hbGain.connect(audioCtx.destination);
+  hbOsc.start();
+  window._heartbeatThump = hbGain;
+  
   // Crackle/noise generator
   const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
   const data = noiseBuffer.getChannelData(0);
@@ -331,10 +342,18 @@ function playNoise(duration = 0.3, vol = 0.005) {
 
 function setTension(level) {
   if (!audioCtx) return;
-  // 0 = calm, 1 = maximum tension
-  if (window._droneGain) window._droneGain.gain.value = 0.03 + level * 0.06;
-  if (window._subGain) window._subGain.gain.value = 0.02 + level * 0.04;
-  if (level > 0.5 && Math.random() < 0.1) playNoise(0.2, 0.01 * level);
+  // 0 = calm, 1 = panic
+  const drone = 0.02 + level * 0.10;
+  const sub = 0.01 + level * 0.07;
+  if (window._droneGain) window._droneGain.gain.value = drone;
+  if (window._subGain) window._subGain.gain.value = sub;
+  // Crackle increases with tension
+  if (level > 0.3 && Math.random() < level * 0.4) playNoise(0.15 + level * 0.5, 0.005 + level * 0.03);
+  // Heartbeat thump at high tension
+  if (level > 0.6 && window._heartbeatThump && Math.random() < level * 0.3) {
+    window._heartbeatThump.gain.setValueAtTime(level * 0.15, audioCtx.currentTime);
+    window._heartbeatThump.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+  }
 }
 
 // ======== NARRATOR ========
@@ -349,16 +368,19 @@ function initVoice() {
           voices.find(v => v.lang.startsWith('en'));
 }
 
-function speak(text, rate = 0.85, pitch = 0.7) {
+function speak(text, rate = 0.85, pitch = 0.7, urgency = 0) {
   synth.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.voice = voice;
-  u.rate = rate;
-  u.pitch = pitch;
-  u.volume = 0.9;
+  // urgency 0 = calm HQ, 1 = field commander under fire
+  u.rate = rate + urgency * 0.3;
+  u.pitch = pitch - urgency * 0.15;
+  u.volume = 0.9 + urgency * 0.1;
   document.getElementById('voice-dot').classList.add('speaking');
   u.onend = () => document.getElementById('voice-dot').classList.remove('speaking');
-  if (audioCtx) playNoise(0.15, 0.003); // Radio click before speaking
+  if (audioCtx) {
+    playNoise(0.1 + urgency * 0.2, 0.003 + urgency * 0.01); // Radio squelch
+  }
   synth.speak(u);
 }
 
@@ -456,36 +478,55 @@ function updateNavigation() {
   document.getElementById('wp-intel').textContent = wp.intel;
   
   // Tension
-  const tension = d < 50 ? 0.8 : d < 150 ? 0.4 : 0.1;
+  const tension = d < 30 ? 1.0 : d < 60 ? 0.75 : d < 120 ? 0.4 : d < 250 ? 0.2 : 0.05;
   setTension(tension);
   
-  // Heartbeat / enemy proximity
+  // Heartbeat visual
   const hb = document.getElementById('heartbeat');
-  if (d < 80) { hb.classList.add('active'); } else { hb.classList.remove('active'); }
+  if (d < 60) { hb.classList.add('active'); hb.style.color = d < 30 ? '#f00' : '#f80'; } 
+  else { hb.classList.remove('active'); }
   
-  // Alert banner
+  // Alert banner — more frequent when close
   const alert = document.getElementById('alert-banner');
-  if (d < 100 && Math.random() < 0.02) { alert.classList.add('active'); setTimeout(()=>alert.classList.remove('active'),3000); }
+  if (d < 80 && Math.random() < (d < 30 ? 0.15 : 0.04)) { 
+    alert.textContent = d < 30 ? '⚠ ENEMY CLOSE — TAKE COVER' : '⚠ PATROL DETECTED — STAY LOW';
+    alert.classList.add('active'); 
+    setTimeout(()=>alert.classList.remove('active'), 2000); 
+  }
   
   // Arrival
   if (d < 20 && document.getElementById('photo-btn').style.display === 'none') {
     document.getElementById('photo-btn').style.display = 'block';
-    playNoise(0.4, 0.01);
-    speak('Target acquired. Photograph the intel. Now.', 0.9, 0.65);
+    playNoise(0.6, 0.02);
+    speak('Target acquired. Take the shot. NOW.', 1.0, 0.55, 0.8);
   }
   
-  // Nav calls
+  // Nav calls — more frequent and urgent when close
   const now = Date.now();
-  if (now - state.lastNavCall > 12000 && d > 40) {
+  const interval = d < 50 ? 6000 : d < 150 ? 10000 : 15000;
+  if (now - state.lastNavCall > interval && d > 15) {
     state.lastNavCall = now;
-    let msg = `${Math.round(d)} meters, ${dir.toLowerCase()}.`;
-    if (d < 80) msg = `Close. ${Math.round(d)} meters. Stay low.`;
-    speak(msg, 1.1, 0.7);
+    const urgency = d < 50 ? 0.7 : d < 150 ? 0.3 : 0;
+    let msg;
+    if (d < 40) msg = `${Math.round(d)} meters. ${dir}. GO.`;
+    else if (d < 100) msg = `${Math.round(d)} meters, ${dir.toLowerCase()}. Stay sharp.`;
+    else msg = `${Math.round(d)} meters, ${dir.toLowerCase()}.`;
+    speak(msg, 1.05 - urgency * 0.15, 0.7 - urgency * 0.1, urgency);
   }
 }
 
 // ======== MISSION ========
-let timerInterval, navInterval, tensionInterval;
+let timerInterval, navInterval, tensionInterval, radioInterval;
+const radioChatter = [
+  'Be advised. Enemy patrols increasing.',
+  'HQ to all units. Report status.',
+  'Intel update: target may be guarded.',
+  'Break. Break. Movement at your six.',
+  'Comms check. Acknowledge.',
+  'Satellite shows heat signature near your position.',
+  'New intel: extraction may be compromised. Proceed with caution.',
+  'Alert. Unknown contact bearing south.',
+];
 
 function showBriefing() {
   const name = document.getElementById('team-name').value.trim() || 'GHOST';
@@ -520,7 +561,18 @@ function deploy() {
   switchScreen('screen-mission');
   timerInterval = setInterval(updateTimer, 1000);
   navInterval = setInterval(() => { if(state.missionActive) updateNavigation(); }, 2000);
-  tensionInterval = setInterval(() => { if(state.missionActive) setTension(Math.random()*0.15); }, 5000);
+  tensionInterval = setInterval(() => { if(state.missionActive) setTension(Math.random()*0.1); }, 5000);
+  // Random radio interruptions
+  radioInterval = setInterval(() => {
+    if (!state.missionActive) return;
+    const wp = state.waypoints[state.currentWP];
+    const d = state.gpsLat ? dist(state.gpsLat, state.gpsLng, wp.lat, wp.lng) : 500;
+    if (d < 150 && Math.random() < 0.25) {
+      const msg = radioChatter[Math.floor(Math.random() * radioChatter.length)];
+      speak(msg, 1.05, 0.55, 0.6);
+      playNoise(0.3, 0.015);
+    }
+  }, 15000);
   
   speak(`Deploy. First waypoint: ${state.waypoints[0].name}. ${state.waypoints[0].intel} Move out.`, 0.85, 0.7);
 }
@@ -533,7 +585,8 @@ function updateTimer() {
   tEl.textContent = `${m}:${s.toString().padStart(2,'0')}`;
   if (remaining < 180) tEl.className = 'timer critical';
   else if (remaining < 600) tEl.className = 'timer warn';
-  if (remaining === 300) speak('Extraction window closing. Five minutes.', 1.0, 0.7);
+  if (remaining === 300) speak('Five minutes. Extraction window closing. Move faster.', 1.1, 0.6, 0.6);
+  if (remaining === 120) speak('Two minutes! You are running out of time!', 1.2, 0.5, 0.9);
   if (remaining <= 0) endMission(false);
   state.elapsed = 1200 - remaining;
 }
@@ -585,7 +638,9 @@ function processPhoto(dataUrl) {
       document.getElementById(`wp-dot-${state.currentWP}`).classList.add('current');
       document.getElementById('photo-btn').style.display = 'none';
       const next = state.waypoints[state.currentWP];
-      speak(`Intel confirmed. +${wp.points+bonus} points. Next: ${next.name}. ${next.intel}`, 0.9, 0.7);
+      speak(`Intel confirmed. Next: ${next.name}. ${next.intel}`, 0.95, 0.65, 0.2);
+      // Brief return to calm before ramping up again
+      setTimeout(() => setTension(0.3), 1000);
     }
   } else {
     speak(`Too far. ${Math.round(d)} meters from target. Get closer.`, 1.0, 0.7);
@@ -608,7 +663,7 @@ function abortMission() {
 
 function endMission(success) {
   state.missionActive = false;
-  clearInterval(timerInterval); clearInterval(navInterval); clearInterval(tensionInterval);
+  clearInterval(timerInterval); clearInterval(navInterval); clearInterval(tensionInterval); clearInterval(radioInterval);
   synth.cancel(); setTension(0);
   
   const timeBonus = success ? Math.max(0, 600 - state.elapsed) : 0;
