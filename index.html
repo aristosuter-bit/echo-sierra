@@ -8,172 +8,146 @@
 <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>ECHO SIERRA v6</title>
+<title>ECHO SIERRA v7</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100dvh;width:100vw;overflow:hidden;font-family:'SF Mono','Courier New',monospace;background:#000;color:#0f0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:999;opacity:.3}
-.screen{position:absolute;inset:0;display:none;flex-direction:column;padding:16px;z-index:1;overflow-y:auto}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;padding:14px;z-index:1;overflow-y:auto}
 .screen.active{display:flex}
-.static{position:fixed;inset:0;pointer-events:none;z-index:998;opacity:.03;animation:staticShift .1s infinite}
-@keyframes staticShift{0%,100%{opacity:.03}50%{opacity:.05}}
+.static{position:fixed;inset:0;pointer-events:none;z-index:998;opacity:.02;animation:staticShift .1s infinite}
+@keyframes staticShift{0%,100%{opacity:.02}50%{opacity:.04}}
 @keyframes fadeInOut{0%,100%{opacity:.5}50%{opacity:1}}
 @keyframes blink{50%{opacity:.3}}
-@keyframes pulse{50%{box-shadow:0 0 25px #0f0,0 0 40px #0f0}}
-@keyframes breatheBox{0%,100%{box-shadow:0 0 8px rgba(0,255,0,.15),inset 0 0 8px rgba(0,255,0,.05)}50%{box-shadow:0 0 20px rgba(0,255,0,.3),inset 0 0 15px rgba(0,255,0,.1)}}
-@keyframes breatheBoxFast{0%,100%{box-shadow:0 0 12px rgba(255,136,0,.2),inset 0 0 12px rgba(255,136,0,.05)}50%{box-shadow:0 0 28px rgba(255,136,0,.35),inset 0 0 20px rgba(255,136,0,.1)}}
-@keyframes breatheBoxPanic{0%,100%{box-shadow:0 0 15px rgba(255,0,0,.25),inset 0 0 15px rgba(255,0,0,.05)}50%{box-shadow:0 0 35px rgba(255,0,0,.45),inset 0 0 25px rgba(255,0,0,.1)}}
+@keyframes pulse{50%{box-shadow:0 0 20px #0f0,0 0 35px #0f0}}
+@keyframes breatheBox{0%,100%{box-shadow:0 0 6px rgba(0,255,0,.1),inset 0 0 6px rgba(0,255,0,.03)}50%{box-shadow:0 0 14px rgba(0,255,0,.2),inset 0 0 10px rgba(0,255,0,.07)}}
+@keyframes breatheBoxFast{0%,100%{box-shadow:0 0 8px rgba(255,136,0,.15),inset 0 0 8px rgba(255,136,0,.03)}50%{box-shadow:0 0 20px rgba(255,136,0,.25),inset 0 0 14px rgba(255,136,0,.08)}}
+@keyframes breatheBoxPanic{0%,100%{box-shadow:0 0 10px rgba(255,0,0,.2),inset 0 0 10px rgba(255,0,0,.04)}50%{box-shadow:0 0 25px rgba(255,0,0,.35),inset 0 0 18px rgba(255,0,0,.08)}}
 
-.lobby{align-items:center;justify-content:center;text-align:center;gap:8px}
-.classified{font-size:10px;letter-spacing:.4em;color:#0a0;animation:fadeInOut 3s infinite}
-.crest{font-size:10px;letter-spacing:.3em;color:#050;margin-bottom:4px}
-.title{font-size:40px;font-weight:900;letter-spacing:.08em;line-height:.9;text-shadow:0 0 30px #0f0,0 0 60px #0a0}
-.subtitle{font-size:10px;color:#050;letter-spacing:.3em;margin-bottom:20px}
-.input{background:rgba(0,15,0,.5);border:1px solid #0a0;color:#0f0;padding:14px 18px;font-size:16px;font-family:inherit;width:100%;max-width:280px;text-align:center;letter-spacing:.2em;text-transform:uppercase;backdrop-filter:blur(4px)}
+.lobby,.team-lobby,.briefing,.complete{align-items:center;justify-content:center;text-align:center;gap:8px}
+.classified{font-size:9px;letter-spacing:.4em;color:#0a0;animation:fadeInOut 3s infinite}
+.crest{font-size:9px;letter-spacing:.3em;color:#050;margin-bottom:2px}
+.title{font-size:38px;font-weight:900;letter-spacing:.08em;line-height:.9;text-shadow:0 0 30px #0f0,0 0 60px #0a0}
+.subtitle{font-size:9px;color:#050;letter-spacing:.3em;margin-bottom:16px}
+.input{background:rgba(0,15,0,.5);border:1px solid #0a0;color:#0f0;padding:12px 16px;font-size:15px;font-family:inherit;width:100%;max-width:260px;text-align:center;letter-spacing:.2em;text-transform:uppercase;backdrop-filter:blur(4px)}
 .input::placeholder{color:#020}
-.btn{background:#0f0;color:#000;border:none;padding:14px 40px;font-size:15px;font-weight:900;font-family:inherit;letter-spacing:.15em;cursor:pointer;text-transform:uppercase;transition:.1s;width:100%;max-width:280px;box-shadow:0 0 20px rgba(0,255,0,.3);margin:4px 0}
-.btn:active{background:#0a0;box-shadow:0 0 40px rgba(0,255,0,.5)}
-.btn.danger{background:#200;color:#f44;box-shadow:0 0 20px rgba(255,0,0,.2)}
-.btn.ghost{background:transparent;color:#0a0;border:1px solid #0a0;box-shadow:none;padding:8px 16px;font-size:11px}
-.btn.blue{background:#003;color:#6af;box-shadow:0 0 20px rgba(100,170,255,.2)}
+.btn{background:#0f0;color:#000;border:none;padding:12px 32px;font-size:14px;font-weight:900;font-family:inherit;letter-spacing:.15em;cursor:pointer;text-transform:uppercase;transition:.1s;width:100%;max-width:260px;box-shadow:0 0 15px rgba(0,255,0,.25);margin:3px 0}
+.btn:active{background:#0a0;box-shadow:0 0 30px rgba(0,255,0,.4)}
+.btn.danger{background:#200;color:#f44;box-shadow:0 0 15px rgba(255,0,0,.15)}
+.btn.ghost{background:transparent;color:#0a0;border:1px solid #0a0;box-shadow:none;padding:7px 14px;font-size:10px}
+.btn.blue{background:#003;color:#6af;box-shadow:0 0 15px rgba(100,170,255,.15)}
 
-.team-lobby{align-items:center;justify-content:center;text-align:center;gap:10px}
-.room-code{font-size:32px;font-weight:900;letter-spacing:.3em;color:#0f0;text-shadow:0 0 20px #0f0;padding:10px 20px;border:1px dashed #0a0}
-.teammate-list{width:100%;max-width:280px}
-.teammate{display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #030;margin:3px 0;font-size:10px;letter-spacing:.1em}
-.teammate .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.teammate .dot.online{background:#0f0;box-shadow:0 0 5px #0f0}
-.role-picker{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
-.role-card{padding:8px 12px;border:1px solid #030;cursor:pointer;text-align:center;min-width:70px;transition:.2s;font-size:10px}
-.role-card.selected{border-color:#0f0;box-shadow:0 0 12px rgba(0,255,0,.2);background:rgba(0,15,0,.4)}
-.role-card .role-icon{font-size:20px;margin-bottom:2px}
-.role-card .role-name{font-size:10px;letter-spacing:.1em;color:#0f0}
-.role-card .role-desc{font-size:7px;color:#050;margin-top:1px}
+.room-code{font-size:28px;font-weight:900;letter-spacing:.3em;color:#0f0;text-shadow:0 0 20px #0f0;padding:8px 16px;border:1px dashed #0a0}
+.teammate-list{width:100%;max-width:260px}
+.teammate{display:flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid #030;margin:2px 0;font-size:9px;letter-spacing:.1em}
+.teammate .dot{width:6px;height:6px;border-radius:50%}
+.teammate .dot.online{background:#0f0;box-shadow:0 0 4px #0f0}
+.role-picker{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.role-card{padding:6px 10px;border:1px solid #030;cursor:pointer;text-align:center;min-width:64px;transition:.2s;font-size:9px}
+.role-card.selected{border-color:#0f0;box-shadow:0 0 10px rgba(0,255,0,.2);background:rgba(0,15,0,.4)}
+.role-card .role-icon{font-size:18px;margin-bottom:1px}
+.role-card .role-name{font-size:9px;letter-spacing:.1em;color:#0f0}
 
-.briefing{align-items:center;justify-content:center;text-align:center;gap:8px}
-.intel-card{background:rgba(0,15,0,.3);border:1px solid #0a0;padding:16px;max-width:340px;text-align:left;font-size:11px;line-height:1.7;backdrop-filter:blur(4px)}
+.intel-card{background:rgba(0,15,0,.3);border:1px solid #0a0;padding:14px;max-width:340px;text-align:left;font-size:10px;line-height:1.6;backdrop-filter:blur(4px)}
 .intel-card .label{color:#0a0;font-size:8px;letter-spacing:.25em}
-.intel-card .value{color:#0f0;margin-bottom:8px;font-size:11px}
-.intel-card .value.real{color:#6f6;font-weight:900}
-.threat-level{color:#f80;font-size:18px;font-weight:900}
+.intel-card .value{color:#0f0;margin-bottom:6px;font-size:10px}
+.threat-level{color:#f80;font-size:16px;font-weight:900}
 
-.mission-header{display:flex;justify-content:space-between;align-items:flex-start;padding:2px 0}
-.mission-header .op-name{font-size:9px;color:#050;letter-spacing:.25em}
-.mission-header .op-title{font-size:12px;color:#0a0;letter-spacing:.15em}
-.timer{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums}
+.mission-header{display:flex;justify-content:space-between;align-items:flex-start;padding:1px 0}
+.mission-header .op-name{font-size:8px;color:#050;letter-spacing:.25em}
+.mission-header .op-title{font-size:11px;color:#0a0;letter-spacing:.15em}
+.timer{font-size:18px;font-weight:900;font-variant-numeric:tabular-nums}
 .timer.warn{color:#f80;animation:blink .5s infinite}
 .timer.critical{color:#f00;animation:blink .25s infinite}
-.alert-banner{background:rgba(255,80,0,.1);border:1px solid #f80;padding:4px 10px;font-size:9px;color:#f80;letter-spacing:.15em;text-align:center;display:none}
+.alert-banner{background:rgba(255,80,0,.1);border:1px solid #f80;padding:3px 8px;font-size:8px;color:#f80;letter-spacing:.12em;text-align:center;display:none}
 .alert-banner.active{display:block;animation:blink 1s infinite}
 
-.heading-debug{text-align:center;font-size:9px;color:#030;letter-spacing:.1em;padding:2px 0}
-.compass-area{flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:200px}
-.compass-ring{width:170px;height:170px;border-radius:50%;border:2px solid #0a0;position:relative;box-shadow:0 0 15px rgba(0,255,0,.15),inset 0 0 15px rgba(0,255,0,.05)}
-.compass-inner{width:130px;height:130px;border-radius:50%;border:1px solid #030;position:relative}
-.compass-arrow{position:absolute;top:50%;left:50%;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:38px solid #0f0;transform:translate(-50%,-100%);filter:drop-shadow(0 0 10px #0f0);transition:transform .3s}
-.teammate-marker{position:absolute;top:50%;left:50%;width:7px;height:7px;border-radius:50%;transform:translate(-50%,-50%);transition:.5s;z-index:2}
-.compass-n{position:absolute;top:4px;left:50%;transform:translateX(-50%);font-size:7px;color:#0a0}
-.compass-s{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:7px;color:#020}
-.compass-e{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:7px;color:#020}
-.compass-w{position:absolute;left:4px;top:50%;transform:translateY(-50%);font-size:7px;color:#020}
+.heading-debug{text-align:center;font-size:8px;color:#030;letter-spacing:.1em;padding:1px 0}
+.compass-area{flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:180px}
+.compass-ring{width:160px;height:160px;border-radius:50%;border:2px solid #0a0;position:relative;box-shadow:0 0 12px rgba(0,255,0,.12),inset 0 0 12px rgba(0,255,0,.04)}
+.compass-inner{width:122px;height:122px;border-radius:50%;border:1px solid #030;position:relative}
+.compass-arrow{position:absolute;top:50%;left:50%;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:34px solid #0f0;transform:translate(-50%,-100%);filter:drop-shadow(0 0 8px #0f0);transition:transform .3s}
+.compass-n{position:absolute;top:3px;left:50%;transform:translateX(-50%);font-size:7px;color:#0a0}
+.compass-s{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);font-size:7px;color:#020}
+.compass-e{position:absolute;right:3px;top:50%;transform:translateY(-50%);font-size:7px;color:#020}
+.compass-w{position:absolute;left:3px;top:50%;transform:translateY(-50%);font-size:7px;color:#020}
 
-.nav-info{text-align:center;padding:2px 0}
-.distance{font-size:44px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
-.distance-unit{font-size:13px;color:#050}
-.bearing-text{font-size:12px;color:#0a0;letter-spacing:.1em;margin-top:1px}
-.wp-name{font-size:11px;color:#0f0;margin-top:1px;letter-spacing:.12em}
-.wp-intel{font-size:9px;color:#050;margin-top:1px;font-style:italic}
+.nav-info{text-align:center;padding:1px 0}
+.distance{font-size:40px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+.distance-unit{font-size:12px;color:#050}
+.bearing-text{font-size:11px;color:#0a0;letter-spacing:.1em;margin-top:1px}
+.wp-name{font-size:10px;color:#0f0;margin-top:1px;letter-spacing:.1em}
+.wp-intel{font-size:8px;color:#050;margin-top:1px;font-style:italic}
 
-.breath-box{margin:6px auto;padding:10px 14px;max-width:280px;border:1px solid #040;text-align:center;animation:breatheBox 4s ease-in-out infinite}
+.breath-box{margin:4px auto;padding:8px 12px;max-width:260px;border:1px solid #040;text-align:center;animation:breatheBox 4s ease-in-out infinite}
 .breath-box.fast{animation-duration:2s;border-color:#f80;animation-name:breatheBoxFast}
 .breath-box.panic{animation-duration:.8s;border-color:#f00;animation-name:breatheBoxPanic}
-.breath-label{font-size:9px;color:#050;letter-spacing:.15em}
-.breath-state{font-size:12px;color:#0f0;letter-spacing:.1em;margin-top:1px}
-.breath-tip{font-size:9px;color:#060;margin-top:2px;font-style:italic;min-height:12px}
-.whisper-display{text-align:center;font-size:9px;color:#040;margin:2px 0;min-height:14px;letter-spacing:.08em;font-style:italic}
+.breath-label{font-size:8px;color:#050;letter-spacing:.12em}
+.breath-state{font-size:11px;color:#0f0;letter-spacing:.1em;margin-top:1px}
+.breath-tip{font-size:8px;color:#060;margin-top:1px;font-style:italic;min-height:10px}
+.whisper-display{text-align:center;font-size:8px;color:#040;margin:1px 0;min-height:12px;letter-spacing:.06em;font-style:italic}
 
-.mission-footer{display:flex;gap:6px;padding:2px 0;align-items:center}
-.waypoint-list{display:flex;gap:4px;flex:1;overflow-x:auto}
-.wp-dot{width:24px;height:24px;border-radius:50%;border:1px solid #030;display:flex;align-items:center;justify-content:center;font-size:8px;color:#030;flex-shrink:0;transition:.3s}
+.mission-footer{display:flex;gap:4px;padding:1px 0;align-items:center}
+.waypoint-list{display:flex;gap:3px;flex:1;overflow-x:auto}
+.wp-dot{width:22px;height:22px;border-radius:50%;border:1px solid #030;display:flex;align-items:center;justify-content:center;font-size:7px;color:#030;flex-shrink:0;transition:.3s}
 .wp-dot.done{background:#0a0;border-color:#0f0;color:#000}
-.wp-dot.current{border-color:#0f0;color:#0f0;box-shadow:0 0 10px #0f0;animation:pulse 1s infinite}
-.heartbeat{text-align:center;font-size:9px;color:#300;margin:1px 0;display:none}
-.heartbeat.active{display:block;color:#600;animation:blink .8s infinite}
+.wp-dot.current{border-color:#0f0;color:#0f0;box-shadow:0 0 8px #0f0;animation:pulse 1s infinite}
 
 .camera-area{flex:1;display:flex;align-items:center;justify-content:center;background:#000;position:relative}
 .camera-area video{width:100%;height:100%;object-fit:cover;opacity:.8}
-.camera-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;flex-direction:column}
-.crosshair{width:70px;height:70px;border:2px solid #0f0;border-radius:50%;opacity:.6;box-shadow:0 0 15px rgba(0,255,0,.2);position:relative}
-.crosshair::before{content:'';position:absolute;width:2px;height:40px;background:#0f0;opacity:.3;left:50%;top:50%;transform:translate(-50%,-50%)}
-.crosshair::after{content:'';position:absolute;width:40px;height:2px;background:#0f0;opacity:.3;left:50%;top:50%;transform:translate(-50%,-50%)}
-.capture-hint{color:#0f0;font-size:10px;letter-spacing:.2em;margin-top:90px;animation:fadeInOut 2s infinite}
-.camera-capture{position:absolute;bottom:40px;left:50%;transform:translateX(-50%)}
-.capture-btn{width:68px;height:68px;border-radius:50%;border:3px solid #0f0;background:rgba(0,255,0,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(0,255,0,.2)}
-.capture-btn:active{background:rgba(0,255,0,.3);transform:scale(.95)}
+.capture-btn{width:64px;height:64px;border-radius:50%;border:3px solid #0f0;background:rgba(0,255,0,.1);cursor:pointer;position:absolute;bottom:36px;left:50%;transform:translateX(-50%);box-shadow:0 0 20px rgba(0,255,0,.2)}
+.capture-btn:active{background:rgba(0,255,0,.3);transform:translateX(-50%) scale(.95)}
 
-.complete{align-items:center;justify-content:center;text-align:center;gap:6px}
-.score{font-size:64px;font-weight:900;line-height:1;text-shadow:0 0 40px #0f0,0 0 80px #0a0}
-.score-label{font-size:11px;color:#0a0;letter-spacing:.3em}
-.stats{font-size:10px;color:#050;line-height:2}
-.photos{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin:6px 0}
-.photos img{width:56px;height:56px;object-fit:cover;border:1px solid #0a0;border-radius:2px}
-.grade{font-size:14px;font-weight:900;letter-spacing:.2em;margin-top:6px}
+.score{font-size:60px;font-weight:900;line-height:1;text-shadow:0 0 40px #0f0,0 0 80px #0a0}
+.grade{font-size:13px;font-weight:900;letter-spacing:.2em;margin-top:4px}
+.stats{font-size:9px;color:#050;line-height:1.8}
+.photos img{width:48px;height:48px;object-fit:cover;border:1px solid #0a0;border-radius:2px}
 
-.voice-dot{position:fixed;top:10px;right:10px;width:7px;height:7px;border-radius:50%;background:#0f0;opacity:0;z-index:1000}
+.voice-dot{position:fixed;top:8px;right:8px;width:6px;height:6px;border-radius:50%;background:#0f0;opacity:0;z-index:1000}
 .voice-dot.speaking{opacity:1;animation:pulse .3s infinite}
-.signal-bars{position:fixed;top:10px;left:10px;display:flex;gap:2px;align-items:flex-end;z-index:1000}
-.signal-bar{width:2px;background:#0a0;opacity:.5}
-.conn-status{position:fixed;bottom:8px;left:8px;font-size:8px;z-index:1000;letter-spacing:.1em}
-.audio-btn{position:fixed;bottom:8px;right:8px;font-size:8px;z-index:1000;background:rgba(0,15,0,.5);border:1px solid #030;color:#050;padding:3px 8px;letter-spacing:.1em;cursor:pointer}
-
-.debug-bar{position:fixed;top:26px;left:10px;font-size:8px;color:#030;z-index:1000;letter-spacing:.08em}
+.debug-bar{position:fixed;bottom:6px;left:6px;font-size:7px;color:#030;z-index:1000;letter-spacing:.06em;max-width:70%}
 </style>
 </head>
 <body>
-
 <div class="static"></div>
 <div class="voice-dot" id="voice-dot"></div>
-<div class="signal-bars" id="signal-bars">
-  <div class="signal-bar" style="height:4px"></div><div class="signal-bar" style="height:8px"></div>
-  <div class="signal-bar" style="height:6px"></div><div class="signal-bar" style="height:12px"></div>
-</div>
-<div class="conn-status" id="conn-status" style="color:#0a0">● STANDBY</div>
 <div class="debug-bar" id="debug-bar"></div>
 
 <!-- LOBBY -->
 <div class="screen active lobby" id="screen-lobby">
-  <div class="classified">■ CLASSIFIED TRANSMISSION ■</div>
+  <div class="classified">■ CLASSIFIED ■</div>
   <div class="crest">▸ JOINT SPECIAL OPERATIONS COMMAND</div>
   <div class="title">ECHO<br>SIERRA</div>
-  <div class="subtitle">AUDIO FIELD TERMINAL v6</div>
+  <div class="subtitle">AUDIO FIELD TERMINAL v7</div>
   <input class="input" id="team-name" placeholder="CALLSIGN" maxlength="12" value="GHOST">
   <button class="btn" onclick="requestSensors()">UNLOCK SENSORS</button>
   <button class="btn" onclick="toTeamLobby('create')">CREATE TEAM</button>
   <button class="btn blue" onclick="toTeamLobby('join')">JOIN TEAM</button>
   <button class="btn ghost" onclick="deploySolo()">SOLO DEPLOY</button>
-  <p style="color:#020;font-size:8px;margin-top:12px;letter-spacing:.15em">HEADPHONES MANDATORY · GPS + CAMERA + COMPASS</p>
-  <div id="gps-status" style="color:#300;font-size:8px;margin-top:3px"></div>
+  <p style="color:#020;font-size:7px;margin-top:10px;letter-spacing:.15em">HEADPHONES · GPS · CAMERA · COMPASS</p>
+  <div id="gps-status" style="color:#300;font-size:7px;margin-top:2px"></div>
+  <div id="sensor-status" style="color:#300;font-size:7px;margin-top:1px"></div>
 </div>
 
 <!-- TEAM LOBBY -->
 <div class="screen team-lobby" id="screen-team">
   <div class="classified">■ TEAM ASSEMBLY ■</div>
-  <div id="team-create-ui" style="display:none;width:100%;align-items:center;flex-direction:column;gap:10px">
-    <p style="font-size:9px;color:#050">SHARE THIS CODE</p>
+  <div id="team-create-ui" style="display:none;width:100%;align-items:center;flex-direction:column;gap:8px">
+    <p style="font-size:8px;color:#050">SHARE CODE</p>
     <div class="room-code" id="room-code">----</div>
     <div class="role-picker">
-      <div class="role-card" onclick="selectRole('scout')" id="role-scout"><div class="role-icon">🔭</div><div class="role-name">SCOUT</div><div class="role-desc">+80m radar</div></div>
-      <div class="role-card selected" onclick="selectRole('operative')" id="role-operative"><div class="role-icon">🎯</div><div class="role-name">OPERATIVE</div><div class="role-desc">+25 pts</div></div>
-      <div class="role-card" onclick="selectRole('sniper')" id="role-sniper"><div class="role-icon">🔭</div><div class="role-name">SNIPER</div><div class="role-desc">+50m range</div></div>
+      <div class="role-card" onclick="selectRole('scout')" id="role-scout"><div class="role-icon">🔭</div><div class="role-name">SCOUT</div></div>
+      <div class="role-card selected" onclick="selectRole('operative')" id="role-operative"><div class="role-icon">🎯</div><div class="role-name">OPS</div></div>
+      <div class="role-card" onclick="selectRole('sniper')" id="role-sniper"><div class="role-icon">🔭</div><div class="role-name">SNIPER</div></div>
     </div>
   </div>
-  <div id="team-join-ui" style="display:none;width:100%;align-items:center;flex-direction:column;gap:10px">
-    <p style="font-size:9px;color:#050">ENTER ROOM CODE</p>
-    <input class="input" id="join-code" placeholder="CODE" maxlength="4" style="max-width:120px;font-size:22px">
+  <div id="team-join-ui" style="display:none;width:100%;align-items:center;flex-direction:column;gap:8px">
+    <p style="font-size:8px;color:#050">ENTER CODE</p>
+    <input class="input" id="join-code" placeholder="CODE" maxlength="4" style="max-width:110px;font-size:20px">
     <button class="btn blue" onclick="joinTeam()">JOIN</button>
   </div>
   <div class="teammate-list" id="teammate-list"></div>
-  <button class="btn" onclick="teamDeploy()" id="team-deploy-btn" disabled>REQUEST BRIEFING</button>
+  <button class="btn" onclick="teamDeploy()" id="team-deploy-btn" disabled>BRIEFING</button>
   <button class="btn ghost" onclick="leaveTeam()">LEAVE</button>
 </div>
 
@@ -182,9 +156,9 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   <div class="classified">■ MISSION BRIEFING ■</div>
   <div class="intel-card">
     <div class="label">OPERATION</div>
-    <div class="value" style="font-size:15px;font-weight:900" id="brief-op">NIGHTFALL</div>
+    <div class="value" style="font-size:14px;font-weight:900" id="brief-op">NIGHTFALL</div>
     <div class="label">OBJECTIVE</div>
-    <div class="value" id="brief-obj">Recover 4 intel caches. Photograph each.</div>
+    <div class="value" id="brief-obj">Recover intel caches. Photograph each.</div>
     <div class="label">THREAT</div>
     <div class="threat-level" id="brief-threat">MODERATE</div>
     <div class="label">EXTRACTION</div>
@@ -192,9 +166,8 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
     <div class="label">WAYPOINTS</div>
     <div class="value" id="brief-wp"></div>
   </div>
-  <div id="brief-map-info" style="font-size:10px;color:#0a0;max-width:340px;text-align:left;padding:8px"></div>
-  <div class="map-loading" id="brief-loader" style="display:none">◈ SATELLITE FEED...</div>
-  <div style="font-size:8px;color:#300;margin-top:8px;letter-spacing:.1em">■ ENCRYPTED ■</div>
+  <div id="brief-map-info" style="font-size:9px;color:#0a0;max-width:340px;text-align:left;padding:6px;line-height:1.6"></div>
+  <div style="font-size:7px;color:#300;margin-top:6px;letter-spacing:.1em">■ ENCRYPTED ■</div>
   <button class="btn" onclick="deploy()">DEPLOY</button>
   <button class="btn ghost" onclick="switchScreen('screen-team')">BACK</button>
 </div>
@@ -205,42 +178,34 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   <div class="heading-debug" id="heading-debug">COMPASS: --°</div>
   <div class="mission-header">
     <div>
-      <div class="op-name" id="mission-id">OP NIGHTFALL</div>
+      <div class="op-name" id="mission-id">OP</div>
       <div class="op-title" id="mission-obj">RECOVER INTEL</div>
     </div>
     <div class="timer" id="timer">20:00</div>
   </div>
-
   <div class="compass-area">
     <div class="compass-ring" id="compass-ring">
-      <div class="compass-n">N</div><div class="compass-s">S</div>
-      <div class="compass-e">E</div><div class="compass-w">W</div>
-      <div class="compass-inner">
-        <div class="compass-arrow" id="compass-arrow"></div>
-      </div>
+      <div class="compass-n">N</div><div class="compass-s">S</div><div class="compass-e">E</div><div class="compass-w">W</div>
+      <div class="compass-inner"><div class="compass-arrow" id="compass-arrow"></div></div>
       <div id="teammate-markers"></div>
     </div>
   </div>
-
   <div class="nav-info">
     <div><span class="distance" id="distance">--</span><span class="distance-unit">m</span></div>
-    <div class="bearing-text" id="bearing-label">CALIBRATING...</div>
+    <div class="bearing-text" id="bearing-label">CALIBRATING</div>
     <div class="wp-name" id="wp-name"></div>
     <div class="wp-intel" id="wp-intel"></div>
   </div>
-
   <div class="breath-box" id="breath-box">
     <div class="breath-label">▎BREATHING</div>
     <div class="breath-state" id="breath-state">STEADY</div>
     <div class="breath-tip" id="breath-tip"></div>
   </div>
   <div class="whisper-display" id="whisper"></div>
-  <div class="heartbeat" id="heartbeat"></div>
-
   <div class="mission-footer">
     <div class="waypoint-list" id="wp-list"></div>
-    <button class="btn ghost" onclick="takePhoto()" id="photo-btn" style="display:none;max-width:100px;font-size:10px">📷 CAPTURE</button>
-    <button class="btn danger" onclick="abortMission()" style="max-width:60px;padding:5px;font-size:8px">ABORT</button>
+    <button class="btn ghost" onclick="takePhoto()" id="photo-btn" style="display:none;max-width:90px;font-size:9px">📷 CAPTURE</button>
+    <button class="btn danger" onclick="abortMission()" style="max-width:50px;padding:4px;font-size:7px">ABORT</button>
   </div>
 </div>
 
@@ -248,690 +213,482 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 <div class="screen" id="screen-camera">
   <div class="camera-area">
     <video id="camera-video" autoplay playsinline></video>
-    <div class="camera-overlay">
-      <div class="crosshair"></div>
-      <div class="capture-hint">TARGET IN SIGHT</div>
-    </div>
   </div>
-  <div class="camera-capture"><button class="capture-btn" onclick="capturePhoto()"></button></div>
-  <button class="btn ghost" onclick="closeCamera()" style="position:absolute;top:14px;right:14px;font-size:9px;padding:5px 10px">BACK</button>
+  <div class="capture-btn" onclick="capturePhoto()"></div>
+  <button class="btn ghost" onclick="closeCamera()" style="position:absolute;top:12px;right:12px;font-size:8px;padding:4px 8px">BACK</button>
 </div>
 
 <!-- COMPLETE -->
 <div class="screen complete" id="screen-complete">
   <div class="classified">■ MISSION DEBRIEF ■</div>
   <div class="score" id="final-score">0</div>
-  <div class="score-label">OPERATIONAL SCORE</div>
+  <div class="score-label">SCORE</div>
   <div class="grade" id="final-grade"></div>
   <div class="stats" id="final-stats"></div>
   <div class="photos" id="final-photos"></div>
-  <div style="font-size:8px;color:#300;margin-top:6px;letter-spacing:.1em">■ TRANSMISSION END ■</div>
-  <button class="btn" onclick="location.reload()">NEW OPERATION</button>
+  <div style="font-size:7px;color:#300;margin-top:4px">■ END TRANSMISSION ■</div>
+  <button class="btn" onclick="location.reload()">NEW OP</button>
 </div>
 
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <script>
 "use strict";
 // ============================================================
-// ECHO SIERRA v6 — LOUD AMBIENT · COMPASS FIX · RADIO VOICE
+// ECHO SIERRA v7 — SUSPENSE SCORE · MUSICAL BREATHING · NOMINATIM
 // ============================================================
 
-// ======== SENSOR PERMISSION (iOS fix) ========
-function requestSensors() {
-  ensureCtx(); startAmbient();
-  // Request motion/orientation permission (iOS 13+)
-  if(typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-    DeviceOrientationEvent.requestPermission()
-      .then(state => {
-        if(state === 'granted') { startCompass(); startGPS(); }
-        debug('Sensors: granted');
-      })
-      .catch(e => { debug('Sensors: denied - '+e); startCompass(); startGPS(); });
-  } else {
-    // Android or older iOS — just start
-    startCompass(); startGPS();
-    debug('Sensors: auto');
+function D(m){ const el=document.getElementById('debug-bar'); if(el)el.textContent=m; console.log('[ES]',m); }
+
+// ======== SENSORS ========
+function requestSensors(){
+  ensureCtx();
+  if(typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function'){
+    DeviceOrientationEvent.requestPermission().then(s=>{
+      if(s==='granted'){startCompass();startGPS();D('Sensors OK');}
+      else{D('Motion denied');startGPS();}
+    }).catch(()=>{startCompass();startGPS();});
+  }else{startCompass();startGPS();D('Sensors auto');}
+  document.getElementById('sensor-status').textContent='● SENSORS REQUESTED';
+  document.getElementById('sensor-status').style.color='#0a0';
+}
+
+// ======== AUDIO: SUSPENSE SCORE ========
+const AC=window.AudioContext||window.webkitAudioContext;let ctx=null;
+function ensureCtx(){if(!ctx)ctx=new AC();return ctx;}
+
+let _noiseBuf=null;
+function noiseBuf(){if(_noiseBuf)return _noiseBuf;const c=ensureCtx();_noiseBuf=c.createBuffer(1,c.sampleRate*2,c.sampleRate);const d=_noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.02;return _noiseBuf;}
+
+// Play filtered noise burst
+function nz(dur,freq,q,vol,type='bandpass'){
+  const c=ensureCtx();const s=c.createBufferSource();s.buffer=noiseBuf();
+  const f=c.createBiquadFilter();f.type=type;f.frequency.value=freq;f.Q.value=q;
+  const g=c.createGain();g.gain.setValueAtTime(vol,c.currentTime);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+dur);
+  s.connect(f);f.connect(g);g.connect(c.destination);s.start();s.stop(c.currentTime+dur);
+}
+
+// ======== MUSICAL SCORE ========
+let _score={pads:[],bass:null,tension:null,ticks:null},_scoreActive=false;
+// Key: D minor — D3=146.83, F3=174.61, A3=220.00, E4=329.63
+const ROOT=146.83;
+const CHORD=[ROOT,ROOT*6/5,ROOT*3/2,ROOT*9/8*2]; // D F A E
+
+function startScore(){
+  if(_scoreActive)return;_scoreActive=true;
+  const c=ensureCtx();
+
+  // --- PAD: 4 detuned sine oscillators on Dm(add9), each with slow LFO ---
+  _score.pads=CHORD.map((freq,i)=>{
+    const osc=c.createOscillator();osc.type='sine';
+    osc.frequency.value=freq+(Math.random()-.5)*2.5; // slight detune
+    const lfo=c.createOscillator();lfo.type='sine';
+    lfo.frequency.value=.08+i*.04; // very slow, out of phase
+    const lfoG=c.createGain();lfoG.gain.value=6; // subtle wobble
+    const g=c.createGain();g.gain.value=.01; // QUIET — atmospheric, not painful
+    lfo.connect(lfoG);lfoG.connect(g.gain);
+    osc.connect(g);g.connect(c.destination);
+    osc.start();lfo.start();
+    return {osc,lfo,g,lfoG};
+  });
+
+  // --- BASS PULSE: rhythmic low D, not constant ---
+  const bOsc=c.createOscillator();bOsc.type='sine';bOsc.frequency.value=ROOT/2;
+  const bG=c.createGain();bG.gain.value=0;
+  bOsc.connect(bG);bG.connect(c.destination);bOsc.start();
+  _score.bass={osc:bOsc,gain:bG};
+
+  // --- TENSION STRING: high sine, only audible near targets ---
+  const tOsc=c.createOscillator();tOsc.type='sine';tOsc.frequency.value=ROOT*8; // D6
+  const tG=c.createGain();tG.gain.value=0;
+  tOsc.connect(tG);tG.connect(c.destination);tOsc.start();
+  _score.tension={osc:tOsc,gain:tG};
+
+  // --- TICK: rhythmic pulse clock ---
+  _score.ticks=setInterval(()=>{
+    if(!state.missionActive)return;
+    // Bass pulse every 2 beats (~30bpm)
+    const beat=Date.now()%4000;
+    if(beat<200){
+      const vol=state._tension*.06;
+      if(bG.gain.value!==vol)bG.gain.value=vol;
+      // Very short bass note
+      setTimeout(()=>{if(bG)bG.gain.value=0;},150);
+    }
+  },2000);
+}
+
+function setTension(level){
+  // level: 0=calm, 1=panic
+  // Store for bass pulse use
+  state._tension=level;
+  if(!_score.pads.length)return;
+
+  // Pad: gets slightly louder and more harmonically rich with tension
+  const padVol=.008+level*.018; // max 0.026 — stays atmospheric
+  _score.pads.forEach((p,i)=>{
+    p.g.gain.value=padVol;
+    p.lfo.frequency.value=.08+level*.25+i*.04; // faster modulation = more unease
+    p.lfoG.gain.value=4+level*10; // wider wobble
+  });
+
+  // Add dissonance: detune the minor 3rd toward major 3rd at high tension
+  if(level>.3){
+    const detune=CHORD[1]+level*20; // slightly sharp = tension
+    _score.pads[1].osc.frequency.value=detune;
+  }else{
+    _score.pads[1].osc.frequency.value=CHORD[1];
   }
-  // Also request geolocation
-  if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(()=>{}, ()=>{}, {enableHighAccuracy:true});
-  }
+
+  // Tension string: fades in as you get close
+  _score.tension.gain.gain.value=level>.3?level*.025:0;
+
+  // Random atmospheric noise bursts
+  if(level>.2&&Math.random()<level*.3)nz(.1+level*.3,800+level*1200,.5,.004+level*.012);
 }
 
-function debug(msg) {
-  const el = document.getElementById('debug-bar');
-  if(el) el.textContent = msg;
-  console.log('[ES]', msg);
+function stopScore(){
+  _scoreActive=false;
+  if(_score.ticks)clearInterval(_score.ticks);
+  _score.pads.forEach(p=>{try{p.osc.stop();p.lfo.stop();}catch(e){}});
+  try{_score.bass.osc.stop();}catch(e){}
+  try{_score.tension.osc.stop();}catch(e){}
+  _score={pads:[],bass:null,tension:null,ticks:null};
 }
 
-// ======== AUDIO ENGINE ========
-const AC = window.AudioContext || window.webkitAudioContext;
-let ctx = null;
-function ensureCtx() { if(!ctx) ctx = new AC(); return ctx; }
+// ======== MUSICAL BREATHING ========
+let _breathTimer=null,_breathRate=8000;
+function playBreath(type,intensity){
+  const c=ensureCtx();
+  const dur=type==='inhale'?.5+intensity*.25:.7+intensity*.25;
 
-let _noiseBuf = null;
-function noiseBuf() {
-  if(_noiseBuf) return _noiseBuf;
-  const c = ensureCtx();
-  _noiseBuf = c.createBuffer(1, c.sampleRate * 2, c.sampleRate);
-  const d = _noiseBuf.getChannelData(0);
-  for(let i=0;i<d.length;i++) d[i] = (Math.random()*2-1)*0.02;
-  return _noiseBuf;
+  // Musical pitch bend on inhale/exhale
+  const pitchOsc=c.createOscillator();
+  const pitchG=c.createGain();
+  pitchOsc.type='sine';
+  const baseFreq=type==='inhale'?300:200;
+  pitchOsc.frequency.setValueAtTime(baseFreq,c.currentTime);
+  pitchOsc.frequency.linearRampToValueAtTime(baseFreq+(type==='inhale'?150:-100),c.currentTime+dur);
+  pitchG.gain.setValueAtTime(0,c.currentTime);
+  pitchG.gain.linearRampToValueAtTime(.015+intensity*.03,c.currentTime+dur*.3);
+  pitchG.gain.exponentialRampToValueAtTime(.0001,c.currentTime+dur);
+  pitchOsc.connect(pitchG);pitchG.connect(c.destination);
+  pitchOsc.start();pitchOsc.stop(c.currentTime+dur);
+
+  // Noise layer for texture
+  const ns=c.createBufferSource();ns.buffer=noiseBuf();
+  const nf=c.createBiquadFilter();nf.type='bandpass';
+  nf.frequency.value=type==='inhale'?500+intensity*200:300+intensity*100;nf.Q.value=.8;
+  const ng=c.createGain();
+  ng.gain.setValueAtTime(.001,c.currentTime);
+  ng.gain.linearRampToValueAtTime(.02+intensity*.06,c.currentTime+dur*.25);
+  ng.gain.exponentialRampToValueAtTime(.001,c.currentTime+dur);
+  ns.connect(nf);nf.connect(ng);ng.connect(c.destination);
+  ns.start();ns.stop(c.currentTime+dur);
 }
 
-function playFNoise(dur, freq, q, vol, type='bandpass') {
-  const c = ensureCtx();
-  const src = c.createBufferSource(); src.buffer = noiseBuf();
-  const flt = c.createBiquadFilter();
-  flt.type = type; flt.frequency.value = freq; flt.Q.value = q;
-  const g = c.createGain();
-  g.gain.setValueAtTime(vol, c.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + dur);
-  src.connect(flt); flt.connect(g); g.connect(c.destination);
-  src.start(); src.stop(c.currentTime + dur);
+function startBreathing(d){
+  const rate=d>250?8000:d>120?5500:d>60?3500:d>30?2000:1200;
+  if(_breathRate===rate&&_breathTimer)return;_breathRate=rate;
+  if(_breathTimer)clearInterval(_breathTimer);
+  const intensity=d>250?0:d>120?.2:d>60?.5:d>30?.75:1;
+  function cycle(){if(!state.missionActive)return;playBreath('inhale',intensity);setTimeout(()=>playBreath('exhale',intensity),_breathRate*.45);}
+  cycle();_breathTimer=setInterval(cycle,_breathRate);
 }
 
-// ---- AMBIENT (3x louder than v5) ----
-let _layers = {};
-function startAmbient() {
-  const c = ensureCtx();
-  if(_layers.drone) return;
-
-  // L1: Deep drone — 3x
-  const droneO = c.createOscillator();
-  const droneG = c.createGain();
-  droneO.type = 'sawtooth'; droneO.frequency.value = 49;
-  droneG.gain.value = 0.12; // was 0.04
-  droneO.connect(droneG); droneG.connect(c.destination);
-  droneO.start();
-  _layers.drone = {osc: droneO, gain: droneG};
-
-  // L2: Sub rumble — 3x
-  const subO = c.createOscillator();
-  const subG = c.createGain();
-  subO.type = 'sine'; subO.frequency.value = 24.5;
-  subG.gain.value = 0.09; // was 0.03
-  subO.connect(subG); subG.connect(c.destination);
-  subO.start();
-  _layers.sub = {osc: subO, gain: subG};
-
-  // L3: Mid texture — 3x
-  const midSrc = c.createBufferSource(); midSrc.buffer = noiseBuf(); midSrc.loop = true;
-  const midFlt = c.createBiquadFilter();
-  midFlt.type = 'bandpass'; midFlt.frequency.value = 400; midFlt.Q.value = 0.7;
-  const midG = c.createGain();
-  midG.gain.value = 0.03; // was 0.01
-  midSrc.connect(midFlt); midFlt.connect(midG); midG.connect(c.destination);
-  midSrc.start();
-  _layers.mid = {src: midSrc, flt: midFlt, gain: midG};
-
-  // L4: High shimmer
-  const hiO = c.createOscillator();
-  const hiG = c.createGain();
-  hiO.type = 'sine'; hiO.frequency.value = 3000;
-  hiG.gain.value = 0.002;
-  hiO.connect(hiG); hiG.connect(c.destination);
-  hiO.start();
-  _layers.hi = {osc: hiO, gain: hiG};
-
-  // L5: Wind — 3x
-  const windSrc = c.createBufferSource(); windSrc.buffer = noiseBuf(); windSrc.loop = true;
-  const windFlt = c.createBiquadFilter();
-  windFlt.type = 'lowpass'; windFlt.frequency.value = 200; windFlt.Q.value = 0.3;
-  const windG = c.createGain();
-  windG.gain.value = 0.04; // was 0.015
-  windSrc.connect(windFlt); windFlt.connect(windG); windG.connect(c.destination);
-  windSrc.start();
-  _layers.wind = {src: windSrc, flt: windFlt, gain: windG};
-
-  // L6: Heartbeat thump
-  const hbO = c.createOscillator();
-  const hbG = c.createGain();
-  hbO.type = 'sine'; hbO.frequency.value = 35;
-  hbG.gain.value = 0.001;
-  hbO.connect(hbG); hbG.connect(c.destination);
-  hbO.start();
-  _layers.hb = {osc: hbO, gain: hbG};
+// ======== RADIO VOICE ========
+const synth=window.speechSynthesis;let narratorVoice=null;
+function initVoice(){
+  const voices=synth.getVoices();if(!voices.length)return;
+  narratorVoice=voices.find(v=>v.name==='Daniel')||
+    voices.find(v=>v.name==='Arthur')||
+    voices.find(v=>v.name.includes('Oliver'))||
+    voices.find(v=>v.lang==='en-GB'&&v.name.includes('Male'))||
+    voices.find(v=>v.lang.startsWith('en')&&v.name.includes('Male'))||
+    voices.find(v=>v.lang.startsWith('en'))||voices[0];
+  D('Voice:'+(narratorVoice?narratorVoice.name:'none'));
 }
-
-// ---- BREATHING ----
-let _breathTimer = null, _breathRate = 8000;
-
-function playBreath(type, intensity) {
-  const c = ensureCtx();
-  const dur = type === 'inhale' ? 0.6 + intensity * 0.3 : 0.9 + intensity * 0.3;
-  const src = c.createBufferSource(); src.buffer = noiseBuf();
-  const flt = c.createBiquadFilter();
-  flt.type = 'bandpass';
-  flt.frequency.value = type === 'inhale' ? 600 + intensity * 200 : 350 + intensity * 100;
-  flt.Q.value = 1.2;
-  const g = c.createGain();
-  const vol = 0.05 + intensity * 0.12; // louder breathing
-  g.gain.setValueAtTime(0.001, c.currentTime);
-  g.gain.linearRampToValueAtTime(vol, c.currentTime + dur * 0.25);
-  g.gain.linearRampToValueAtTime(vol, c.currentTime + dur * 0.65);
-  g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
-  src.connect(flt); flt.connect(g); g.connect(c.destination);
-  src.start(); src.stop(c.currentTime + dur);
-}
-
-function startBreathing(distance) {
-  const rate = distance > 250 ? 8000 : distance > 120 ? 5500 : distance > 60 ? 3500 : distance > 30 ? 2000 : 1200;
-  if(_breathRate === rate && _breathTimer) return;
-  _breathRate = rate;
-  if(_breathTimer) clearInterval(_breathTimer);
-  const intensity = distance > 250 ? 0 : distance > 120 ? 0.2 : distance > 60 ? 0.5 : distance > 30 ? 0.75 : 1.0;
-  function cycle() { if(!state.missionActive) return; playBreath('inhale', intensity); setTimeout(() => playBreath('exhale', intensity), _breathRate * 0.45); }
-  cycle();
-  _breathTimer = setInterval(cycle, _breathRate);
-}
-
-// ---- TENSION ----
-function setTension(level) {
-  if(!_layers.drone) return;
-  _layers.drone.gain.gain.value = 0.09 + level * 0.15;
-  _layers.sub.gain.gain.value = 0.06 + level * 0.12;
-  _layers.mid.gain.gain.value = 0.02 + level * 0.08;
-  _layers.mid.flt.frequency.value = 300 + level * 600;
-  _layers.hi.gain.gain.value = level > 0.3 ? level * 0.04 : 0.002;
-  _layers.wind.gain.gain.value = 0.03 + level * 0.06;
-  if(level > 0.5 && _layers.hb && Math.random() < level * 0.4) {
-    _layers.hb.gain.gain.setValueAtTime(level * 0.25, ctx.currentTime);
-    _layers.hb.gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-  }
-  if(level > 0.2 && Math.random() < level * 0.5) {
-    playFNoise(0.1 + level * 0.4, 2000, 0.5, 0.005 + level * 0.03, 'highpass');
-  }
-}
-
-// ---- RADIO FX ----
-function radioChirp() {
-  const c = ensureCtx(); const t = c.currentTime;
-  [800, 1200].forEach((f, i) => {
-    const o = c.createOscillator(); const g = c.createGain();
-    o.type = 'sine'; o.frequency.value = f;
-    g.gain.setValueAtTime(0, t + i * 0.06);
-    g.gain.linearRampToValueAtTime(0.06, t + i * 0.06 + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.001, t + i * 0.06 + 0.1);
-    o.connect(g); g.connect(c.destination);
-    o.start(t + i * 0.06); o.stop(t + i * 0.06 + 0.12);
+function chirp(){
+  const c=ensureCtx();const t=c.currentTime;
+  [800,1200].forEach((f,i)=>{
+    const o=c.createOscillator();const g=c.createGain();
+    o.type='sine';o.frequency.value=f;
+    g.gain.setValueAtTime(0,t+i*.05);g.gain.linearRampToValueAtTime(.05,t+i*.05+.015);g.gain.exponentialRampToValueAtTime(.001,t+i*.05+.08);
+    o.connect(g);g.connect(c.destination);o.start(t+i*.05);o.stop(t+i*.05+.1);
   });
 }
-function radioStatic() { playFNoise(0.4, 1500, 0.3, 0.015, 'bandpass'); } // louder
-function radioTail() { playFNoise(0.2, 800, 0.4, 0.01, 'bandpass'); }
-
-// ======== VOICE ========
-const synth = window.speechSynthesis;
-let narratorVoice = null;
-
-function initVoice() {
-  const voices = synth.getVoices();
-  if(!voices.length) return;
-  // Best deep male voices — least robotic on iOS
-  narratorVoice = voices.find(v => v.name === 'Daniel' && v.lang === 'en-GB') ||
-                  voices.find(v => v.name === 'Arthur') ||
-                  voices.find(v => v.name.includes('Oliver')) ||
-                  voices.find(v => v.lang === 'en-GB' && v.name.includes('Male')) ||
-                  voices.find(v => v.lang === 'en-US' && v.name.includes('Male')) ||
-                  voices.find(v => v.lang.startsWith('en') && v.name.includes('Male')) ||
-                  voices.find(v => v.lang.startsWith('en')) ||
-                  voices[0];
-  debug('Voice: '+(narratorVoice?narratorVoice.name:'none'));
-}
-
-function speak(text, urgency = 0) {
-  synth.cancel();
-  radioChirp();
-  setTimeout(() => {
-    const u = new SpeechSynthesisUtterance(text);
-    u.voice = narratorVoice;
-    u.rate = 0.8 + urgency * 0.18;
-    u.pitch = 0.62 - urgency * 0.12;
-    u.volume = 1.0; // max volume
+function speak(text,urgency=0){
+  synth.cancel();chirp();
+  setTimeout(()=>{
+    const u=new SpeechSynthesisUtterance(text);
+    u.voice=narratorVoice;u.rate=.78+urgency*.15;u.pitch=.6-urgency*.1;u.volume=1;
     document.getElementById('voice-dot').classList.add('speaking');
-    u.onstart = () => radioStatic();
-    u.onend = () => {
-      document.getElementById('voice-dot').classList.remove('speaking');
-      radioTail();
-    };
+    u.onstart=()=>nz(.35,1500,.3,.01);
+    u.onend=()=>{document.getElementById('voice-dot').classList.remove('speaking');nz(.15,800,.4,.006);};
     synth.speak(u);
-  }, 120);
+  },100);
 }
-
-function whisper(text) {
-  synth.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.voice = narratorVoice;
-  u.rate = 0.65; u.pitch = 0.4; u.volume = 0.3;
-  document.getElementById('whisper').textContent = text;
-  u.onend = () => { document.getElementById('whisper').textContent = ''; };
+function whisper(text){
+  synth.cancel();const u=new SpeechSynthesisUtterance(text);
+  u.voice=narratorVoice;u.rate=.6;u.pitch=.38;u.volume=.22;
+  document.getElementById('whisper').textContent=text;
+  u.onend=()=>{document.getElementById('whisper').textContent='';};
   synth.speak(u);
 }
 
-// ======== OSM ========
-const WP_TYPES = {
-  viewpoint:'OBSERVATION POST', monument:'DEAD DROP', fountain:'SIGNAL RELAY',
-  memorial:'INTEL CACHE', park:'RENDEZVOUS POINT', artwork:'BLACK SITE',
-  place_of_worship:'SANCTUARY', wayside_cross:'MARKER', spring:'WATER SOURCE',
-  bench:'DROP POINT', castle:'STRONGHOLD', ruins:'RUINS',
-};
+// ======== OSM + NOMINATIM ========
+const WP_TYPES={viewpoint:'OBSERVATION POST',monument:'DEAD DROP',fountain:'SIGNAL RELAY',memorial:'INTEL CACHE',park:'RENDEZVOUS',artwork:'BLACK SITE',place_of_worship:'SANCTUARY',wayside_cross:'MARKER',spring:'WATER SOURCE',bench:'DROP POINT',castle:'STRONGHOLD',ruins:'RUINS'};
 
-async function fetchPOIs(lat, lng) {
-  const queries = [
-    `[out:json];(node["historic"](around:2000,${lat},${lng});node["tourism"](around:2000,${lat},${lng});node["amenity"="fountain"](around:2000,${lat},${lng});node["leisure"="park"](around:2000,${lat},${lng});node["amenity"="place_of_worship"](around:2000,${lat},${lng});node["historic"="wayside_cross"](around:2000,${lat},${lng});node["natural"="spring"](around:2000,${lat},${lng});node["historic"="castle"](around:2000,${lat},${lng});node["historic"="ruins"](around:2000,${lat},${lng}););out 8;`,
+async function fetchPOIs(lat,lng){
+  const queries=[
+    `[out:json];(node["historic"](around:2500,${lat},${lng});node["tourism"](around:2500,${lat},${lng});node["amenity"="fountain"](around:2500,${lat},${lng});node["leisure"="park"](around:2500,${lat},${lng});node["amenity"="place_of_worship"](around:2500,${lat},${lng});node["historic"="wayside_cross"](around:2500,${lat},${lng});node["natural"="spring"](around:2500,${lat},${lng});node["historic"="castle"](around:2500,${lat},${lng});node["historic"="ruins"](around:2500,${lat},${lng}););out 8;`,
   ];
-  for(const query of queries) {
-    try {
-      const resp = await fetch('https://overpass-api.de/api/interpreter', {
-        method:'POST', body:query, headers:{'Content-Type':'text/plain'}
-      });
-      if(!resp.ok) { debug('OSM HTTP '+resp.status); continue; }
-      const data = await resp.json();
-      debug('OSM results: '+(data.elements?data.elements.length:0));
-      if(!data.elements || data.elements.length < 1) continue;
-      return data.elements.map(el => {
-        const tags = el.tags || {};
-        const cat = (tags.tourism || tags.historic || tags.amenity || tags.leisure || tags.natural || 'default');
-        const wpName = WP_TYPES[cat] || 'WAYPOINT';
-        const realName = tags.name || '';
-        const desc = realName ? `Real location: ${realName}.` : '';
-        return {
-          name: wpName + (realName ? ' — '+realName : ''),
-          intel: desc + (tags.description ? ' '+tags.description : ' Proceed with caution.'),
-          lat: el.lat, lng: el.lon, points: 100, real: true, realName
-        };
-      }).slice(0, 5);
-    } catch(e) { debug('OSM err: '+e.message); continue; }
+  for(const query of queries){
+    try{
+      const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:query,headers:{'Content-Type':'text/plain'}});
+      if(!r.ok){D('OSM HTTP '+r.status);continue;}
+      const data=await r.json();
+      D('OSM:'+(data.elements?data.elements.length:0)+' results');
+      if(!data.elements||data.elements.length<1)continue;
+      return data.elements.map(el=>{
+        const tags=el.tags||{};
+        const cat=(tags.tourism||tags.historic||tags.amenity||tags.leisure||tags.natural||'default');
+        const wpName=WP_TYPES[cat]||'WAYPOINT';
+        const realName=tags.name||'';
+        return{name:wpName+(realName?' — '+realName:''),intel:realName?`Location: ${realName}.`:'Proceed with caution.',lat:el.lat,lng:el.lon,points:100,real:true,realName};
+      }).slice(0,5);
+    }catch(e){D('OSM err:'+e.message);continue;}
   }
   return null;
 }
 
-const FW = [
-  {name:'RALLY POINT ALPHA', intel:'Grid reference locked.'},
-  {name:'DEAD DROP BRAVO', intel:'Cache location. Check for mark.'},
-  {name:'RELAY STATION', intel:'High ground. Radio equipment.'},
-  {name:'EXTRACTION ZONE', intel:'Rendezvous. Stay hidden.'},
-];
-function genFallback() {
-  if(!state.gpsLat) return FW.map((w,i)=>({...w, lat:47.33+Math.random()*.005, lng:9.41+Math.random()*.005, points:100+i*60}));
-  const off = [[.002,.001],[.001,-.002],[-.002,-.001],[-.001,.002]];
-  return FW.map((w,i)=>({...w, lat:state.gpsLat+off[i][0], lng:state.gpsLng+off[i][1], points:100+i*60}));
+// Also try to get the user's location name
+async function fetchLocationName(lat,lng){
+  try{
+    const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&zoom=16`);
+    if(!r.ok)return null;
+    const d=await r.json();
+    return d.display_name||d.name||null;
+  }catch(e){return null;}
+}
+
+const FW=[{name:'RALLY POINT ALPHA',intel:'Grid reference locked.'},{name:'DEAD DROP BRAVO',intel:'Cache location. Check for mark.'},{name:'RELAY STATION',intel:'High ground. Radio equipment.'},{name:'EXTRACTION ZONE',intel:'Rendezvous. Stay hidden.'}];
+function genFallback(){
+  if(!state.gpsLat)return FW.map((w,i)=>({...w,lat:47.33+Math.random()*.005,lng:9.41+Math.random()*.005,points:100+i*60}));
+  const off=[[.002,.001],[.001,-.002],[-.002,-.001],[-.001,.002]];
+  return FW.map((w,i)=>({...w,lat:state.gpsLat+off[i][0],lng:state.gpsLng+off[i][1],points:100+i*60}));
 }
 
 // ======== STATE ========
-let state = {
-  teamName:'', missionId:'', waypoints:[], currentWP:0,
-  score:0, startTime:null, elapsed:0, photos:[],
-  gpsLat:null, gpsLng:null, heading:0, missionActive:false,
-  lastNavCall:0, isTeamMission:false, capturedRemotely:new Set(),
-  lastBreathDist:9999,
-};
+let state={teamName:'',missionId:'',waypoints:[],currentWP:0,score:0,startTime:null,elapsed:0,photos:[],gpsLat:null,gpsLng:null,heading:0,missionActive:false,lastNavCall:0,isTeamMission:false,capturedRemotely:new Set(),lastBreathDist:9999,_tension:0};
 
 // ======== GPS & COMPASS ========
-function startGPS() {
-  if(!navigator.geolocation) { debug('No GPS'); return; }
-  navigator.geolocation.watchPosition(
-    pos => {
-      state.gpsLat = pos.coords.latitude;
-      state.gpsLng = pos.coords.longitude;
-      const el = document.getElementById('gps-status');
-      el.textContent = '● GPS '+pos.coords.latitude.toFixed(4)+','+pos.coords.longitude.toFixed(4);
-      el.style.color = '#0a0';
-      if(state.missionActive){ updateNav(); updateBreathUI(); broadcastPos(); }
-      debug('GPS: lock');
-    },
-    err => {
-      document.getElementById('gps-status').textContent = 'GPS: '+err.message;
-      document.getElementById('gps-status').style.color = '#300';
-      debug('GPS err: '+err.message);
-    },
-    {enableHighAccuracy:true, maximumAge:1500, timeout:10000}
-  );
+function startGPS(){
+  if(!navigator.geolocation){D('No GPS');return;}
+  navigator.geolocation.watchPosition(pos=>{
+    state.gpsLat=pos.coords.latitude;state.gpsLng=pos.coords.longitude;
+    document.getElementById('gps-status').textContent='● GPS '+pos.coords.latitude.toFixed(4);
+    document.getElementById('gps-status').style.color='#0a0';
+    if(state.missionActive){updateNav();updateBreathUI();broadcastPos();}
+  },err=>{document.getElementById('gps-status').textContent='GPS err';document.getElementById('gps-status').style.color='#300';},{enableHighAccuracy:true,maximumAge:1500,timeout:10000});
 }
-
-function startCompass() {
-  let gotData = false;
-  window.addEventListener('deviceorientation', e => {
-    let h = null;
-    if(e.webkitCompassHeading !== undefined) h = e.webkitCompassHeading;
-    else if(e.alpha !== null) h = 360 - e.alpha;
-    if(h !== null && !isNaN(h)) {
-      state.heading = h;
-      gotData = true;
-      document.getElementById('heading-debug').textContent = 'COMPASS: '+Math.round(h)+'° N';
-      document.getElementById('heading-debug').style.color = '#060';
-      if(state.missionActive){ updateNav(); updateTMarkers(); }
+function startCompass(){
+  let got=false;
+  window.addEventListener('deviceorientation',e=>{
+    let h=null;
+    if(e.webkitCompassHeading!==undefined)h=e.webkitCompassHeading;
+    else if(e.alpha!==null)h=360-e.alpha;
+    if(h!==null&&!isNaN(h)){
+      state.heading=h;got=true;
+      document.getElementById('heading-debug').textContent='COMPASS: '+Math.round(h)+'°';
+      document.getElementById('heading-debug').style.color='#060';
+      if(state.missionActive){updateNav();updateTMarkers();}
     }
   });
-
-  // Fallback: check if we ever got data
-  setTimeout(() => {
-    if(!gotData) {
-      document.getElementById('heading-debug').textContent = 'COMPASS: NO DATA — Tap UNLOCK SENSORS';
-      document.getElementById('heading-debug').style.color = '#600';
-      debug('Compass: no data after 3s');
-    }
-  }, 3000);
+  setTimeout(()=>{if(!got){document.getElementById('heading-debug').textContent='COMPASS: tap UNLOCK';document.getElementById('heading-debug').style.color='#600';}},3000);
 }
 
 // MATH
-function bearing(l1,ln1,l2,ln2){
-  const φ1=l1*Math.PI/180,φ2=l2*Math.PI/180,Δλ=(ln2-ln1)*Math.PI/180;
-  const y=Math.sin(Δλ)*Math.cos(φ2),x=Math.cos(φ1)*Math.sin(φ2)-Math.sin(φ1)*Math.cos(φ2)*Math.cos(Δλ);
-  return((Math.atan2(y,x)*180/Math.PI)+360)%360;
-}
-function dist(l1,ln1,l2,ln2){
-  const R=6371000,φ1=l1*Math.PI/180,φ2=l2*Math.PI/180,Δφ=(l2-l1)*Math.PI/180,Δλ=(ln2-ln1)*Math.PI/180;
-  const a=Math.sin(Δφ/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-}
+function bearing(l1,ln1,l2,ln2){const φ1=l1*Math.PI/180,φ2=l2*Math.PI/180,Δλ=(ln2-ln1)*Math.PI/180;const y=Math.sin(Δλ)*Math.cos(φ2),x=Math.cos(φ1)*Math.sin(φ2)-Math.sin(φ1)*Math.cos(φ2)*Math.cos(Δλ);return((Math.atan2(y,x)*180/Math.PI)+360)%360;}
+function dist(l1,ln1,l2,ln2){const R=6371000,φ1=l1*Math.PI/180,φ2=l2*Math.PI/180,Δφ=(l2-l1)*Math.PI/180,Δλ=(ln2-ln1)*Math.PI/180;const a=Math.sin(Δφ/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
 
 // ======== NAVIGATION ========
-function updateNav() {
-  if(!state.missionActive || state.currentWP >= state.waypoints.length) return;
-  const wp = state.waypoints[state.currentWP];
-  if(!state.gpsLat) return;
-  const d = dist(state.gpsLat, state.gpsLng, wp.lat, wp.lng);
-  const bear = bearing(state.gpsLat, state.gpsLng, wp.lat, wp.lng);
-  const rel = ((bear - state.heading) + 720) % 360;
-
-  document.getElementById('compass-arrow').style.transform = `translate(-50%,-100%) rotate(${rel}deg)`;
-  document.getElementById('compass-ring').style.transform = `rotate(${-state.heading}deg)`;
+function updateNav(){
+  if(!state.missionActive||state.currentWP>=state.waypoints.length)return;
+  const wp=state.waypoints[state.currentWP];if(!state.gpsLat)return;
+  const d=dist(state.gpsLat,state.gpsLng,wp.lat,wp.lng);
+  const bear=bearing(state.gpsLat,state.gpsLng,wp.lat,wp.lng);
+  const rel=((bear-state.heading)+720)%360;
+  document.getElementById('compass-arrow').style.transform=`translate(-50%,-100%) rotate(${rel}deg)`;
+  document.getElementById('compass-ring').style.transform=`rotate(${-state.heading}deg)`;
   updateTMarkers();
+  const dEl=document.getElementById('distance');
+  if(d<20){dEl.textContent='ARR';dEl.style.color='#0f0';}else if(d<1000){dEl.textContent=Math.round(d);dEl.style.color='#0f0';}else{dEl.textContent=(d/1000).toFixed(1);dEl.style.color='#0a0';}
+  const dirs=['AHEAD','SLIGHT RIGHT','RIGHT','HARD RIGHT','BEHIND','HARD LEFT','LEFT','SLIGHT LEFT'];
+  document.getElementById('bearing-label').textContent=dirs[Math.round(rel/45)%8];
+  document.getElementById('wp-name').textContent=wp.name;
+  document.getElementById('wp-intel').textContent=wp.intel;
 
-  const dEl = document.getElementById('distance');
-  if(d < 20){ dEl.textContent='ARR'; dEl.style.color='#0f0'; }
-  else if(d < 1000){ dEl.textContent=Math.round(d); dEl.style.color='#0f0'; }
-  else { dEl.textContent=(d/1000).toFixed(1); dEl.style.color='#0a0'; }
-
-  const dirs = ['AHEAD','SLIGHT RIGHT','RIGHT','HARD RIGHT','BEHIND','HARD LEFT','LEFT','SLIGHT LEFT'];
-  document.getElementById('bearing-label').textContent = dirs[Math.round(rel/45)%8];
-  document.getElementById('wp-name').textContent = wp.name;
-  document.getElementById('wp-intel').textContent = wp.intel;
-
-  const tension = d < 30 ? 1.0 : d < 60 ? 0.75 : d < 120 ? 0.45 : d < 250 ? 0.2 : 0.05;
+  const tension=d<30?1:d<60?.75:d<120?.45:d<250?.2:.05;
   setTension(tension);
+  if(Math.abs(d-state.lastBreathDist)>10){state.lastBreathDist=d;startBreathing(d);updateBreathUI();}
 
-  if(Math.abs(d - state.lastBreathDist) > 10) {
-    state.lastBreathDist = d;
-    startBreathing(d);
-    updateBreathUI();
-  }
+  const al=document.getElementById('alert-banner');
+  if(d<60&&Math.random()<(d<30?.1:.03)){al.textContent=d<30?'⚠ CLOSE — COVER':'⚠ PATROL';al.classList.add('active');setTimeout(()=>al.classList.remove('active'),1500);}
 
-  const hb = document.getElementById('heartbeat');
-  if(d < 80){ hb.classList.add('active'); hb.style.color=d<30?'#f00':'#f80'; hb.textContent='▓▓▓ PROXIMITY ▓▓▓'; }
-  else hb.classList.remove('active');
+  if(d<20&&document.getElementById('photo-btn').style.display==='none'){document.getElementById('photo-btn').style.display='block';nz(.5,600,1.5,.03);speak('Target acquired.',.7);}
 
-  const al = document.getElementById('alert-banner');
-  if(d < 80 && Math.random() < (d<30?.12:.04)){
-    al.textContent = d<30?'⚠ ENEMY CLOSE — TAKE COVER':'⚠ PATROL DETECTED — STAY LOW';
-    al.classList.add('active');
-    setTimeout(()=>al.classList.remove('active'), 2000);
-  }
-
-  if(d < 20 && document.getElementById('photo-btn').style.display === 'none'){
-    document.getElementById('photo-btn').style.display = 'block';
-    playFNoise(0.6, 600, 1.5, 0.04);
-    speak('Target acquired. Take the shot.', 0.8);
-  }
-
-  const now = Date.now();
-  const interval = d < 50 ? 6000 : d < 150 ? 10000 : 15000;
-  if(now - state.lastNavCall > interval && d > 15){
-    state.lastNavCall = now;
-    const urg = d < 50 ? 0.7 : d < 150 ? 0.3 : 0;
-    let msg;
-    if(d < 40) msg = `${Math.round(d)} meters. ${dirs[Math.round(rel/45)%8]}. GO.`;
-    else if(d < 100) msg = `${Math.round(d)} meters, ${dirs[Math.round(rel/45)%8].toLowerCase()}. Stay sharp.`;
-    else msg = `${Math.round(d)} meters, ${dirs[Math.round(rel/45)%8].toLowerCase()}.`;
-    speak(msg, urg);
+  const now=Date.now();const interval=d<50?6000:d<150?10000:15000;
+  if(now-state.lastNavCall>interval&&d>15){state.lastNavCall=now;
+    const urg=d<50?.7:d<150?.3:0;
+    const dirName=dirs[Math.round(rel/45)%8];
+    if(d<40)speak(`${Math.round(d)}m. ${dirName}.`,urg);
+    else speak(`${Math.round(d)}m ${dirName.toLowerCase()}.`,urg);
   }
 }
 
-function updateBreathUI() {
-  if(!state.missionActive || state.currentWP >= state.waypoints.length) return;
-  const wp = state.waypoints[state.currentWP];
-  if(!state.gpsLat) return;
-  const d = dist(state.gpsLat, state.gpsLng, wp.lat, wp.lng);
-  const box = document.getElementById('breath-box');
-  const stEl = document.getElementById('breath-state');
-  const tipEl = document.getElementById('breath-tip');
-  box.className = 'breath-box';
-  if(d < 30){ box.classList.add('panic'); stEl.textContent='PANIC'; stEl.style.color='#f00'; tipEl.textContent='Take the shot. NOW.'; }
-  else if(d < 60){ box.classList.add('fast'); stEl.textContent='RAPID'; stEl.style.color='#f80'; tipEl.textContent='Close. Watch for patrols.'; }
-  else if(d < 120){ stEl.textContent='ELEVATED'; stEl.style.color='#ff0'; tipEl.textContent='Slow is smooth, smooth is fast.'; }
-  else if(d < 250){ stEl.textContent='STEADY'; stEl.style.color='#0f0'; tipEl.textContent='Use cover. Check your six.'; }
-  else { stEl.textContent='CALM'; stEl.style.color='#0a0'; tipEl.textContent='Steady pace. Keep moving.'; }
+function updateBreathUI(){
+  if(!state.missionActive||state.currentWP>=state.waypoints.length||!state.gpsLat)return;
+  const d=dist(state.gpsLat,state.gpsLng,state.waypoints[state.currentWP].lat,state.waypoints[state.currentWP].lng);
+  const box=document.getElementById('breath-box'),st=document.getElementById('breath-state'),tp=document.getElementById('breath-tip');
+  box.className='breath-box';
+  if(d<30){box.classList.add('panic');st.textContent='PANIC';st.style.color='#f00';tp.textContent='Take it.';}
+  else if(d<60){box.classList.add('fast');st.textContent='RAPID';st.style.color='#f80';tp.textContent='Stay sharp.';}
+  else if(d<120){st.textContent='ELEVATED';st.style.color='#ff0';tp.textContent='Slow is smooth.';}
+  else if(d<250){st.textContent='STEADY';st.style.color='#0f0';tp.textContent='Use cover.';}
+  else{st.textContent='CALM';st.style.color='#0a0';tp.textContent='Steady pace.';}
 }
 
-function updateTMarkers() {
-  const ctr = document.getElementById('teammate-markers');
-  const ring = document.getElementById('compass-ring');
-  if(!state.gpsLat || !ring || !Object.keys(teamPeers).length){ ctr.innerHTML=''; return; }
-  const r = ring.getBoundingClientRect();
-  const cx = r.width/2, cy = r.height/2, rad = r.width*.42;
-  ctr.innerHTML = Object.entries(teamPeers).filter(([_,p])=>p.lat&&p.lng).map(([_,p])=>{
-    const d = dist(state.gpsLat, state.gpsLng, p.lat, p.lng);
-    if(d>500) return '';
-    const b = bearing(state.gpsLat, state.gpsLng, p.lat, p.lng);
-    const rel = ((b-state.heading)+720)%360;
-    const rr = Math.min(d/500*rad, rad*.9);
-    const x = cx+Math.sin(rel*Math.PI/180)*rr, y = cy-Math.cos(rel*Math.PI/180)*rr;
-    const col = p.role==='scout'?'#0af':p.role==='sniper'?'#f0f':'#0f0';
-    return `<div class="teammate-marker" style="left:${x}px;top:${y}px;background:${col};box-shadow:0 0 8px ${col}" title="${p.name} · ${Math.round(d)}m"></div>`;
+function updateTMarkers(){
+  const ctr=document.getElementById('teammate-markers');const ring=document.getElementById('compass-ring');
+  if(!state.gpsLat||!ring||!Object.keys(teamPeers).length){ctr.innerHTML='';return;}
+  const r=ring.getBoundingClientRect(),cx=r.width/2,cy=r.height/2,rad=r.width*.42;
+  ctr.innerHTML=Object.entries(teamPeers).filter(([_,p])=>p.lat&&p.lng).map(([_,p])=>{
+    const d=dist(state.gpsLat,state.gpsLng,p.lat,p.lng);if(d>500)return'';
+    const b=bearing(state.gpsLat,state.gpsLng,p.lat,p.lng),rel=((b-state.heading)+720)%360;
+    const rr=Math.min(d/500*rad,rad*.9),x=cx+Math.sin(rel*Math.PI/180)*rr,y=cy-Math.cos(rel*Math.PI/180)*rr;
+    const col=p.role==='scout'?'#0af':p.role==='sniper'?'#f0f':'#0f0';
+    return`<div class="teammate-marker" style="position:absolute;left:${x}px;top:${y}px;width:6px;height:6px;border-radius:50%;background:${col};box-shadow:0 0 6px ${col}" title="${p.name} · ${Math.round(d)}m"></div>`;
   }).join('');
 }
 
 // ======== MULTIPLAYER ========
-let peer=null, teamPeers={}, teamRole='operative', isTeamLeader=false, teamRoomCode='';
-const TP = 'echosierra-';
-
-function initPeer(){
-  return new Promise((resolve,reject)=>{
-    try{
-      const id = TP+(isTeamLeader?teamRoomCode:crypto.randomUUID().slice(0,8));
-      peer = new Peer(id, {host:'0.peerjs.com',port:443,secure:true,debug:0});
-      peer.on('open', id=>{ resolve(id); });
-      peer.on('connection', c=>handleConn(c));
-      peer.on('error', e=>{console.warn(e);reject(e);});
-    }catch(e){reject(e)}
-  });
-}
-function handleConn(c){
-  c.on('open',()=>{
-    teamPeers[c.peer]={conn:c,lat:null,lng:null,role:'operative',name:'UNKNOWN'};
-    c.on('data',d=>handleTData(c.peer,d));
-    c.on('close',()=>{delete teamPeers[c.peer];renderTmates();});
-    c.send({type:'intro',name:state.teamName,role:teamRole,lat:state.gpsLat,lng:state.gpsLng});
-    renderTmates();
-  });
-}
-function handleTData(pid,d){
-  if(!teamPeers[pid]) return;
-  if(d.type==='intro'){teamPeers[pid].name=d.name;teamPeers[pid].role=d.role;teamPeers[pid].lat=d.lat;teamPeers[pid].lng=d.lng;}
-  else if(d.type==='position'){teamPeers[pid].lat=d.lat;teamPeers[pid].lng=d.lng;}
-  else if(d.type==='wp-captured') captureWP(d.wpIndex);
-  if(state.missionActive) updateTMarkers();
-}
-function broadcast(d){ Object.values(teamPeers).forEach(p=>{if(p.conn&&p.conn.open)p.conn.send(d);}); }
-function broadcastPos(){ if(state.gpsLat) broadcast({type:'position',lat:state.gpsLat,lng:state.gpsLng}); }
-function selectRole(r){ teamRole=r; document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected')); document.getElementById('role-'+r)?.classList.add('selected'); broadcast({type:'intro',name:state.teamName,role:teamRole,lat:state.gpsLat,lng:state.gpsLng}); renderTmates(); }
-function renderTmates(){
-  const list = document.getElementById('teammate-list');
-  const entries = [{name:state.teamName+' (YOU)',role:teamRole,online:true},...Object.values(teamPeers).map(p=>({name:p.name,role:p.role,online:true}))];
-  list.innerHTML = entries.map(e=>`<div class="teammate"><span class="dot online"></span><span>${e.name}</span><span class="role-badge">${e.role.toUpperCase()}</span></div>`).join('');
-}
+let peer=null,teamPeers={},teamRole='operative',isTeamLeader=false,teamRoomCode='';
+const TP='echosierra-';
+function initPeer(){return new Promise((resolve,reject)=>{try{const id=TP+(isTeamLeader?teamRoomCode:crypto.randomUUID().slice(0,8));peer=new Peer(id,{host:'0.peerjs.com',port:443,secure:true,debug:0});peer.on('open',id=>{resolve(id);});peer.on('connection',c=>handleConn(c));peer.on('error',e=>{console.warn(e);reject(e);});}catch(e){reject(e)}});}
+function handleConn(c){c.on('open',()=>{teamPeers[c.peer]={conn:c,lat:null,lng:null,role:'operative',name:'UNKNOWN'};c.on('data',d=>handleTData(c.peer,d));c.on('close',()=>{delete teamPeers[c.peer];renderTmates();});c.send({type:'intro',name:state.teamName,role:teamRole,lat:state.gpsLat,lng:state.gpsLng});renderTmates();});}
+function handleTData(pid,d){if(!teamPeers[pid])return;if(d.type==='intro'){teamPeers[pid].name=d.name;teamPeers[pid].role=d.role;teamPeers[pid].lat=d.lat;teamPeers[pid].lng=d.lng;}else if(d.type==='position'){teamPeers[pid].lat=d.lat;teamPeers[pid].lng=d.lng;}else if(d.type==='wp-captured')captureWP(d.wpIndex);if(state.missionActive)updateTMarkers();}
+function broadcast(d){Object.values(teamPeers).forEach(p=>{if(p.conn&&p.conn.open)p.conn.send(d);});}
+function broadcastPos(){if(state.gpsLat)broadcast({type:'position',lat:state.gpsLat,lng:state.gpsLng});}
+function selectRole(r){teamRole=r;document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));document.getElementById('role-'+r)?.classList.add('selected');broadcast({type:'intro',name:state.teamName,role:teamRole,lat:state.gpsLat,lng:state.gpsLng});renderTmates();}
+function renderTmates(){const list=document.getElementById('teammate-list'),entries=[{name:state.teamName+' (YOU)',role:teamRole,online:true},...Object.values(teamPeers).map(p=>({name:p.name,role:p.role,online:true}))];list.innerHTML=entries.map(e=>`<div class="teammate"><span class="dot online"></span><span>${e.name}</span><span class="role-badge">${e.role.toUpperCase()}</span></div>`).join('');}
 
 // ======== FLOW ========
 let timerI,navI,tensionI,radioI,posI,breathI;
-const radioChatter = [
-  'Be advised. Enemy patrols increasing.',
-  'HQ to all units. Report status.',
-  'Intel update: target may be guarded.',
-  'Break. Break. Movement at your six.',
-  'Satellite shows heat signature near your position.',
-  'Alert. Unknown contact bearing south.',
-];
-const tips = [
-  'Stay low. Use cover. Watch your six.',
-  'Freeze. They\'re close.',
-  'Slow is smooth, smooth is fast.',
-  'Check corners. Ambush points.',
-  'Breathe. Steady hands.',
-  'You\'re exposed. Find cover.',
-];
+const radioChatter=['Patrols increasing.','Report status.','Target may be guarded.','Movement at your six.','Heat signature near you.','Unknown contact south.'];
+const tips=['Stay low. Watch six.','Freeze. Close.','Slow is smooth.','Check corners.','Breathe. Steady.','Find cover.'];
 
 async function toTeamLobby(mode){
-  const name = document.getElementById('team-name').value.trim()||'GHOST';
-  state.teamName = name; ensureCtx(); startAmbient();
-  switchScreen('screen-team');
-  document.getElementById('team-deploy-btn').disabled=true;
-  if(mode==='create'){
-    isTeamLeader=true; teamRoomCode=crypto.randomUUID().slice(0,4).toUpperCase();
-    document.getElementById('room-code').textContent=teamRoomCode;
-    document.getElementById('team-create-ui').style.display='flex';
-    document.getElementById('team-join-ui').style.display='none';
-    try{await initPeer();document.getElementById('team-deploy-btn').disabled=false;}catch(e){document.getElementById('room-code').textContent='ERROR';}
-  }else{
-    isTeamLeader=false;
-    document.getElementById('team-create-ui').style.display='none';
-    document.getElementById('team-join-ui').style.display='flex';
-  }
+  state.teamName=document.getElementById('team-name').value.trim()||'GHOST';ensureCtx();
+  switchScreen('screen-team');document.getElementById('team-deploy-btn').disabled=true;
+  if(mode==='create'){isTeamLeader=true;teamRoomCode=crypto.randomUUID().slice(0,4).toUpperCase();document.getElementById('room-code').textContent=teamRoomCode;document.getElementById('team-create-ui').style.display='flex';document.getElementById('team-join-ui').style.display='none';try{await initPeer();document.getElementById('team-deploy-btn').disabled=false;}catch(e){document.getElementById('room-code').textContent='ERROR';}}
+  else{isTeamLeader=false;document.getElementById('team-create-ui').style.display='none';document.getElementById('team-join-ui').style.display='flex';}
 }
-async function joinTeam(){
-  const code = document.getElementById('join-code').value.trim().toUpperCase();
-  if(!code||code.length!==4) return; teamRoomCode=code;
-  try{
-    await initPeer();
-    const conn = peer.connect(TP+code,{reliable:true});
-    teamPeers[TP+code]={conn,lat:null,lng:null,role:'operative',name:'LEADER'};
-    conn.on('open',()=>{conn.on('data',d=>handleTData(TP+code,d));conn.on('close',()=>{delete teamPeers[TP+code];renderTmates();});conn.send({type:'intro',name:state.teamName,role:teamRole,lat:state.gpsLat,lng:state.gpsLng});renderTmates();document.getElementById('team-deploy-btn').disabled=false;});
-  }catch(e){alert('Failed to join.');}
-}
-function leaveTeam(){ if(peer&&!peer.destroyed)peer.destroy(); peer=null;teamPeers={};isTeamLeader=false;switchScreen('screen-lobby'); }
-async function teamDeploy(){ state.isTeamMission=true; broadcast({type:'mission-start'}); showBriefing(); }
-async function deploySolo(){ state.teamName=document.getElementById('team-name').value.trim()||'GHOST'; state.isTeamMission=false; showBriefing(); }
+async function joinTeam(){const code=document.getElementById('join-code').value.trim().toUpperCase();if(!code||code.length!==4)return;teamRoomCode=code;try{await initPeer();const conn=peer.connect(TP+code,{reliable:true});teamPeers[TP+code]={conn,lat:null,lng:null,role:'operative',name:'LEADER'};conn.on('open',()=>{conn.on('data',d=>handleTData(TP+code,d));conn.on('close',()=>{delete teamPeers[TP+code];renderTmates();});conn.send({type:'intro',name:state.teamName,role:teamRole,lat:state.gpsLat,lng:state.gpsLng});renderTmates();document.getElementById('team-deploy-btn').disabled=false;});}catch(e){alert('Failed.');}}
+function leaveTeam(){if(peer&&!peer.destroyed)peer.destroy();peer=null;teamPeers={};isTeamLeader=false;switchScreen('screen-lobby');}
+async function teamDeploy(){state.isTeamMission=true;broadcast({type:'mission-start'});showBriefing();}
+async function deploySolo(){state.teamName=document.getElementById('team-name').value.trim()||'GHOST';state.isTeamMission=false;showBriefing();}
 
 async function showBriefing(){
-  state.missionId = 'NIGHTFALL-'+Math.random().toString(36).slice(2,5).toUpperCase();
-  ensureCtx(); startAmbient();
-  document.getElementById('brief-op').textContent = state.missionId;
-  document.getElementById('brief-loader').style.display='block';
-  document.getElementById('brief-map-info').innerHTML='';
+  state.missionId='NIGHTFALL-'+Math.random().toString(36).slice(2,5).toUpperCase();
+  ensureCtx();startScore();
+  document.getElementById('brief-op').textContent=state.missionId;
+  document.getElementById('brief-map-info').innerHTML='<span style="color:#050">◈ Scanning satellite...</span>';
 
-  let pois = null;
-  if(state.gpsLat) pois = await fetchPOIs(state.gpsLat, state.gpsLng);
-  document.getElementById('brief-loader').style.display='none';
-
-  const infoEl = document.getElementById('brief-map-info');
-  if(pois && pois.length >= 2){
-    state.waypoints = pois.map((p,i)=>({...p, points:100+i*60}));
-    infoEl.innerHTML = '<div style="color:#6f6;font-size:12px;font-weight:900;margin-bottom:6px">◆ SATELLITE CONFIRMED — '+pois.length+' REAL LOCATIONS</div>' + pois.map(p=>`<div style="color:#0a0;font-size:10px;margin:2px 0">📍 ${p.name}</div>`).join('');
-    document.getElementById('brief-obj').textContent = `Recover ${pois.length} intel caches at real-world locations. Photograph each.`;
-  } else {
-    state.waypoints = genFallback();
-    const reason = !state.gpsLat ? 'NO GPS — cannot query satellite' : 'No mapped locations found within 2km';
-    infoEl.innerHTML = '<div style="color:#f80;font-size:11px;margin-bottom:4px">◆ GENERATED WAYPOINTS</div><div style="color:#050;font-size:9px">'+reason+'</div>';
+  let pois=null,locName=null;
+  if(state.gpsLat){
+    [pois,locName]=await Promise.all([fetchPOIs(state.gpsLat,state.gpsLng),fetchLocationName(state.gpsLat,state.gpsLng)]);
   }
 
-  document.getElementById('brief-wp').innerHTML = state.waypoints.map(w=>w.name).join('<br>');
-  switchScreen('screen-briefing');
+  const infoEl=document.getElementById('brief-map-info');
+  if(pois&&pois.length>=2){
+    state.waypoints=pois.map((p,i)=>({...p,points:100+i*60}));
+    let html='<div style="color:#6f6;font-size:11px;font-weight:900;margin-bottom:4px">◆ SATELLITE: '+pois.length+' REAL LOCATIONS</div>';
+    pois.forEach(p=>{html+=`<div style="color:#0a0;font-size:9px;margin:1px 0">📍 ${p.name}</div>`;});
+    if(locName)html+=`<div style="color:#050;font-size:8px;margin-top:4px">SECTOR: ${locName}</div>`;
+    infoEl.innerHTML=html;
+    document.getElementById('brief-obj').textContent=`Recover ${pois.length} intel caches at real locations. Photograph each.`;
+  }else{
+    state.waypoints=genFallback();
+    let reason=!state.gpsLat?'No GPS signal':'No mapped POIs within 2.5km';
+    let html='<div style="color:#f80;font-size:10px;margin-bottom:4px">◆ GENERATED WAYPOINTS</div>';
+    html+=`<div style="color:#050;font-size:8px">${reason}</div>`;
+    if(locName)html+=`<div style="color:#0a0;font-size:8px;margin-top:2px">📍 ${locName}</div>`;
+    infoEl.innerHTML=html;
+  }
 
-  speak(`Team ${state.teamName}. Stand by for briefing.`);
-  setTimeout(()=>speak(`${state.waypoints.length} waypoints locked. Threat level moderate. Extraction in 20 minutes.`, 0.1), 2200);
+  document.getElementById('brief-wp').innerHTML=state.waypoints.map(w=>w.name).join('<br>');
+  switchScreen('screen-briefing');
+  speak(`Team ${state.teamName}. Briefing ready.`);
+  setTimeout(()=>speak(`${state.waypoints.length} waypoints. Threat moderate. 20 minutes.`,.1),2000);
 }
 
 function deploy(){
-  state.currentWP=0;state.score=0;state.photos=[];state.startTime=Date.now();
-  state.missionActive=true;state.lastNavCall=0;state.capturedRemotely=new Set();state.lastBreathDist=9999;
-
+  state.currentWP=0;state.score=0;state.photos=[];state.startTime=Date.now();state.missionActive=true;state.lastNavCall=0;state.capturedRemotely=new Set();state.lastBreathDist=9999;state._tension=0;
   document.getElementById('mission-id').textContent=state.missionId;
-  document.getElementById('mission-obj').textContent='RECOVER INTEL';
   document.getElementById('timer').textContent='20:00';document.getElementById('timer').className='timer';
   document.getElementById('photo-btn').style.display='none';
-  document.getElementById('heartbeat').classList.remove('active');
-  document.getElementById('alert-banner').classList.remove('active');
-  document.getElementById('whisper').textContent='';
-  document.getElementById('breath-state').textContent='STEADY'; document.getElementById('breath-state').style.color='#0a0';
-  document.getElementById('breath-tip').textContent=''; document.getElementById('breath-box').className='breath-box';
-
+  document.getElementById('breath-state').textContent='STEADY';document.getElementById('breath-state').style.color='#0a0';
+  document.getElementById('breath-tip').textContent='';document.getElementById('breath-box').className='breath-box';
   document.getElementById('wp-list').innerHTML=state.waypoints.map((_,i)=>`<div class="wp-dot ${i===0?'current':''}" id="wp-dot-${i}">${i+1}</div>`).join('');
   switchScreen('screen-mission');
 
   timerI=setInterval(updateTimer,1000);
   navI=setInterval(()=>{if(state.missionActive)updateNav();},2000);
-  tensionI=setInterval(()=>{if(state.missionActive)setTension(.05+Math.random()*.08);},6000);
+  tensionI=setInterval(()=>{if(state.missionActive)setTension(.03+Math.random()*.06);},8000);
   posI=setInterval(()=>{if(state.missionActive)broadcastPos();},3000);
   breathI=setInterval(()=>{if(state.missionActive&&state.gpsLat){const wp=state.waypoints[state.currentWP];const d=dist(state.gpsLat,state.gpsLng,wp.lat,wp.lng);startBreathing(d);updateBreathUI();}},5000);
+  radioI=setInterval(()=>{if(!state.missionActive)return;const wp=state.waypoints[state.currentWP];const d=state.gpsLat?dist(state.gpsLat,state.gpsLng,wp.lat,wp.lng):500;if(d<150&&Math.random()<.15){speak(radioChatter[Math.floor(Math.random()*radioChatter.length)],.4);nz(.25,1000,.5,.008);}},18000);
+  setInterval(()=>{if(!state.missionActive||!state.gpsLat)return;const d=dist(state.gpsLat,state.gpsLng,state.waypoints[state.currentWP].lat,state.waypoints[state.currentWP].lng);if(d<150&&Math.random()<.1)whisper(tips[Math.floor(Math.random()*tips.length)]);},20000);
 
-  radioI=setInterval(()=>{
-    if(!state.missionActive)return;
-    const wp=state.waypoints[state.currentWP];
-    const d=state.gpsLat?dist(state.gpsLat,state.gpsLng,wp.lat,wp.lng):500;
-    if(d<150&&Math.random()<.2){speak(radioChatter[Math.floor(Math.random()*radioChatter.length)],.5);playFNoise(.3,1000,.5,.015);}
-  },15000);
-
-  setInterval(()=>{
-    if(!state.missionActive)return;
-    const wp=state.waypoints[state.currentWP];
-    if(!state.gpsLat)return;
-    const d=dist(state.gpsLat,state.gpsLng,wp.lat,wp.lng);
-    if(d<150&&Math.random()<.12) whisper(tips[Math.floor(Math.random()*tips.length)]);
-  },18000);
-
-  speak(`Deploy. First waypoint: ${state.waypoints[0].name}. Move out.`, 0.1);
-  setTimeout(()=>speak(state.waypoints[0].intel, 0.15), 1800);
+  speak(`Deploy. ${state.waypoints[0].name}. Move.`,.1);
+  setTimeout(()=>speak(state.waypoints[0].intel,.1),1600);
 }
 
 function updateTimer(){
   if(!state.missionActive)return;
   const rem=Math.max(0,1200-Math.floor((Date.now()-state.startTime)/1000));
   const m=Math.floor(rem/60),s=rem%60;
-  const tEl=document.getElementById('timer');
-  tEl.textContent=`${m}:${s.toString().padStart(2,'0')}`;
-  if(rem<180)tEl.className='timer critical';else if(rem<600)tEl.className='timer warn';
-  if(rem===300)speak('Five minutes. Extraction closing. Move faster.',.6);
-  if(rem===120)speak('Two minutes! Running out of time!',.9);
-  if(rem<=0)endMission(false);
-  state.elapsed=1200-rem;
+  const t=document.getElementById('timer');t.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+  if(rem<180)t.className='timer critical';else if(rem<600)t.className='timer warn';
+  if(rem===300)speak('Five minutes.',.5);if(rem===120)speak('Two minutes.',.8);
+  if(rem<=0)endMission(false);state.elapsed=1200-rem;
 }
-
-function captureWP(idx){
-  if(idx>=state.waypoints.length||state.capturedRemotely.has(idx))return;
-  state.capturedRemotely.add(idx);
-  const dot=document.getElementById('wp-dot-'+idx);
-  if(dot){dot.classList.add('done');dot.classList.remove('current');}
-  if(idx===state.currentWP){state.currentWP++;if(state.currentWP>=state.waypoints.length){if(state.capturedRemotely.size+state.photos.length>=state.waypoints.length)endMission(true);}else{document.getElementById('wp-dot-'+state.currentWP)?.classList.add('current');document.getElementById('photo-btn').style.display='none';speak('Teammate confirmed. Moving on.',.1);}}
-  playFNoise(.3,800,.7,.015);
-}
-
+function captureWP(idx){if(idx>=state.waypoints.length||state.capturedRemotely.has(idx))return;state.capturedRemotely.add(idx);const dot=document.getElementById('wp-dot-'+idx);if(dot){dot.classList.add('done');dot.classList.remove('current');}if(idx===state.currentWP){state.currentWP++;if(state.currentWP>=state.waypoints.length){if(state.capturedRemotely.size+state.photos.length>=state.waypoints.length)endMission(true);}else{document.getElementById('wp-dot-'+state.currentWP)?.classList.add('current');document.getElementById('photo-btn').style.display='none';speak('Teammate confirmed.',.1);}}nz(.25,800,.7,.01);}
 function takePhoto(){ensureCtx();switchScreen('screen-camera');const v=document.getElementById('camera-video');navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(s=>{v.srcObject=s;}).catch(()=>{const i=document.createElement('input');i.type='file';i.accept='image/*';i.capture='environment';i.onchange=e=>{const f=e.target.files[0];if(f)processPhoto(URL.createObjectURL(f));};i.click();});}
 function capturePhoto(){const v=document.getElementById('camera-video');const c=document.createElement('canvas');c.width=v.videoWidth||640;c.height=v.videoHeight||480;c.getContext('2d').drawImage(v,0,0);const d=c.toDataURL('image/jpeg',.8);const s=v.srcObject;if(s)s.getTracks().forEach(t=>t.stop());processPhoto(d);}
 function processPhoto(dataUrl){
-  const wp=state.waypoints[state.currentWP];
-  const capRange=teamRole==='sniper'?70:40;
+  const wp=state.waypoints[state.currentWP];const capRange=teamRole==='sniper'?70:40;
   const d=state.gpsLat?dist(state.gpsLat,state.gpsLng,wp.lat,wp.lng):0;
   if(d<capRange||!state.gpsLat){
-    const bonus=Math.max(0,100-Math.round(d));
-    const roleBonus=teamRole==='operative'?25:0;
+    const bonus=Math.max(0,100-Math.round(d)),roleBonus=teamRole==='operative'?25:0;
     state.score+=wp.points+bonus+roleBonus;state.photos.push(dataUrl);
     document.getElementById('wp-dot-'+state.currentWP).classList.add('done');
     document.getElementById('wp-dot-'+state.currentWP).classList.remove('current');
-    state.currentWP++;setTension(0);playFNoise(.5,500,1.5,.03);
+    state.currentWP++;setTension(0);nz(.4,500,1.5,.025);
     broadcast({type:'wp-captured',wpIndex:state.currentWP-1});
     if(state.currentWP>=state.waypoints.length){endMission(true);}else{
       document.getElementById('wp-dot-'+state.currentWP).classList.add('current');
       document.getElementById('photo-btn').style.display='none';
       const next=state.waypoints[state.currentWP];
-      speak(`Confirmed. Next: ${next.name}.`,.2);
-      setTimeout(()=>speak(next.intel,.1),1800);
-      setTimeout(()=>setTension(.3),1000);
+      speak(`Confirmed. ${next.name}.`,.2);
+      setTimeout(()=>speak(next.intel,.1),1500);
+      setTimeout(()=>setTension(.25),1200);
     }
-  }else{speak(`Too far. ${Math.round(d)} meters. Get closer.`,.4);}
+  }else{speak(`Too far. ${Math.round(d)}m.`,.3);}
   switchScreen('screen-mission');
 }
 function closeCamera(){const s=document.getElementById('camera-video').srcObject;if(s)s.getTracks().forEach(t=>t.stop());switchScreen('screen-mission');}
-function abortMission(){if(confirm('ABORT MISSION?')){speak('Mission aborted. RTB.',0);endMission(false);}}
+function abortMission(){if(confirm('ABORT?')){speak('Aborted.');endMission(false);}}
 
 function endMission(success){
   state.missionActive=false;
@@ -941,24 +698,20 @@ function endMission(success){
   const timeBonus=success?Math.max(0,600-state.elapsed):0;
   const finalScore=success?state.score+timeBonus:Math.round(state.score*.4);
   let grade='FAILED';
-  if(success&&state.currentWP>=state.waypoints.length){
-    if(finalScore>800)grade='S — LEGENDARY';else if(finalScore>650)grade='S — EXCEPTIONAL';else if(finalScore>450)grade='A — OUTSTANDING';else if(finalScore>250)grade='B — SOLID';else grade='C — COMPLETE';
-  }
+  if(success&&state.currentWP>=state.waypoints.length){if(finalScore>800)grade='S';else if(finalScore>650)grade='S';else if(finalScore>450)grade='A';else if(finalScore>250)grade='B';else grade='C';}
   document.getElementById('final-score').textContent=finalScore;
   document.getElementById('final-grade').textContent=grade;
-  document.getElementById('final-grade').style.color=grade.startsWith('S')||grade.startsWith('A')?'#0f0':'#0a0';
-  document.getElementById('final-stats').innerHTML=`TEAM: ${state.teamName} | OP: ${state.missionId}<br>WAYPOINTS: ${state.currentWP}/${state.waypoints.length} | TIME: ${Math.floor(state.elapsed/60)}:${(state.elapsed%60).toString().padStart(2,'0')}<br>STATUS: ${success?'COMPLETED':'ABORTED'} | ROLE: ${teamRole.toUpperCase()}`;
+  document.getElementById('final-grade').style.color=grade==='S'||grade==='A'?'#0f0':'#0a0';
+  document.getElementById('final-stats').innerHTML=`TEAM: ${state.teamName}<br>WP: ${state.currentWP}/${state.waypoints.length} · TIME: ${Math.floor(state.elapsed/60)}:${(state.elapsed%60).toString().padStart(2,'0')}`;
   document.getElementById('final-photos').innerHTML=state.photos.map(p=>`<img src="${p}">`).join('');
   switchScreen('screen-complete');
-  if(grade.startsWith('S'))speak('Outstanding. RTB.');else if(success)speak('Mission complete.');else speak('Mission failed.');
+  if(grade==='S')speak('Outstanding.');else if(success)speak('Complete.');else speak('Failed.');
 }
 
 function switchScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 
-// ======== INIT ========
 initVoice();
-if(speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = initVoice;
-// GPS & compass started by user tapping UNLOCK SENSORS (iOS permission requirement)
+if(speechSynthesis.onvoiceschanged!==undefined)speechSynthesis.onvoiceschanged=initVoice;
 </script>
 </body>
 </html>
