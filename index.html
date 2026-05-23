@@ -8,106 +8,96 @@
 <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>ECHO SIERRA v5</title>
+<title>ECHO SIERRA v6</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100dvh;width:100vw;overflow:hidden;font-family:'SF Mono','Courier New',monospace;background:#000;color:#0f0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:999;opacity:.3}
-.screen{position:absolute;inset:0;display:none;flex-direction:column;padding:20px;z-index:1;overflow-y:auto}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;padding:16px;z-index:1;overflow-y:auto}
 .screen.active{display:flex}
-.static{position:fixed;inset:0;pointer-events:none;z-index:998;opacity:.02;animation:staticShift .1s infinite}
-@keyframes staticShift{0%,100%{opacity:.02}50%{opacity:.04}}
+.static{position:fixed;inset:0;pointer-events:none;z-index:998;opacity:.03;animation:staticShift .1s infinite}
+@keyframes staticShift{0%,100%{opacity:.03}50%{opacity:.05}}
 @keyframes fadeInOut{0%,100%{opacity:.5}50%{opacity:1}}
 @keyframes blink{50%{opacity:.3}}
 @keyframes pulse{50%{box-shadow:0 0 25px #0f0,0 0 40px #0f0}}
 @keyframes breatheBox{0%,100%{box-shadow:0 0 8px rgba(0,255,0,.15),inset 0 0 8px rgba(0,255,0,.05)}50%{box-shadow:0 0 20px rgba(0,255,0,.3),inset 0 0 15px rgba(0,255,0,.1)}}
+@keyframes breatheBoxFast{0%,100%{box-shadow:0 0 12px rgba(255,136,0,.2),inset 0 0 12px rgba(255,136,0,.05)}50%{box-shadow:0 0 28px rgba(255,136,0,.35),inset 0 0 20px rgba(255,136,0,.1)}}
+@keyframes breatheBoxPanic{0%,100%{box-shadow:0 0 15px rgba(255,0,0,.25),inset 0 0 15px rgba(255,0,0,.05)}50%{box-shadow:0 0 35px rgba(255,0,0,.45),inset 0 0 25px rgba(255,0,0,.1)}}
 
 .lobby{align-items:center;justify-content:center;text-align:center;gap:8px}
 .classified{font-size:10px;letter-spacing:.4em;color:#0a0;animation:fadeInOut 3s infinite}
-.crest{font-size:11px;letter-spacing:.3em;color:#050;margin-bottom:4px}
-.title{font-size:42px;font-weight:900;letter-spacing:.08em;line-height:.9;text-shadow:0 0 30px #0f0,0 0 60px #0a0}
-.subtitle{font-size:11px;color:#050;letter-spacing:.3em;margin-bottom:24px}
+.crest{font-size:10px;letter-spacing:.3em;color:#050;margin-bottom:4px}
+.title{font-size:40px;font-weight:900;letter-spacing:.08em;line-height:.9;text-shadow:0 0 30px #0f0,0 0 60px #0a0}
+.subtitle{font-size:10px;color:#050;letter-spacing:.3em;margin-bottom:20px}
 .input{background:rgba(0,15,0,.5);border:1px solid #0a0;color:#0f0;padding:14px 18px;font-size:16px;font-family:inherit;width:100%;max-width:280px;text-align:center;letter-spacing:.2em;text-transform:uppercase;backdrop-filter:blur(4px)}
 .input::placeholder{color:#020}
-.btn{background:#0f0;color:#000;border:none;padding:16px 48px;font-size:16px;font-weight:900;font-family:inherit;letter-spacing:.15em;cursor:pointer;text-transform:uppercase;transition:.1s;width:100%;max-width:280px;box-shadow:0 0 20px rgba(0,255,0,.3)}
+.btn{background:#0f0;color:#000;border:none;padding:14px 40px;font-size:15px;font-weight:900;font-family:inherit;letter-spacing:.15em;cursor:pointer;text-transform:uppercase;transition:.1s;width:100%;max-width:280px;box-shadow:0 0 20px rgba(0,255,0,.3);margin:4px 0}
 .btn:active{background:#0a0;box-shadow:0 0 40px rgba(0,255,0,.5)}
 .btn.danger{background:#200;color:#f44;box-shadow:0 0 20px rgba(255,0,0,.2)}
-.btn.danger:active{background:#400}
-.btn.ghost{background:transparent;color:#0a0;border:1px solid #0a0;box-shadow:none;padding:10px 20px;font-size:12px}
-.btn.small{padding:10px 20px;font-size:11px;max-width:140px}
+.btn.ghost{background:transparent;color:#0a0;border:1px solid #0a0;box-shadow:none;padding:8px 16px;font-size:11px}
 .btn.blue{background:#003;color:#6af;box-shadow:0 0 20px rgba(100,170,255,.2)}
 
-.team-lobby{align-items:center;justify-content:center;text-align:center;gap:12px}
-.room-code{font-size:36px;font-weight:900;letter-spacing:.3em;color:#0f0;text-shadow:0 0 20px #0f0;padding:12px 24px;border:1px dashed #0a0}
+.team-lobby{align-items:center;justify-content:center;text-align:center;gap:10px}
+.room-code{font-size:32px;font-weight:900;letter-spacing:.3em;color:#0f0;text-shadow:0 0 20px #0f0;padding:10px 20px;border:1px dashed #0a0}
 .teammate-list{width:100%;max-width:280px}
-.teammate{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid #030;margin:4px 0;font-size:11px;letter-spacing:.1em}
-.teammate .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.teammate .dot.online{background:#0f0;box-shadow:0 0 6px #0f0}
-.teammate .role-badge{font-size:9px;color:#0a0;margin-left:auto}
-.role-picker{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.role-card{padding:10px 16px;border:1px solid #030;cursor:pointer;text-align:center;min-width:80px;transition:.2s}
-.role-card.selected{border-color:#0f0;box-shadow:0 0 15px rgba(0,255,0,.2);background:rgba(0,15,0,.4)}
-.role-card .role-icon{font-size:24px;margin-bottom:4px}
-.role-card .role-name{font-size:11px;letter-spacing:.1em;color:#0f0}
-.role-card .role-desc{font-size:8px;color:#050;margin-top:2px}
+.teammate{display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #030;margin:3px 0;font-size:10px;letter-spacing:.1em}
+.teammate .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.teammate .dot.online{background:#0f0;box-shadow:0 0 5px #0f0}
+.role-picker{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.role-card{padding:8px 12px;border:1px solid #030;cursor:pointer;text-align:center;min-width:70px;transition:.2s;font-size:10px}
+.role-card.selected{border-color:#0f0;box-shadow:0 0 12px rgba(0,255,0,.2);background:rgba(0,15,0,.4)}
+.role-card .role-icon{font-size:20px;margin-bottom:2px}
+.role-card .role-name{font-size:10px;letter-spacing:.1em;color:#0f0}
+.role-card .role-desc{font-size:7px;color:#050;margin-top:1px}
 
-.briefing{align-items:center;justify-content:center;text-align:center;gap:12px}
-.intel-card{background:rgba(0,15,0,.3);border:1px solid #0a0;padding:20px;max-width:340px;text-align:left;font-size:12px;line-height:1.8;backdrop-filter:blur(4px)}
-.intel-card .label{color:#0a0;font-size:9px;letter-spacing:.2em}
-.intel-card .value{color:#0f0;margin-bottom:10px}
+.briefing{align-items:center;justify-content:center;text-align:center;gap:8px}
+.intel-card{background:rgba(0,15,0,.3);border:1px solid #0a0;padding:16px;max-width:340px;text-align:left;font-size:11px;line-height:1.7;backdrop-filter:blur(4px)}
+.intel-card .label{color:#0a0;font-size:8px;letter-spacing:.25em}
+.intel-card .value{color:#0f0;margin-bottom:8px;font-size:11px}
 .intel-card .value.real{color:#6f6;font-weight:900}
-.threat-level{color:#f80;font-size:20px;font-weight:900}
-.map-loading{font-size:10px;color:#050;animation:fadeInOut 1s infinite}
-.map-real{font-size:9px;color:#0a0;margin-top:4px}
+.threat-level{color:#f80;font-size:18px;font-weight:900}
 
-.mission-header{display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0}
-.mission-header .op-name{font-size:10px;color:#050;letter-spacing:.25em}
-.mission-header .op-title{font-size:13px;color:#0a0;letter-spacing:.15em}
-.timer{font-size:22px;font-weight:900;font-variant-numeric:tabular-nums}
+.mission-header{display:flex;justify-content:space-between;align-items:flex-start;padding:2px 0}
+.mission-header .op-name{font-size:9px;color:#050;letter-spacing:.25em}
+.mission-header .op-title{font-size:12px;color:#0a0;letter-spacing:.15em}
+.timer{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums}
 .timer.warn{color:#f80;animation:blink .5s infinite}
 .timer.critical{color:#f00;animation:blink .25s infinite}
-.alert-banner{background:rgba(255,80,0,.1);border:1px solid #f80;padding:6px 12px;font-size:10px;color:#f80;letter-spacing:.15em;text-align:center;display:none}
+.alert-banner{background:rgba(255,80,0,.1);border:1px solid #f80;padding:4px 10px;font-size:9px;color:#f80;letter-spacing:.15em;text-align:center;display:none}
 .alert-banner.active{display:block;animation:blink 1s infinite}
 
-.compass-area{flex:1;display:flex;align-items:center;justify-content:center;position:relative}
-.compass-ring{width:180px;height:180px;border-radius:50%;border:2px solid #0a0;position:relative;box-shadow:0 0 15px rgba(0,255,0,.15),inset 0 0 15px rgba(0,255,0,.05)}
-.compass-inner{width:140px;height:140px;border-radius:50%;border:1px solid #030;position:relative}
-.compass-arrow{position:absolute;top:50%;left:50%;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:40px solid #0f0;transform:translate(-50%,-100%);filter:drop-shadow(0 0 10px #0f0);transition:transform .3s}
-.teammate-marker{position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%);transition:.5s;z-index:2}
-.compass-n{position:absolute;top:4px;left:50%;transform:translateX(-50%);font-size:8px;color:#0a0}
-.compass-s{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:8px;color:#020}
-.compass-e{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:8px;color:#020}
-.compass-w{position:absolute;left:4px;top:50%;transform:translateY(-50%);font-size:8px;color:#020}
+.heading-debug{text-align:center;font-size:9px;color:#030;letter-spacing:.1em;padding:2px 0}
+.compass-area{flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:200px}
+.compass-ring{width:170px;height:170px;border-radius:50%;border:2px solid #0a0;position:relative;box-shadow:0 0 15px rgba(0,255,0,.15),inset 0 0 15px rgba(0,255,0,.05)}
+.compass-inner{width:130px;height:130px;border-radius:50%;border:1px solid #030;position:relative}
+.compass-arrow{position:absolute;top:50%;left:50%;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:38px solid #0f0;transform:translate(-50%,-100%);filter:drop-shadow(0 0 10px #0f0);transition:transform .3s}
+.teammate-marker{position:absolute;top:50%;left:50%;width:7px;height:7px;border-radius:50%;transform:translate(-50%,-50%);transition:.5s;z-index:2}
+.compass-n{position:absolute;top:4px;left:50%;transform:translateX(-50%);font-size:7px;color:#0a0}
+.compass-s{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:7px;color:#020}
+.compass-e{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:7px;color:#020}
+.compass-w{position:absolute;left:4px;top:50%;transform:translateY(-50%);font-size:7px;color:#020}
 
-.nav-info{text-align:center;padding:4px 0}
-.distance{font-size:48px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
-.distance-unit{font-size:14px;color:#050}
-.bearing-text{font-size:13px;color:#0a0;letter-spacing:.1em;margin-top:2px}
-.wp-name{font-size:12px;color:#0f0;margin-top:2px;letter-spacing:.15em}
-.wp-intel{font-size:10px;color:#050;margin-top:2px;font-style:italic}
+.nav-info{text-align:center;padding:2px 0}
+.distance{font-size:44px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+.distance-unit{font-size:13px;color:#050}
+.bearing-text{font-size:12px;color:#0a0;letter-spacing:.1em;margin-top:1px}
+.wp-name{font-size:11px;color:#0f0;margin-top:1px;letter-spacing:.12em}
+.wp-intel{font-size:9px;color:#050;margin-top:1px;font-style:italic}
 
-/* BREATHING INDICATOR */
-.breath-box{
-  margin:8px auto;padding:12px 16px;max-width:280px;
-  border:1px solid #040;text-align:center;
-  animation:breatheBox 4s ease-in-out infinite;
-}
+.breath-box{margin:6px auto;padding:10px 14px;max-width:280px;border:1px solid #040;text-align:center;animation:breatheBox 4s ease-in-out infinite}
 .breath-box.fast{animation-duration:2s;border-color:#f80;animation-name:breatheBoxFast}
 .breath-box.panic{animation-duration:.8s;border-color:#f00;animation-name:breatheBoxPanic}
-@keyframes breatheBoxFast{0%,100%{box-shadow:0 0 12px rgba(255,136,0,.2),inset 0 0 12px rgba(255,136,0,.05)}50%{box-shadow:0 0 28px rgba(255,136,0,.35),inset 0 0 20px rgba(255,136,0,.1)}}
-@keyframes breatheBoxPanic{0%,100%{box-shadow:0 0 15px rgba(255,0,0,.25),inset 0 0 15px rgba(255,0,0,.05)}50%{box-shadow:0 0 35px rgba(255,0,0,.45),inset 0 0 25px rgba(255,0,0,.1)}}
-.breath-label{font-size:10px;color:#050;letter-spacing:.15em}
-.breath-state{font-size:13px;color:#0f0;letter-spacing:.1em;margin-top:2px}
-.breath-tip{font-size:10px;color:#060;margin-top:4px;font-style:italic;min-height:14px}
+.breath-label{font-size:9px;color:#050;letter-spacing:.15em}
+.breath-state{font-size:12px;color:#0f0;letter-spacing:.1em;margin-top:1px}
+.breath-tip{font-size:9px;color:#060;margin-top:2px;font-style:italic;min-height:12px}
+.whisper-display{text-align:center;font-size:9px;color:#040;margin:2px 0;min-height:14px;letter-spacing:.08em;font-style:italic}
 
-.whisper-display{text-align:center;font-size:10px;color:#040;margin:4px 0;min-height:16px;letter-spacing:.08em;font-style:italic}
-
-.mission-footer{display:flex;gap:8px;padding:4px 0;align-items:center}
-.waypoint-list{display:flex;gap:6px;flex:1;overflow-x:auto}
-.wp-dot{width:28px;height:28px;border-radius:50%;border:1px solid #030;display:flex;align-items:center;justify-content:center;font-size:9px;color:#030;flex-shrink:0;transition:.3s}
+.mission-footer{display:flex;gap:6px;padding:2px 0;align-items:center}
+.waypoint-list{display:flex;gap:4px;flex:1;overflow-x:auto}
+.wp-dot{width:24px;height:24px;border-radius:50%;border:1px solid #030;display:flex;align-items:center;justify-content:center;font-size:8px;color:#030;flex-shrink:0;transition:.3s}
 .wp-dot.done{background:#0a0;border-color:#0f0;color:#000}
 .wp-dot.current{border-color:#0f0;color:#0f0;box-shadow:0 0 10px #0f0;animation:pulse 1s infinite}
-.heartbeat{text-align:center;font-size:10px;color:#300;margin:2px 0;display:none}
+.heartbeat{text-align:center;font-size:9px;color:#300;margin:1px 0;display:none}
 .heartbeat.active{display:block;color:#600;animation:blink .8s infinite}
 
 .camera-area{flex:1;display:flex;align-items:center;justify-content:center;background:#000;position:relative}
@@ -116,28 +106,27 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .crosshair{width:70px;height:70px;border:2px solid #0f0;border-radius:50%;opacity:.6;box-shadow:0 0 15px rgba(0,255,0,.2);position:relative}
 .crosshair::before{content:'';position:absolute;width:2px;height:40px;background:#0f0;opacity:.3;left:50%;top:50%;transform:translate(-50%,-50%)}
 .crosshair::after{content:'';position:absolute;width:40px;height:2px;background:#0f0;opacity:.3;left:50%;top:50%;transform:translate(-50%,-50%)}
-.capture-hint{color:#0f0;font-size:11px;letter-spacing:.2em;margin-top:100px;animation:fadeInOut 2s infinite}
+.capture-hint{color:#0f0;font-size:10px;letter-spacing:.2em;margin-top:90px;animation:fadeInOut 2s infinite}
 .camera-capture{position:absolute;bottom:40px;left:50%;transform:translateX(-50%)}
-.capture-btn{width:72px;height:72px;border-radius:50%;border:3px solid #0f0;background:rgba(0,255,0,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(0,255,0,.2)}
+.capture-btn{width:68px;height:68px;border-radius:50%;border:3px solid #0f0;background:rgba(0,255,0,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(0,255,0,.2)}
 .capture-btn:active{background:rgba(0,255,0,.3);transform:scale(.95)}
 
-.complete{align-items:center;justify-content:center;text-align:center;gap:8px}
-.score{font-size:72px;font-weight:900;line-height:1;text-shadow:0 0 40px #0f0,0 0 80px #0a0}
-.score-label{font-size:12px;color:#0a0;letter-spacing:.3em}
-.stats{font-size:11px;color:#050;line-height:2}
-.photos{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:8px 0}
-.photos img{width:64px;height:64px;object-fit:cover;border:1px solid #0a0;border-radius:2px}
-.grade{font-size:16px;font-weight:900;letter-spacing:.2em;margin-top:8px}
+.complete{align-items:center;justify-content:center;text-align:center;gap:6px}
+.score{font-size:64px;font-weight:900;line-height:1;text-shadow:0 0 40px #0f0,0 0 80px #0a0}
+.score-label{font-size:11px;color:#0a0;letter-spacing:.3em}
+.stats{font-size:10px;color:#050;line-height:2}
+.photos{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+.photos img{width:56px;height:56px;object-fit:cover;border:1px solid #0a0;border-radius:2px}
+.grade{font-size:14px;font-weight:900;letter-spacing:.2em;margin-top:6px}
 
-.voice-dot{position:fixed;top:12px;right:12px;width:8px;height:8px;border-radius:50%;background:#0f0;opacity:0;z-index:1000}
+.voice-dot{position:fixed;top:10px;right:10px;width:7px;height:7px;border-radius:50%;background:#0f0;opacity:0;z-index:1000}
 .voice-dot.speaking{opacity:1;animation:pulse .3s infinite}
-.signal-bars{position:fixed;top:12px;left:12px;display:flex;gap:2px;align-items:flex-end;z-index:1000}
+.signal-bars{position:fixed;top:10px;left:10px;display:flex;gap:2px;align-items:flex-end;z-index:1000}
 .signal-bar{width:2px;background:#0a0;opacity:.5}
-.conn-status{position:fixed;bottom:12px;left:12px;font-size:9px;z-index:1000;letter-spacing:.1em}
-.conn-status.good{color:#0a0}
-.conn-status.bad{color:#300}
+.conn-status{position:fixed;bottom:8px;left:8px;font-size:8px;z-index:1000;letter-spacing:.1em}
+.audio-btn{position:fixed;bottom:8px;right:8px;font-size:8px;z-index:1000;background:rgba(0,15,0,.5);border:1px solid #030;color:#050;padding:3px 8px;letter-spacing:.1em;cursor:pointer}
 
-.audio-btn{position:fixed;bottom:12px;right:12px;font-size:9px;z-index:1000;background:rgba(0,15,0,.5);border:1px solid #030;color:#050;padding:4px 10px;letter-spacing:.1em;cursor:pointer}
+.debug-bar{position:fixed;top:26px;left:10px;font-size:8px;color:#030;z-index:1000;letter-spacing:.08em}
 </style>
 </head>
 <body>
@@ -148,45 +137,44 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   <div class="signal-bar" style="height:4px"></div><div class="signal-bar" style="height:8px"></div>
   <div class="signal-bar" style="height:6px"></div><div class="signal-bar" style="height:12px"></div>
 </div>
-<div class="conn-status good" id="conn-status">● STANDBY</div>
+<div class="conn-status" id="conn-status" style="color:#0a0">● STANDBY</div>
+<div class="debug-bar" id="debug-bar"></div>
 
 <!-- LOBBY -->
 <div class="screen active lobby" id="screen-lobby">
   <div class="classified">■ CLASSIFIED TRANSMISSION ■</div>
   <div class="crest">▸ JOINT SPECIAL OPERATIONS COMMAND</div>
   <div class="title">ECHO<br>SIERRA</div>
-  <div class="subtitle">AUDIO FIELD TERMINAL v5</div>
+  <div class="subtitle">AUDIO FIELD TERMINAL v6</div>
   <input class="input" id="team-name" placeholder="CALLSIGN" maxlength="12" value="GHOST">
+  <button class="btn" onclick="requestSensors()">UNLOCK SENSORS</button>
   <button class="btn" onclick="toTeamLobby('create')">CREATE TEAM</button>
   <button class="btn blue" onclick="toTeamLobby('join')">JOIN TEAM</button>
   <button class="btn ghost" onclick="deploySolo()">SOLO DEPLOY</button>
-  <p style="color:#020;font-size:9px;margin-top:16px;letter-spacing:.15em">
-    HEADPHONES MANDATORY<br>GPS + CAMERA REQUIRED
-  </p>
-  <div id="gps-status" style="color:#300;font-size:9px;margin-top:4px"></div>
+  <p style="color:#020;font-size:8px;margin-top:12px;letter-spacing:.15em">HEADPHONES MANDATORY · GPS + CAMERA + COMPASS</p>
+  <div id="gps-status" style="color:#300;font-size:8px;margin-top:3px"></div>
 </div>
 
 <!-- TEAM LOBBY -->
 <div class="screen team-lobby" id="screen-team">
   <div class="classified">■ TEAM ASSEMBLY ■</div>
-  <div id="team-create-ui" style="display:none;width:100%;align-items:center;flex-direction:column;gap:12px">
-    <p style="font-size:10px;color:#050">SHARE THIS CODE</p>
+  <div id="team-create-ui" style="display:none;width:100%;align-items:center;flex-direction:column;gap:10px">
+    <p style="font-size:9px;color:#050">SHARE THIS CODE</p>
     <div class="room-code" id="room-code">----</div>
-    <div class="role-picker" id="role-picker">
-      <div class="role-card" onclick="selectRole('scout')" id="role-scout"><div class="role-icon">🔭</div><div class="role-name">SCOUT</div><div class="role-desc">Extended radar +80m</div></div>
-      <div class="role-card selected" onclick="selectRole('operative')" id="role-operative"><div class="role-icon">🎯</div><div class="role-name">OPERATIVE</div><div class="role-desc">+25 pts per capture</div></div>
-      <div class="role-card" onclick="selectRole('sniper')" id="role-sniper"><div class="role-icon">🔭</div><div class="role-name">SNIPER</div><div class="role-desc">+50m capture range</div></div>
+    <div class="role-picker">
+      <div class="role-card" onclick="selectRole('scout')" id="role-scout"><div class="role-icon">🔭</div><div class="role-name">SCOUT</div><div class="role-desc">+80m radar</div></div>
+      <div class="role-card selected" onclick="selectRole('operative')" id="role-operative"><div class="role-icon">🎯</div><div class="role-name">OPERATIVE</div><div class="role-desc">+25 pts</div></div>
+      <div class="role-card" onclick="selectRole('sniper')" id="role-sniper"><div class="role-icon">🔭</div><div class="role-name">SNIPER</div><div class="role-desc">+50m range</div></div>
     </div>
   </div>
-  <div id="team-join-ui" style="display:none;width:100%;align-items:center;flex-direction:column;gap:12px">
-    <p style="font-size:10px;color:#050">ENTER ROOM CODE</p>
-    <input class="input" id="join-code" placeholder="CODE" maxlength="4" style="max-width:140px;font-size:24px">
+  <div id="team-join-ui" style="display:none;width:100%;align-items:center;flex-direction:column;gap:10px">
+    <p style="font-size:9px;color:#050">ENTER ROOM CODE</p>
+    <input class="input" id="join-code" placeholder="CODE" maxlength="4" style="max-width:120px;font-size:22px">
     <button class="btn blue" onclick="joinTeam()">JOIN</button>
   </div>
   <div class="teammate-list" id="teammate-list"></div>
   <button class="btn" onclick="teamDeploy()" id="team-deploy-btn" disabled>REQUEST BRIEFING</button>
   <button class="btn ghost" onclick="leaveTeam()">LEAVE</button>
-  <button class="btn ghost" onclick="switchScreen('screen-lobby')">BACK</button>
 </div>
 
 <!-- BRIEFING -->
@@ -194,28 +182,27 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   <div class="classified">■ MISSION BRIEFING ■</div>
   <div class="intel-card">
     <div class="label">OPERATION</div>
-    <div class="value" style="font-size:16px;font-weight:900" id="brief-op">NIGHTFALL</div>
+    <div class="value" style="font-size:15px;font-weight:900" id="brief-op">NIGHTFALL</div>
     <div class="label">OBJECTIVE</div>
-    <div class="value" id="brief-obj">Recover 4 intel caches from enemy territory. Photograph each.</div>
-    <div class="label">THREAT LEVEL</div>
+    <div class="value" id="brief-obj">Recover 4 intel caches. Photograph each.</div>
+    <div class="label">THREAT</div>
     <div class="threat-level" id="brief-threat">MODERATE</div>
-    <div class="label">ENEMY ACTIVITY</div>
-    <div class="value" id="brief-enemy">Patrols detected. Stay low. Avoid open ground.</div>
     <div class="label">EXTRACTION</div>
     <div class="value">20 MINUTES</div>
     <div class="label">WAYPOINTS</div>
     <div class="value" id="brief-wp"></div>
-    <div id="brief-map-info" style="margin-top:8px"></div>
-    <div class="map-loading" id="brief-loader" style="display:none">◈ ACCESSING SATELLITE FEED...</div>
   </div>
-  <div style="font-size:9px;color:#300;margin-top:12px;letter-spacing:.1em">■ ENCRYPTED CHANNEL ■</div>
+  <div id="brief-map-info" style="font-size:10px;color:#0a0;max-width:340px;text-align:left;padding:8px"></div>
+  <div class="map-loading" id="brief-loader" style="display:none">◈ SATELLITE FEED...</div>
+  <div style="font-size:8px;color:#300;margin-top:8px;letter-spacing:.1em">■ ENCRYPTED ■</div>
   <button class="btn" onclick="deploy()">DEPLOY</button>
   <button class="btn ghost" onclick="switchScreen('screen-team')">BACK</button>
 </div>
 
 <!-- MISSION -->
 <div class="screen" id="screen-mission">
-  <div class="alert-banner" id="alert-banner">⚠ ENEMY PATROL DETECTED — STAY LOW</div>
+  <div class="alert-banner" id="alert-banner"></div>
+  <div class="heading-debug" id="heading-debug">COMPASS: --°</div>
   <div class="mission-header">
     <div>
       <div class="op-name" id="mission-id">OP NIGHTFALL</div>
@@ -247,14 +234,13 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
     <div class="breath-state" id="breath-state">STEADY</div>
     <div class="breath-tip" id="breath-tip"></div>
   </div>
-
   <div class="whisper-display" id="whisper"></div>
-  <div class="heartbeat" id="heartbeat">▓▓▓ PROXIMITY ▓▓▓</div>
+  <div class="heartbeat" id="heartbeat"></div>
 
   <div class="mission-footer">
     <div class="waypoint-list" id="wp-list"></div>
-    <button class="btn ghost" onclick="takePhoto()" id="photo-btn" style="display:none;max-width:110px">📷 CAPTURE</button>
-    <button class="btn danger" onclick="abortMission()" style="max-width:70px;padding:6px;font-size:9px">ABORT</button>
+    <button class="btn ghost" onclick="takePhoto()" id="photo-btn" style="display:none;max-width:100px;font-size:10px">📷 CAPTURE</button>
+    <button class="btn danger" onclick="abortMission()" style="max-width:60px;padding:5px;font-size:8px">ABORT</button>
   </div>
 </div>
 
@@ -268,7 +254,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
     </div>
   </div>
   <div class="camera-capture"><button class="capture-btn" onclick="capturePhoto()"></button></div>
-  <button class="btn ghost" onclick="closeCamera()" style="position:absolute;top:16px;right:16px;font-size:10px;padding:6px 12px">BACK</button>
+  <button class="btn ghost" onclick="closeCamera()" style="position:absolute;top:14px;right:14px;font-size:9px;padding:5px 10px">BACK</button>
 </div>
 
 <!-- COMPLETE -->
@@ -279,23 +265,50 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   <div class="grade" id="final-grade"></div>
   <div class="stats" id="final-stats"></div>
   <div class="photos" id="final-photos"></div>
-  <div style="font-size:9px;color:#300;margin-top:8px;letter-spacing:.1em">■ END TRANSMISSION ■</div>
+  <div style="font-size:8px;color:#300;margin-top:6px;letter-spacing:.1em">■ TRANSMISSION END ■</div>
   <button class="btn" onclick="location.reload()">NEW OPERATION</button>
 </div>
 
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <script>
-// ============================================================
-// ECHO SIERRA v5 — BREATHING · LAYERED AMBIENT · RADIO VOICE
-// ============================================================
 "use strict";
+// ============================================================
+// ECHO SIERRA v6 — LOUD AMBIENT · COMPASS FIX · RADIO VOICE
+// ============================================================
+
+// ======== SENSOR PERMISSION (iOS fix) ========
+function requestSensors() {
+  ensureCtx(); startAmbient();
+  // Request motion/orientation permission (iOS 13+)
+  if(typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission()
+      .then(state => {
+        if(state === 'granted') { startCompass(); startGPS(); }
+        debug('Sensors: granted');
+      })
+      .catch(e => { debug('Sensors: denied - '+e); startCompass(); startGPS(); });
+  } else {
+    // Android or older iOS — just start
+    startCompass(); startGPS();
+    debug('Sensors: auto');
+  }
+  // Also request geolocation
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(()=>{}, ()=>{}, {enableHighAccuracy:true});
+  }
+}
+
+function debug(msg) {
+  const el = document.getElementById('debug-bar');
+  if(el) el.textContent = msg;
+  console.log('[ES]', msg);
+}
 
 // ======== AUDIO ENGINE ========
 const AC = window.AudioContext || window.webkitAudioContext;
 let ctx = null;
 function ensureCtx() { if(!ctx) ctx = new AC(); return ctx; }
 
-// ---- noise buffer ----
 let _noiseBuf = null;
 function noiseBuf() {
   if(_noiseBuf) return _noiseBuf;
@@ -306,11 +319,9 @@ function noiseBuf() {
   return _noiseBuf;
 }
 
-// ---- play filtered noise (for wind, texture, breath) ----
 function playFNoise(dur, freq, q, vol, type='bandpass') {
   const c = ensureCtx();
-  const src = c.createBufferSource();
-  src.buffer = noiseBuf();
+  const src = c.createBufferSource(); src.buffer = noiseBuf();
   const flt = c.createBiquadFilter();
   flt.type = type; flt.frequency.value = freq; flt.Q.value = q;
   const g = c.createGain();
@@ -318,60 +329,57 @@ function playFNoise(dur, freq, q, vol, type='bandpass') {
   g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + dur);
   src.connect(flt); flt.connect(g); g.connect(c.destination);
   src.start(); src.stop(c.currentTime + dur);
-  return {src, flt, g};
 }
 
-// ---- AMBIENT LAYERS ----
+// ---- AMBIENT (3x louder than v5) ----
 let _layers = {};
 function startAmbient() {
   const c = ensureCtx();
-  if(_layers.drone) return; // already running
+  if(_layers.drone) return;
 
-  // L1: Deep drone — always present, low
+  // L1: Deep drone — 3x
   const droneO = c.createOscillator();
   const droneG = c.createGain();
   droneO.type = 'sawtooth'; droneO.frequency.value = 49;
-  droneG.gain.value = 0.04;
+  droneG.gain.value = 0.12; // was 0.04
   droneO.connect(droneG); droneG.connect(c.destination);
   droneO.start();
   _layers.drone = {osc: droneO, gain: droneG};
 
-  // L2: Sub rumble
+  // L2: Sub rumble — 3x
   const subO = c.createOscillator();
   const subG = c.createGain();
   subO.type = 'sine'; subO.frequency.value = 24.5;
-  subG.gain.value = 0.03;
+  subG.gain.value = 0.09; // was 0.03
   subO.connect(subG); subG.connect(c.destination);
   subO.start();
   _layers.sub = {osc: subO, gain: subG};
 
-  // L3: Mid texture — filtered noise, tension-scaled
-  const midSrc = c.createBufferSource();
-  midSrc.buffer = noiseBuf(); midSrc.loop = true;
+  // L3: Mid texture — 3x
+  const midSrc = c.createBufferSource(); midSrc.buffer = noiseBuf(); midSrc.loop = true;
   const midFlt = c.createBiquadFilter();
   midFlt.type = 'bandpass'; midFlt.frequency.value = 400; midFlt.Q.value = 0.7;
   const midG = c.createGain();
-  midG.gain.value = 0.01;
+  midG.gain.value = 0.03; // was 0.01
   midSrc.connect(midFlt); midFlt.connect(midG); midG.connect(c.destination);
   midSrc.start();
   _layers.mid = {src: midSrc, flt: midFlt, gain: midG};
 
-  // L4: High shimmer — only at tension
+  // L4: High shimmer
   const hiO = c.createOscillator();
   const hiG = c.createGain();
   hiO.type = 'sine'; hiO.frequency.value = 3000;
-  hiG.gain.value = 0.001;
+  hiG.gain.value = 0.002;
   hiO.connect(hiG); hiG.connect(c.destination);
   hiO.start();
   _layers.hi = {osc: hiO, gain: hiG};
 
-  // L5: Wind — very low filtered noise
-  const windSrc = c.createBufferSource();
-  windSrc.buffer = noiseBuf(); windSrc.loop = true;
+  // L5: Wind — 3x
+  const windSrc = c.createBufferSource(); windSrc.buffer = noiseBuf(); windSrc.loop = true;
   const windFlt = c.createBiquadFilter();
   windFlt.type = 'lowpass'; windFlt.frequency.value = 200; windFlt.Q.value = 0.3;
   const windG = c.createGain();
-  windG.gain.value = 0.015;
+  windG.gain.value = 0.04; // was 0.015
   windSrc.connect(windFlt); windFlt.connect(windG); windG.connect(c.destination);
   windSrc.start();
   _layers.wind = {src: windSrc, flt: windFlt, gain: windG};
@@ -386,20 +394,19 @@ function startAmbient() {
   _layers.hb = {osc: hbO, gain: hbG};
 }
 
-// ---- BREATHING SOUNDS ----
-let _breathTimer = null, _breathRate = 8000; // ms per breath cycle
+// ---- BREATHING ----
+let _breathTimer = null, _breathRate = 8000;
 
 function playBreath(type, intensity) {
   const c = ensureCtx();
   const dur = type === 'inhale' ? 0.6 + intensity * 0.3 : 0.9 + intensity * 0.3;
-  const src = c.createBufferSource();
-  src.buffer = noiseBuf();
+  const src = c.createBufferSource(); src.buffer = noiseBuf();
   const flt = c.createBiquadFilter();
   flt.type = 'bandpass';
   flt.frequency.value = type === 'inhale' ? 600 + intensity * 200 : 350 + intensity * 100;
   flt.Q.value = 1.2;
   const g = c.createGain();
-  const vol = 0.03 + intensity * 0.08;
+  const vol = 0.05 + intensity * 0.12; // louder breathing
   g.gain.setValueAtTime(0.001, c.currentTime);
   g.gain.linearRampToValueAtTime(vol, c.currentTime + dur * 0.25);
   g.gain.linearRampToValueAtTime(vol, c.currentTime + dur * 0.65);
@@ -413,76 +420,63 @@ function startBreathing(distance) {
   if(_breathRate === rate && _breathTimer) return;
   _breathRate = rate;
   if(_breathTimer) clearInterval(_breathTimer);
-
   const intensity = distance > 250 ? 0 : distance > 120 ? 0.2 : distance > 60 ? 0.5 : distance > 30 ? 0.75 : 1.0;
-
-  function cycle() {
-    if(!state.missionActive) return;
-    playBreath('inhale', intensity);
-    setTimeout(() => playBreath('exhale', intensity), _breathRate * 0.45);
-  }
+  function cycle() { if(!state.missionActive) return; playBreath('inhale', intensity); setTimeout(() => playBreath('exhale', intensity), _breathRate * 0.45); }
   cycle();
   _breathTimer = setInterval(cycle, _breathRate);
 }
 
-// ---- TENSION CONTROL ----
+// ---- TENSION ----
 function setTension(level) {
-  // 0 = calm, 1 = panic
   if(!_layers.drone) return;
-  _layers.drone.gain.gain.value = 0.03 + level * 0.1;
-  _layers.sub.gain.gain.value = 0.02 + level * 0.08;
-  _layers.mid.gain.gain.value = 0.01 + level * 0.06;
+  _layers.drone.gain.gain.value = 0.09 + level * 0.15;
+  _layers.sub.gain.gain.value = 0.06 + level * 0.12;
+  _layers.mid.gain.gain.value = 0.02 + level * 0.08;
   _layers.mid.flt.frequency.value = 300 + level * 600;
-  _layers.hi.gain.gain.value = level > 0.3 ? level * 0.03 : 0.001;
-  _layers.wind.gain.gain.value = 0.01 + level * 0.04;
-
-  // Heartbeat thump at high tension
+  _layers.hi.gain.gain.value = level > 0.3 ? level * 0.04 : 0.002;
+  _layers.wind.gain.gain.value = 0.03 + level * 0.06;
   if(level > 0.5 && _layers.hb && Math.random() < level * 0.4) {
-    _layers.hb.gain.gain.setValueAtTime(level * 0.2, ctx.currentTime);
-    _layers.hb.gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    _layers.hb.gain.gain.setValueAtTime(level * 0.25, ctx.currentTime);
+    _layers.hb.gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
   }
-
-  // Random static bursts
   if(level > 0.2 && Math.random() < level * 0.5) {
-    playFNoise(0.1 + level * 0.4, 2000, 0.5, 0.003 + level * 0.02, 'highpass');
+    playFNoise(0.1 + level * 0.4, 2000, 0.5, 0.005 + level * 0.03, 'highpass');
   }
 }
 
-// ---- RADIO CHIRP (pre-voice) ----
+// ---- RADIO FX ----
 function radioChirp() {
-  const c = ensureCtx();
-  const t = c.currentTime;
+  const c = ensureCtx(); const t = c.currentTime;
   [800, 1200].forEach((f, i) => {
-    const o = c.createOscillator();
-    const g = c.createGain();
+    const o = c.createOscillator(); const g = c.createGain();
     o.type = 'sine'; o.frequency.value = f;
     g.gain.setValueAtTime(0, t + i * 0.06);
-    g.gain.linearRampToValueAtTime(0.04, t + i * 0.06 + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.001, t + i * 0.06 + 0.08);
+    g.gain.linearRampToValueAtTime(0.06, t + i * 0.06 + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, t + i * 0.06 + 0.1);
     o.connect(g); g.connect(c.destination);
-    o.start(t + i * 0.06); o.stop(t + i * 0.06 + 0.1);
+    o.start(t + i * 0.06); o.stop(t + i * 0.06 + 0.12);
   });
 }
+function radioStatic() { playFNoise(0.4, 1500, 0.3, 0.015, 'bandpass'); } // louder
+function radioTail() { playFNoise(0.2, 800, 0.4, 0.01, 'bandpass'); }
 
-// ---- RADIO STATIC UNDER VOICE ----
-function radioStatic() {
-  playFNoise(0.3, 1500, 0.3, 0.008, 'bandpass');
-}
-
-// ======== VOICE (SINGLE NARRATOR) ========
+// ======== VOICE ========
 const synth = window.speechSynthesis;
 let narratorVoice = null;
 
 function initVoice() {
   const voices = synth.getVoices();
   if(!voices.length) return;
-  // Prefer deep authoritative male — but keep it ONE voice
+  // Best deep male voices — least robotic on iOS
   narratorVoice = voices.find(v => v.name === 'Daniel' && v.lang === 'en-GB') ||
-                  voices.find(v => v.name.includes('Arthur')) ||
+                  voices.find(v => v.name === 'Arthur') ||
+                  voices.find(v => v.name.includes('Oliver')) ||
                   voices.find(v => v.lang === 'en-GB' && v.name.includes('Male')) ||
+                  voices.find(v => v.lang === 'en-US' && v.name.includes('Male')) ||
                   voices.find(v => v.lang.startsWith('en') && v.name.includes('Male')) ||
                   voices.find(v => v.lang.startsWith('en')) ||
                   voices[0];
+  debug('Voice: '+(narratorVoice?narratorVoice.name:'none'));
 }
 
 function speak(text, urgency = 0) {
@@ -491,65 +485,50 @@ function speak(text, urgency = 0) {
   setTimeout(() => {
     const u = new SpeechSynthesisUtterance(text);
     u.voice = narratorVoice;
-    u.rate = 0.82 + urgency * 0.2;
-    u.pitch = 0.65 - urgency * 0.15;
-    u.volume = 0.85 + urgency * 0.15;
+    u.rate = 0.8 + urgency * 0.18;
+    u.pitch = 0.62 - urgency * 0.12;
+    u.volume = 1.0; // max volume
     document.getElementById('voice-dot').classList.add('speaking');
     u.onstart = () => radioStatic();
     u.onend = () => {
       document.getElementById('voice-dot').classList.remove('speaking');
-      playFNoise(0.15, 800, 0.4, 0.006, 'bandpass'); // radio squelch tail
+      radioTail();
     };
     synth.speak(u);
   }, 120);
 }
 
-// ---- TACTICAL WHISPERS ----
 function whisper(text) {
-  synth.cancel(); // don't interrupt main voice, but cancel previous whisper
+  synth.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.voice = narratorVoice;
-  u.rate = 0.7;
-  u.pitch = 0.45;
-  u.volume = 0.25;
+  u.rate = 0.65; u.pitch = 0.4; u.volume = 0.3;
   document.getElementById('whisper').textContent = text;
   u.onend = () => { document.getElementById('whisper').textContent = ''; };
   synth.speak(u);
 }
 
-// ======== OPENSTREETMAP INTEGRATION ========
+// ======== OSM ========
 const WP_TYPES = {
-  viewpoint: 'OBSERVATION POST',
-  monument: 'DEAD DROP',
-  fountain: 'SIGNAL RELAY',
-  memorial: 'INTEL CACHE',
-  park: 'RENDEZVOUS POINT',
-  artwork: 'BLACK SITE',
-  place_of_worship: 'SANCTUARY',
-  cross: 'MARKER',
-  bench: 'DROP POINT',
-  spring: 'WATER SOURCE',
+  viewpoint:'OBSERVATION POST', monument:'DEAD DROP', fountain:'SIGNAL RELAY',
+  memorial:'INTEL CACHE', park:'RENDEZVOUS POINT', artwork:'BLACK SITE',
+  place_of_worship:'SANCTUARY', wayside_cross:'MARKER', spring:'WATER SOURCE',
+  bench:'DROP POINT', castle:'STRONGHOLD', ruins:'RUINS',
 };
 
 async function fetchPOIs(lat, lng) {
-  // Try multiple queries with expanding radius
   const queries = [
-    // Rural-friendly: more types, larger radius
-    `[out:json];(node["historic"](around:1500,${lat},${lng});node["tourism"](around:1500,${lat},${lng});node["amenity"="fountain"](around:1500,${lat},${lng});node["leisure"="park"](around:1500,${lat},${lng});node["amenity"="place_of_worship"](around:1500,${lat},${lng});node["historic"="wayside_cross"](around:1500,${lat},${lng});node["natural"="spring"](around:1500,${lat},${lng}););out 8;`,
-    // Even broader
-    `[out:json];(node["historic"](around:3000,${lat},${lng});node["tourism"](around:3000,${lat},${lng}););out 8;`
+    `[out:json];(node["historic"](around:2000,${lat},${lng});node["tourism"](around:2000,${lat},${lng});node["amenity"="fountain"](around:2000,${lat},${lng});node["leisure"="park"](around:2000,${lat},${lng});node["amenity"="place_of_worship"](around:2000,${lat},${lng});node["historic"="wayside_cross"](around:2000,${lat},${lng});node["natural"="spring"](around:2000,${lat},${lng});node["historic"="castle"](around:2000,${lat},${lng});node["historic"="ruins"](around:2000,${lat},${lng}););out 8;`,
   ];
-
   for(const query of queries) {
     try {
       const resp = await fetch('https://overpass-api.de/api/interpreter', {
-        method: 'POST', body: query,
-        headers: {'Content-Type': 'text/plain'}
+        method:'POST', body:query, headers:{'Content-Type':'text/plain'}
       });
-      if(!resp.ok) continue;
+      if(!resp.ok) { debug('OSM HTTP '+resp.status); continue; }
       const data = await resp.json();
-      if(!data.elements || data.elements.length < 2) continue;
-
+      debug('OSM results: '+(data.elements?data.elements.length:0));
+      if(!data.elements || data.elements.length < 1) continue;
       return data.elements.map(el => {
         const tags = el.tags || {};
         const cat = (tags.tourism || tags.historic || tags.amenity || tags.leisure || tags.natural || 'default');
@@ -557,65 +536,82 @@ async function fetchPOIs(lat, lng) {
         const realName = tags.name || '';
         const desc = realName ? `Real location: ${realName}.` : '';
         return {
-          name: wpName + (realName ? ` — ${realName}` : ''),
-          intel: desc + (tags.description ? ` ${tags.description}` : ' Proceed with caution.'),
-          lat: el.lat, lng: el.lon, points: 100,
-          real: true, realName
+          name: wpName + (realName ? ' — '+realName : ''),
+          intel: desc + (tags.description ? ' '+tags.description : ' Proceed with caution.'),
+          lat: el.lat, lng: el.lon, points: 100, real: true, realName
         };
       }).slice(0, 5);
-    } catch(e) { continue; }
+    } catch(e) { debug('OSM err: '+e.message); continue; }
   }
   return null;
 }
 
-// ======== FALLBACK WAYPOINTS ========
 const FW = [
-  {name:'RALLY POINT ALPHA',intel:'Grid reference locked. Move out.'},
-  {name:'DEAD DROP BRAVO',intel:'Cache location. Check for the mark.'},
-  {name:'RELAY STATION',intel:'High ground. Radio equipment.'},
-  {name:'EXTRACTION ZONE',intel:'Rendezvous. Stay hidden until pickup.'},
+  {name:'RALLY POINT ALPHA', intel:'Grid reference locked.'},
+  {name:'DEAD DROP BRAVO', intel:'Cache location. Check for mark.'},
+  {name:'RELAY STATION', intel:'High ground. Radio equipment.'},
+  {name:'EXTRACTION ZONE', intel:'Rendezvous. Stay hidden.'},
 ];
-
 function genFallback() {
-  if(!state.gpsLat) return FW.map((w,i)=>({...w,lat:47.33+Math.random()*.005,lng:9.41+Math.random()*.005,points:100+i*60}));
+  if(!state.gpsLat) return FW.map((w,i)=>({...w, lat:47.33+Math.random()*.005, lng:9.41+Math.random()*.005, points:100+i*60}));
   const off = [[.002,.001],[.001,-.002],[-.002,-.001],[-.001,.002]];
-  return FW.map((w,i)=>({...w,lat:state.gpsLat+off[i][0],lng:state.gpsLng+off[i][1],points:100+i*60}));
+  return FW.map((w,i)=>({...w, lat:state.gpsLat+off[i][0], lng:state.gpsLng+off[i][1], points:100+i*60}));
 }
 
 // ======== STATE ========
 let state = {
-  teamName:'',missionId:'',waypoints:[],currentWP:0,
-  score:0,startTime:null,elapsed:0,photos:[],
-  gpsLat:null,gpsLng:null,heading:0,missionActive:false,
-  lastNavCall:0,isTeamMission:false,capturedRemotely:new Set(),
-  lastBreathDist:9999
+  teamName:'', missionId:'', waypoints:[], currentWP:0,
+  score:0, startTime:null, elapsed:0, photos:[],
+  gpsLat:null, gpsLng:null, heading:0, missionActive:false,
+  lastNavCall:0, isTeamMission:false, capturedRemotely:new Set(),
+  lastBreathDist:9999,
 };
 
-// ======== GPS ========
+// ======== GPS & COMPASS ========
 function startGPS() {
-  if(!navigator.geolocation) return;
+  if(!navigator.geolocation) { debug('No GPS'); return; }
   navigator.geolocation.watchPosition(
     pos => {
       state.gpsLat = pos.coords.latitude;
       state.gpsLng = pos.coords.longitude;
       const el = document.getElementById('gps-status');
-      el.textContent = '● GPS LOCKED'; el.style.color = '#0a0';
+      el.textContent = '● GPS '+pos.coords.latitude.toFixed(4)+','+pos.coords.longitude.toFixed(4);
+      el.style.color = '#0a0';
       if(state.missionActive){ updateNav(); updateBreathUI(); broadcastPos(); }
+      debug('GPS: lock');
     },
     err => {
-      const el = document.getElementById('gps-status');
-      el.textContent = 'GPS: '+err.message; el.style.color = '#300';
+      document.getElementById('gps-status').textContent = 'GPS: '+err.message;
+      document.getElementById('gps-status').style.color = '#300';
+      debug('GPS err: '+err.message);
     },
-    {enableHighAccuracy:true,maximumAge:1500,timeout:8000}
+    {enableHighAccuracy:true, maximumAge:1500, timeout:10000}
   );
 }
 
 function startCompass() {
+  let gotData = false;
   window.addEventListener('deviceorientation', e => {
-    if(e.webkitCompassHeading !== undefined) state.heading = e.webkitCompassHeading;
-    else if(e.alpha !== null) state.heading = 360 - e.alpha;
-    if(state.missionActive){ updateNav(); updateTMarkers(); }
+    let h = null;
+    if(e.webkitCompassHeading !== undefined) h = e.webkitCompassHeading;
+    else if(e.alpha !== null) h = 360 - e.alpha;
+    if(h !== null && !isNaN(h)) {
+      state.heading = h;
+      gotData = true;
+      document.getElementById('heading-debug').textContent = 'COMPASS: '+Math.round(h)+'° N';
+      document.getElementById('heading-debug').style.color = '#060';
+      if(state.missionActive){ updateNav(); updateTMarkers(); }
+    }
   });
+
+  // Fallback: check if we ever got data
+  setTimeout(() => {
+    if(!gotData) {
+      document.getElementById('heading-debug').textContent = 'COMPASS: NO DATA — Tap UNLOCK SENSORS';
+      document.getElementById('heading-debug').style.color = '#600';
+      debug('Compass: no data after 3s');
+    }
+  }, 3000);
 }
 
 // MATH
@@ -653,23 +649,19 @@ function updateNav() {
   document.getElementById('wp-name').textContent = wp.name;
   document.getElementById('wp-intel').textContent = wp.intel;
 
-  // Tension scaling
   const tension = d < 30 ? 1.0 : d < 60 ? 0.75 : d < 120 ? 0.45 : d < 250 ? 0.2 : 0.05;
   setTension(tension);
 
-  // Breathing
   if(Math.abs(d - state.lastBreathDist) > 10) {
     state.lastBreathDist = d;
     startBreathing(d);
     updateBreathUI();
   }
 
-  // Heartbeat visual
   const hb = document.getElementById('heartbeat');
-  if(d < 80){ hb.classList.add('active'); hb.style.color=d<30?'#f00':'#f80'; }
+  if(d < 80){ hb.classList.add('active'); hb.style.color=d<30?'#f00':'#f80'; hb.textContent='▓▓▓ PROXIMITY ▓▓▓'; }
   else hb.classList.remove('active');
 
-  // Alert
   const al = document.getElementById('alert-banner');
   if(d < 80 && Math.random() < (d<30?.12:.04)){
     al.textContent = d<30?'⚠ ENEMY CLOSE — TAKE COVER':'⚠ PATROL DETECTED — STAY LOW';
@@ -677,14 +669,12 @@ function updateNav() {
     setTimeout(()=>al.classList.remove('active'), 2000);
   }
 
-  // Arrival
   if(d < 20 && document.getElementById('photo-btn').style.display === 'none'){
     document.getElementById('photo-btn').style.display = 'block';
-    playFNoise(0.6, 600, 1.5, 0.025);
-    speak('Target acquired. Take the shot. NOW.', 0.8);
+    playFNoise(0.6, 600, 1.5, 0.04);
+    speak('Target acquired. Take the shot.', 0.8);
   }
 
-  // Nav voice calls
   const now = Date.now();
   const interval = d < 50 ? 6000 : d < 150 ? 10000 : 15000;
   if(now - state.lastNavCall > interval && d > 15){
@@ -704,15 +694,14 @@ function updateBreathUI() {
   if(!state.gpsLat) return;
   const d = dist(state.gpsLat, state.gpsLng, wp.lat, wp.lng);
   const box = document.getElementById('breath-box');
-  const stateEl = document.getElementById('breath-state');
+  const stEl = document.getElementById('breath-state');
   const tipEl = document.getElementById('breath-tip');
-
   box.className = 'breath-box';
-  if(d < 30){ box.classList.add('panic'); stateEl.textContent='PANIC'; stateEl.style.color='#f00'; tipEl.textContent='Target on top of you. Take the shot.'; }
-  else if(d < 60){ box.classList.add('fast'); stateEl.textContent='RAPID'; stateEl.style.color='#f80'; tipEl.textContent='You\'re close. Stay sharp. Watch for patrols.'; }
-  else if(d < 120){ stateEl.textContent='ELEVATED'; stateEl.style.color='#ff0'; tipEl.textContent='Approaching target. Slow is smooth, smooth is fast.'; }
-  else if(d < 250){ stateEl.textContent='STEADY'; stateEl.style.color='#0f0'; tipEl.textContent='Good pace. Use cover. Check your six regularly.'; }
-  else { stateEl.textContent='CALM'; stateEl.style.color='#0a0'; tipEl.textContent='You\'re safe. Keep moving toward the waypoint.'; }
+  if(d < 30){ box.classList.add('panic'); stEl.textContent='PANIC'; stEl.style.color='#f00'; tipEl.textContent='Take the shot. NOW.'; }
+  else if(d < 60){ box.classList.add('fast'); stEl.textContent='RAPID'; stEl.style.color='#f80'; tipEl.textContent='Close. Watch for patrols.'; }
+  else if(d < 120){ stEl.textContent='ELEVATED'; stEl.style.color='#ff0'; tipEl.textContent='Slow is smooth, smooth is fast.'; }
+  else if(d < 250){ stEl.textContent='STEADY'; stEl.style.color='#0f0'; tipEl.textContent='Use cover. Check your six.'; }
+  else { stEl.textContent='CALM'; stEl.style.color='#0a0'; tipEl.textContent='Steady pace. Keep moving.'; }
 }
 
 function updateTMarkers() {
@@ -733,7 +722,7 @@ function updateTMarkers() {
   }).join('');
 }
 
-// ======== MULTIPLAYER (PeerJS) ========
+// ======== MULTIPLAYER ========
 let peer=null, teamPeers={}, teamRole='operative', isTeamLeader=false, teamRoomCode='';
 const TP = 'echosierra-';
 
@@ -742,9 +731,9 @@ function initPeer(){
     try{
       const id = TP+(isTeamLeader?teamRoomCode:crypto.randomUUID().slice(0,8));
       peer = new Peer(id, {host:'0.peerjs.com',port:443,secure:true,debug:0});
-      peer.on('open',id=>{ resolve(id); });
-      peer.on('connection',c=>handleConn(c));
-      peer.on('error',e=>{console.warn(e);reject(e);});
+      peer.on('open', id=>{ resolve(id); });
+      peer.on('connection', c=>handleConn(c));
+      peer.on('error', e=>{console.warn(e);reject(e);});
     }catch(e){reject(e)}
   });
 }
@@ -780,27 +769,22 @@ const radioChatter = [
   'HQ to all units. Report status.',
   'Intel update: target may be guarded.',
   'Break. Break. Movement at your six.',
-  'Comms check. Acknowledge.',
   'Satellite shows heat signature near your position.',
-  'New intel: extraction may be compromised.',
   'Alert. Unknown contact bearing south.',
 ];
 const tips = [
   'Stay low. Use cover. Watch your six.',
-  'Freeze. Don\'t move. They\'re close.',
-  'Target ahead. Slow is smooth, smooth is fast.',
-  'Clock\'s ticking. Double time.',
-  'Good shot. Keep moving. Don\'t get comfortable.',
-  'Check corners. Enemy loves ambush points.',
-  'Breathe. Control your heart rate. Steady hands.',
-  'You\'re exposed. Find cover. Now.',
+  'Freeze. They\'re close.',
+  'Slow is smooth, smooth is fast.',
+  'Check corners. Ambush points.',
+  'Breathe. Steady hands.',
+  'You\'re exposed. Find cover.',
 ];
 
 async function toTeamLobby(mode){
   const name = document.getElementById('team-name').value.trim()||'GHOST';
   state.teamName = name; ensureCtx(); startAmbient();
   switchScreen('screen-team');
-  document.getElementById('teammate-list').innerHTML='';
   document.getElementById('team-deploy-btn').disabled=true;
   if(mode==='create'){
     isTeamLeader=true; teamRoomCode=crypto.randomUUID().slice(0,4).toUpperCase();
@@ -839,20 +823,22 @@ async function showBriefing(){
   if(state.gpsLat) pois = await fetchPOIs(state.gpsLat, state.gpsLng);
   document.getElementById('brief-loader').style.display='none';
 
+  const infoEl = document.getElementById('brief-map-info');
   if(pois && pois.length >= 2){
-    state.waypoints = pois.map((p,i)=>({...p,points:100+i*60}));
-    document.getElementById('brief-map-info').innerHTML = '<div class="map-real" style="color:#6f6;font-size:11px">◆ SATELLITE CONFIRMED: REAL LOCATIONS</div>' + pois.map(p=>`<div class="map-real">📍 ${p.name}</div>`).join('');
+    state.waypoints = pois.map((p,i)=>({...p, points:100+i*60}));
+    infoEl.innerHTML = '<div style="color:#6f6;font-size:12px;font-weight:900;margin-bottom:6px">◆ SATELLITE CONFIRMED — '+pois.length+' REAL LOCATIONS</div>' + pois.map(p=>`<div style="color:#0a0;font-size:10px;margin:2px 0">📍 ${p.name}</div>`).join('');
     document.getElementById('brief-obj').textContent = `Recover ${pois.length} intel caches at real-world locations. Photograph each.`;
   } else {
     state.waypoints = genFallback();
-    document.getElementById('brief-map-info').innerHTML = '<div class="map-real">◆ GENERATED WAYPOINTS (no satellite data for this area)</div>';
+    const reason = !state.gpsLat ? 'NO GPS — cannot query satellite' : 'No mapped locations found within 2km';
+    infoEl.innerHTML = '<div style="color:#f80;font-size:11px;margin-bottom:4px">◆ GENERATED WAYPOINTS</div><div style="color:#050;font-size:9px">'+reason+'</div>';
   }
 
   document.getElementById('brief-wp').innerHTML = state.waypoints.map(w=>w.name).join('<br>');
   switchScreen('screen-briefing');
 
-  speak(`Team ${state.teamName}. Stand by for briefing.`, 0);
-  setTimeout(()=>speak(`${state.waypoints.length} waypoints locked. Threat level: moderate. Extraction in 20 minutes.`, 0.1), 2200);
+  speak(`Team ${state.teamName}. Stand by for briefing.`);
+  setTimeout(()=>speak(`${state.waypoints.length} waypoints locked. Threat level moderate. Extraction in 20 minutes.`, 0.1), 2200);
 }
 
 function deploy(){
@@ -866,9 +852,8 @@ function deploy(){
   document.getElementById('heartbeat').classList.remove('active');
   document.getElementById('alert-banner').classList.remove('active');
   document.getElementById('whisper').textContent='';
-  document.getElementById('breath-state').textContent='STEADY';
-  document.getElementById('breath-tip').textContent='';
-  document.getElementById('breath-box').className='breath-box';
+  document.getElementById('breath-state').textContent='STEADY'; document.getElementById('breath-state').style.color='#0a0';
+  document.getElementById('breath-tip').textContent=''; document.getElementById('breath-box').className='breath-box';
 
   document.getElementById('wp-list').innerHTML=state.waypoints.map((_,i)=>`<div class="wp-dot ${i===0?'current':''}" id="wp-dot-${i}">${i+1}</div>`).join('');
   switchScreen('screen-mission');
@@ -877,18 +862,15 @@ function deploy(){
   navI=setInterval(()=>{if(state.missionActive)updateNav();},2000);
   tensionI=setInterval(()=>{if(state.missionActive)setTension(.05+Math.random()*.08);},6000);
   posI=setInterval(()=>{if(state.missionActive)broadcastPos();},3000);
-  // Breathing cycle
   breathI=setInterval(()=>{if(state.missionActive&&state.gpsLat){const wp=state.waypoints[state.currentWP];const d=dist(state.gpsLat,state.gpsLng,wp.lat,wp.lng);startBreathing(d);updateBreathUI();}},5000);
 
-  // Radio interruptions
   radioI=setInterval(()=>{
     if(!state.missionActive)return;
     const wp=state.waypoints[state.currentWP];
     const d=state.gpsLat?dist(state.gpsLat,state.gpsLng,wp.lat,wp.lng):500;
-    if(d<150&&Math.random()<.2){speak(radioChatter[Math.floor(Math.random()*radioChatter.length)],.5);playFNoise(.3,1000,.5,.01);}
+    if(d<150&&Math.random()<.2){speak(radioChatter[Math.floor(Math.random()*radioChatter.length)],.5);playFNoise(.3,1000,.5,.015);}
   },15000);
 
-  // Tactical whispers when close
   setInterval(()=>{
     if(!state.missionActive)return;
     const wp=state.waypoints[state.currentWP];
@@ -908,8 +890,8 @@ function updateTimer(){
   const tEl=document.getElementById('timer');
   tEl.textContent=`${m}:${s.toString().padStart(2,'0')}`;
   if(rem<180)tEl.className='timer critical';else if(rem<600)tEl.className='timer warn';
-  if(rem===300)speak('Five minutes. Extraction window closing. Move faster.',.6);
-  if(rem===120)speak('Two minutes! You are running out of time!',.9);
+  if(rem===300)speak('Five minutes. Extraction closing. Move faster.',.6);
+  if(rem===120)speak('Two minutes! Running out of time!',.9);
   if(rem<=0)endMission(false);
   state.elapsed=1200-rem;
 }
@@ -920,7 +902,7 @@ function captureWP(idx){
   const dot=document.getElementById('wp-dot-'+idx);
   if(dot){dot.classList.add('done');dot.classList.remove('current');}
   if(idx===state.currentWP){state.currentWP++;if(state.currentWP>=state.waypoints.length){if(state.capturedRemotely.size+state.photos.length>=state.waypoints.length)endMission(true);}else{document.getElementById('wp-dot-'+state.currentWP)?.classList.add('current');document.getElementById('photo-btn').style.display='none';speak('Teammate confirmed. Moving on.',.1);}}
-  playFNoise(.3,800,.7,.01);
+  playFNoise(.3,800,.7,.015);
 }
 
 function takePhoto(){ensureCtx();switchScreen('screen-camera');const v=document.getElementById('camera-video');navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(s=>{v.srcObject=s;}).catch(()=>{const i=document.createElement('input');i.type='file';i.accept='image/*';i.capture='environment';i.onchange=e=>{const f=e.target.files[0];if(f)processPhoto(URL.createObjectURL(f));};i.click();});}
@@ -935,17 +917,17 @@ function processPhoto(dataUrl){
     state.score+=wp.points+bonus+roleBonus;state.photos.push(dataUrl);
     document.getElementById('wp-dot-'+state.currentWP).classList.add('done');
     document.getElementById('wp-dot-'+state.currentWP).classList.remove('current');
-    state.currentWP++;setTension(0);playFNoise(.5,500,1.5,.02);
+    state.currentWP++;setTension(0);playFNoise(.5,500,1.5,.03);
     broadcast({type:'wp-captured',wpIndex:state.currentWP-1});
     if(state.currentWP>=state.waypoints.length){endMission(true);}else{
       document.getElementById('wp-dot-'+state.currentWP).classList.add('current');
       document.getElementById('photo-btn').style.display='none';
       const next=state.waypoints[state.currentWP];
-      speak(`Intel confirmed. Next: ${next.name}.`,.2);
+      speak(`Confirmed. Next: ${next.name}.`,.2);
       setTimeout(()=>speak(next.intel,.1),1800);
       setTimeout(()=>setTension(.3),1000);
     }
-  }else{speak(`Too far. ${Math.round(d)} meters from target. Get closer.`,.4);}
+  }else{speak(`Too far. ${Math.round(d)} meters. Get closer.`,.4);}
   switchScreen('screen-mission');
 }
 function closeCamera(){const s=document.getElementById('camera-video').srcObject;if(s)s.getTracks().forEach(t=>t.stop());switchScreen('screen-mission');}
@@ -968,13 +950,15 @@ function endMission(success){
   document.getElementById('final-stats').innerHTML=`TEAM: ${state.teamName} | OP: ${state.missionId}<br>WAYPOINTS: ${state.currentWP}/${state.waypoints.length} | TIME: ${Math.floor(state.elapsed/60)}:${(state.elapsed%60).toString().padStart(2,'0')}<br>STATUS: ${success?'COMPLETED':'ABORTED'} | ROLE: ${teamRole.toUpperCase()}`;
   document.getElementById('final-photos').innerHTML=state.photos.map(p=>`<img src="${p}">`).join('');
   switchScreen('screen-complete');
-  if(grade.startsWith('S'))speak('Outstanding. RTB.',0);else if(success)speak('Mission complete.',0);else speak('Mission failed.',0);
+  if(grade.startsWith('S'))speak('Outstanding. RTB.');else if(success)speak('Mission complete.');else speak('Mission failed.');
 }
 
 function switchScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 
-initVoice();startGPS();startCompass();
-if(speechSynthesis.onvoiceschanged!==undefined)speechSynthesis.onvoiceschanged=initVoice;
+// ======== INIT ========
+initVoice();
+if(speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = initVoice;
+// GPS & compass started by user tapping UNLOCK SENSORS (iOS permission requirement)
 </script>
 </body>
 </html>
