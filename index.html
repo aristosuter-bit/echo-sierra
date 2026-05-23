@@ -8,160 +8,128 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>ECHO SIERRA</title>
+<title>ECHO SIERRA v4</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html, body { 
-    height:100dvh; width:100vw; overflow:hidden;
-    font-family:'SF Mono','Courier New',monospace;
-    background:#000; color:#0f0;
-    -webkit-tap-highlight-color:transparent;
-    user-select:none; -webkit-user-select:none;
-  }
-  body::before {
-    content:''; position:fixed; inset:0;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
-    pointer-events:none; z-index:999; opacity:0.3;
-  }
-  .screen { position:absolute; inset:0; display:none; flex-direction:column; padding:20px; z-index:1; }
-  .screen.active { display:flex; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100dvh; width:100vw; overflow:hidden; font-family:'SF Mono','Courier New',monospace; background:#000; color:#0f0; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none; }
+body::before { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); pointer-events:none; z-index:999; opacity:0.3; }
+.screen { position:absolute; inset:0; display:none; flex-direction:column; padding:20px; z-index:1; overflow-y:auto; }
+.screen.active { display:flex; }
+.static { position:fixed; inset:0; pointer-events:none; z-index:998; opacity:0.02; animation:staticShift 0.1s infinite; }
+@keyframes staticShift { 0%,100%{opacity:0.02} 50%{opacity:0.04} }
+@keyframes fadeInOut { 0%,100%{opacity:0.5} 50%{opacity:1} }
+@keyframes blink { 50%{opacity:0.3} }
+@keyframes pulse { 50%{box-shadow:0 0 25px #0f0,0 0 40px #0f0} }
+@keyframes ping { 0%{box-shadow:0 0 0 0 rgba(255,0,0,0.6)} 100%{box-shadow:0 0 0 20px rgba(255,0,0,0)} }
 
-  /* Static noise overlay */
-  .static { position:fixed; inset:0; pointer-events:none; z-index:998; opacity:0.02; animation:staticShift 0.1s infinite; }
-  @keyframes staticShift { 0%,100% { opacity:0.02; } 50% { opacity:0.04; } }
+/* LOBBY */
+.lobby { align-items:center; justify-content:center; text-align:center; gap:8px; }
+.classified { font-size:10px; letter-spacing:0.4em; color:#0a0; animation:fadeInOut 3s infinite; }
+.crest { font-size:11px; letter-spacing:0.3em; color:#050; margin-bottom:4px; }
+.title { font-size:42px; font-weight:900; letter-spacing:0.08em; line-height:0.9; text-shadow:0 0 30px #0f0,0 0 60px #0a0; }
+.subtitle { font-size:11px; color:#050; letter-spacing:0.3em; margin-bottom:24px; }
+.input { background:rgba(0,15,0,0.5); border:1px solid #0a0; color:#0f0; padding:14px 18px; font-size:16px; font-family:inherit; width:100%; max-width:280px; text-align:center; letter-spacing:0.2em; text-transform:uppercase; backdrop-filter:blur(4px); }
+.input::placeholder { color:#020; }
+.btn { background:#0f0; color:#000; border:none; padding:16px 48px; font-size:16px; font-weight:900; font-family:inherit; letter-spacing:0.15em; cursor:pointer; text-transform:uppercase; transition:0.1s; width:100%; max-width:280px; box-shadow:0 0 20px rgba(0,255,0,0.3); }
+.btn:active { background:#0a0; box-shadow:0 0 40px rgba(0,255,0,0.5); }
+.btn.danger { background:#200; color:#f44; box-shadow:0 0 20px rgba(255,0,0,0.2); }
+.btn.danger:active { background:#400; }
+.btn.ghost { background:transparent; color:#0a0; border:1px solid #0a0; box-shadow:none; padding:10px 20px; font-size:12px; }
+.btn.small { padding:10px 20px; font-size:11px; max-width:140px; }
+.btn.blue { background:#003; color:#6af; box-shadow:0 0 20px rgba(100,170,255,0.2); }
 
-  /* LOBBY */
-  .lobby { align-items:center; justify-content:center; text-align:center; gap:8px; }
-  .classified { font-size:10px; letter-spacing:0.4em; color:#0a0; animation:fadeInOut 3s infinite; }
-  @keyframes fadeInOut { 0%,100% { opacity:0.5; } 50% { opacity:1; } }
-  .crest { font-size:11px; letter-spacing:0.3em; color:#050; margin-bottom:4px; }
-  .title { font-size:42px; font-weight:900; letter-spacing:0.08em; line-height:0.9; text-shadow:0 0 30px #0f0, 0 0 60px #0a0; }
-  .subtitle { font-size:11px; color:#050; letter-spacing:0.3em; margin-bottom:24px; }
-  .input {
-    background:rgba(0,15,0,0.5); border:1px solid #0a0; color:#0f0; 
-    padding:14px 18px; font-size:16px; font-family:inherit; 
-    width:100%; max-width:280px; text-align:center; letter-spacing:0.2em;
-    text-transform:uppercase; backdrop-filter:blur(4px);
-  }
-  .input::placeholder { color:#020; }
-  .btn {
-    background:#0f0; color:#000; border:none; padding:16px 48px; 
-    font-size:16px; font-weight:900; font-family:inherit; 
-    letter-spacing:0.15em; cursor:pointer; text-transform:uppercase;
-    transition:0.1s; width:100%; max-width:280px;
-    box-shadow:0 0 20px rgba(0,255,0,0.3);
-  }
-  .btn:active { background:#0a0; box-shadow:0 0 40px rgba(0,255,0,0.5); }
-  .btn.danger { background:#200; color:#f44; box-shadow:0 0 20px rgba(255,0,0,0.2); }
-  .btn.ghost { background:transparent; color:#0a0; border:1px solid #0a0; box-shadow:none; padding:10px 20px; font-size:12px; }
+/* TEAM LOBBY */
+.team-lobby { align-items:center; justify-content:center; text-align:center; gap:12px; }
+.room-code { font-size:36px; font-weight:900; letter-spacing:0.3em; color:#0f0; text-shadow:0 0 20px #0f0; padding:12px 24px; border:1px dashed #0a0; }
+.teammate-list { width:100%; max-width:280px; }
+.teammate { display:flex; align-items:center; gap:10px; padding:8px 12px; border:1px solid #030; margin:4px 0; font-size:11px; letter-spacing:0.1em; }
+.teammate .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.teammate .dot.online { background:#0f0; box-shadow:0 0 6px #0f0; }
+.teammate .dot.offline { background:#300; }
+.teammate .role-badge { font-size:9px; color:#0a0; margin-left:auto; }
+.role-picker { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+.role-card { padding:10px 16px; border:1px solid #030; cursor:pointer; text-align:center; min-width:80px; transition:0.2s; }
+.role-card.selected { border-color:#0f0; box-shadow:0 0 15px rgba(0,255,0,0.2); background:rgba(0,15,0,0.4); }
+.role-card .role-icon { font-size:24px; margin-bottom:4px; }
+.role-card .role-name { font-size:11px; letter-spacing:0.1em; color:#0f0; }
+.role-card .role-desc { font-size:8px; color:#050; margin-top:2px; }
 
-  /* BRIEFING */
-  .briefing { align-items:center; justify-content:center; text-align:center; gap:12px; }
-  .intel-card {
-    background:rgba(0,15,0,0.3); border:1px solid #0a0; 
-    padding:24px; max-width:320px; text-align:left; font-size:13px;
-    line-height:1.8; backdrop-filter:blur(4px);
-  }
-  .intel-card .label { color:#0a0; font-size:10px; letter-spacing:0.2em; }
-  .intel-card .value { color:#0f0; margin-bottom:12px; }
-  .threat-level { color:#f80; font-size:24px; font-weight:900; }
+/* BRIEFING */
+.briefing { align-items:center; justify-content:center; text-align:center; gap:12px; }
+.intel-card { background:rgba(0,15,0,0.3); border:1px solid #0a0; padding:20px; max-width:320px; text-align:left; font-size:12px; line-height:1.8; backdrop-filter:blur(4px); }
+.intel-card .label { color:#0a0; font-size:9px; letter-spacing:0.2em; }
+.intel-card .value { color:#0f0; margin-bottom:10px; }
+.threat-level { color:#f80; font-size:20px; font-weight:900; }
+.map-loading { font-size:10px; color:#050; animation:fadeInOut 1s infinite; }
+.map-real { font-size:9px; color:#0a0; }
 
-  /* MISSION */
-  .mission-header { display:flex; justify-content:space-between; align-items:flex-start; padding:4px 0; }
-  .mission-header .op-name { font-size:10px; color:#050; letter-spacing:0.25em; }
-  .mission-header .op-title { font-size:13px; color:#0a0; letter-spacing:0.15em; }
-  .timer { font-size:22px; font-weight:900; font-variant-numeric:tabular-nums; }
-  .timer.warn { color:#f80; animation:blink 0.5s infinite; }
-  .timer.critical { color:#f00; animation:blink 0.25s infinite; }
-  @keyframes blink { 50% { opacity:0.3; } }
+/* MISSION */
+.mission-header { display:flex; justify-content:space-between; align-items:flex-start; padding:4px 0; }
+.mission-header .op-name { font-size:10px; color:#050; letter-spacing:0.25em; }
+.mission-header .op-title { font-size:13px; color:#0a0; letter-spacing:0.15em; }
+.team-bar { display:flex; gap:6px; padding:2px 0; align-items:center; }
+.team-dot { width:7px; height:7px; border-radius:50%; }
+.timer { font-size:22px; font-weight:900; font-variant-numeric:tabular-nums; }
+.timer.warn { color:#f80; }
+.timer.critical { color:#f00; animation:blink 0.25s infinite; }
+.alert-banner { background:rgba(255,80,0,0.1); border:1px solid #f80; padding:6px 12px; font-size:10px; color:#f80; letter-spacing:0.15em; text-align:center; display:none; }
+.alert-banner.active { display:block; animation:blink 1s infinite; }
+.alert-banner.pvp { border-color:#f00; color:#f00; background:rgba(255,0,0,0.1); }
 
-  .alert-banner {
-    background:rgba(255,80,0,0.1); border:1px solid #f80;
-    padding:6px 12px; font-size:10px; color:#f80; letter-spacing:0.15em;
-    text-align:center; display:none; animation:blink 1s infinite;
-  }
-  .alert-banner.active { display:block; }
+.compass-area { flex:1; display:flex; align-items:center; justify-content:center; position:relative; }
+.compass-ring { width:180px; height:180px; border-radius:50%; border:2px solid #0a0; position:relative; box-shadow:0 0 15px rgba(0,255,0,0.15),inset 0 0 15px rgba(0,255,0,0.05); }
+.compass-inner { width:140px; height:140px; border-radius:50%; border:1px solid #030; position:relative; }
+.compass-arrow { position:absolute; top:50%; left:50%; width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-bottom:40px solid #0f0; transform:translate(-50%,-100%); filter:drop-shadow(0 0 10px #0f0); transition:transform 0.3s; }
+.teammate-marker { position:absolute; top:50%; left:50%; width:8px; height:8px; border-radius:50%; transform:translate(-50%,-50%); transition:0.5s; z-index:2; }
+.compass-n{position:absolute;top:4px;left:50%;transform:translateX(-50%);font-size:8px;color:#0a0;}
+.compass-s{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:8px;color:#020;}
+.compass-e{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:8px;color:#020;}
+.compass-w{position:absolute;left:4px;top:50%;transform:translateY(-50%);font-size:8px;color:#020;}
 
-  .compass-area { flex:1; display:flex; align-items:center; justify-content:center; position:relative; }
-  .compass-ring {
-    width:200px; height:200px; border-radius:50%; 
-    border:2px solid #0a0; position:relative;
-    box-shadow:0 0 15px rgba(0,255,0,0.15), inset 0 0 15px rgba(0,255,0,0.05);
-  }
-  .compass-inner { width:160px; height:160px; border-radius:50%; border:1px solid #030; position:relative; }
-  .compass-arrow {
-    position:absolute; top:50%; left:50%; 
-    width:0; height:0;
-    border-left:12px solid transparent;
-    border-right:12px solid transparent;
-    border-bottom:50px solid #0f0;
-    transform:translate(-50%,-100%);
-    filter:drop-shadow(0 0 10px #0f0);
-    transition:transform 0.3s;
-  }
-  .compass-n{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:10px;color:#0a0;}
-  .compass-s{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:10px;color:#020;}
-  .compass-e{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:#020;}
-  .compass-w{position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:10px;color:#020;}
+.nav-info { text-align:center; padding:4px 0; }
+.distance { font-size:48px; font-weight:900; line-height:1; font-variant-numeric:tabular-nums; }
+.distance-unit { font-size:14px; color:#050; }
+.bearing-text { font-size:13px; color:#0a0; letter-spacing:0.1em; margin-top:2px; }
+.wp-name { font-size:12px; color:#0f0; margin-top:2px; letter-spacing:0.15em; }
+.wp-intel { font-size:10px; color:#050; margin-top:2px; font-style:italic; }
+.voice-char { font-size:9px; color:#020; margin-top:2px; }
 
-  .nav-info { text-align:center; padding:4px 0; }
-  .distance { font-size:52px; font-weight:900; line-height:1; font-variant-numeric:tabular-nums; }
-  .distance-unit { font-size:14px; color:#050; }
-  .bearing-text { font-size:13px; color:#0a0; letter-spacing:0.1em; margin-top:2px; }
-  .wp-name { font-size:12px; color:#0f0; margin-top:2px; letter-spacing:0.15em; }
-  .wp-intel { font-size:10px; color:#050; margin-top:2px; font-style:italic; }
+.mission-footer { display:flex; gap:8px; padding:4px 0; align-items:center; }
+.waypoint-list { display:flex; gap:6px; flex:1; overflow-x:auto; }
+.wp-dot { width:28px; height:28px; border-radius:50%; border:1px solid #030; display:flex; align-items:center; justify-content:center; font-size:9px; color:#030; flex-shrink:0; transition:0.3s; }
+.wp-dot.done { background:#0a0; border-color:#0f0; color:#000; }
+.wp-dot.current { border-color:#0f0; color:#0f0; box-shadow:0 0 10px #0f0; animation:pulse 1s infinite; }
+.heartbeat { text-align:center; font-size:10px; color:#300; margin:2px 0; display:none; }
+.heartbeat.active { display:block; color:#600; animation:blink 0.8s infinite; }
 
-  .mission-footer { display:flex; gap:8px; padding:4px 0; align-items:center; }
-  .waypoint-list { display:flex; gap:6px; flex:1; overflow-x:auto; }
-  .wp-dot {
-    width:28px; height:28px; border-radius:50%; border:1px solid #030;
-    display:flex; align-items:center; justify-content:center;
-    font-size:9px; color:#030; flex-shrink:0; transition:0.3s;
-  }
-  .wp-dot.done { background:#0a0; border-color:#0f0; color:#000; }
-  .wp-dot.current { border-color:#0f0; color:#0f0; box-shadow:0 0 10px #0f0; animation:pulse 1s infinite; }
-  @keyframes pulse { 50% { box-shadow:0 0 25px #0f0, 0 0 40px #0f0; } }
+/* CAMERA */
+.camera-area { flex:1; display:flex; align-items:center; justify-content:center; background:#000; position:relative; }
+.camera-area video { width:100%; height:100%; object-fit:cover; opacity:0.8; }
+.camera-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; flex-direction:column; }
+.crosshair { width:70px; height:70px; border:2px solid #0f0; border-radius:50%; opacity:0.6; box-shadow:0 0 15px rgba(0,255,0,0.2); position:relative; }
+.crosshair::before { content:''; position:absolute; width:2px; height:40px; background:#0f0; opacity:0.3; left:50%; top:50%; transform:translate(-50%,-50%); }
+.crosshair::after { content:''; position:absolute; width:40px; height:2px; background:#0f0; opacity:0.3; left:50%; top:50%; transform:translate(-50%,-50%); }
+.capture-hint { color:#0f0; font-size:11px; letter-spacing:0.2em; margin-top:100px; animation:fadeInOut 2s infinite; }
+.camera-capture { position:absolute; bottom:40px; left:50%; transform:translateX(-50%); }
+.capture-btn { width:72px; height:72px; border-radius:50%; border:3px solid #0f0; background:rgba(0,255,0,0.1); cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 0 20px rgba(0,255,0,0.2); }
+.capture-btn:active { background:rgba(0,255,0,0.3); transform:scale(0.95); }
 
-  .heartbeat { text-align:center; font-size:10px; color:#300; margin:2px 0; display:none; }
-  .heartbeat.active { display:block; color:#600; animation:blink 0.8s infinite; }
+/* COMPLETE */
+.complete { align-items:center; justify-content:center; text-align:center; gap:8px; }
+.score { font-size:72px; font-weight:900; line-height:1; text-shadow:0 0 40px #0f0,0 0 80px #0a0; }
+.score-label { font-size:12px; color:#0a0; letter-spacing:0.3em; }
+.stats { font-size:11px; color:#050; line-height:2; }
+.photos { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin:8px 0; }
+.photos img { width:64px; height:64px; object-fit:cover; border:1px solid #0a0; border-radius:2px; }
+.grade { font-size:16px; font-weight:900; letter-spacing:0.2em; margin-top:8px; }
 
-  /* CAMERA */
-  .camera-area { flex:1; display:flex; align-items:center; justify-content:center; background:#000; position:relative; }
-  .camera-area video { width:100%; height:100%; object-fit:cover; opacity:0.8; }
-  .camera-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; flex-direction:column; }
-  .crosshair { width:70px; height:70px; border:2px solid #0f0; border-radius:50%; opacity:0.6; box-shadow:0 0 15px rgba(0,255,0,0.2); }
-  .crosshair::before { content:''; position:absolute; width:2px; height:40px; background:#0f0; opacity:0.3; }
-  .crosshair::after { content:''; position:absolute; width:40px; height:2px; background:#0f0; opacity:0.3; }
-  .capture-hint { color:#0f0; font-size:11px; letter-spacing:0.2em; margin-top:100px; animation:fadeInOut 2s infinite; }
-  .camera-capture { position:absolute; bottom:40px; left:50%; transform:translateX(-50%); }
-  .capture-btn {
-    width:72px; height:72px; border-radius:50%; border:3px solid #0f0;
-    background:rgba(0,255,0,0.1); cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 0 20px rgba(0,255,0,0.2);
-  }
-  .capture-btn:active { background:rgba(0,255,0,0.3); transform:scale(0.95); }
-
-  /* COMPLETE */
-  .complete { align-items:center; justify-content:center; text-align:center; gap:8px; }
-  .score { font-size:80px; font-weight:900; line-height:1; text-shadow:0 0 40px #0f0, 0 0 80px #0a0; }
-  .score-label { font-size:12px; color:#0a0; letter-spacing:0.3em; }
-  .stats { font-size:12px; color:#050; line-height:2; }
-  .photos { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin:8px 0; }
-  .photos img { width:72px; height:72px; object-fit:cover; border:1px solid #0a0; border-radius:2px; }
-  .grade { font-size:16px; font-weight:900; letter-spacing:0.2em; margin-top:8px; }
-
-  .voice-dot {
-    position:fixed; top:12px; right:12px; 
-    width:8px; height:8px; border-radius:50%;
-    background:#0f0; opacity:0; z-index:1000;
-  }
-  .voice-dot.speaking { opacity:1; animation:pulse 0.3s infinite; }
-
-  .signal-bars {
-    position:fixed; top:12px; left:12px; display:flex; gap:2px; align-items:flex-end; z-index:1000;
-  }
-  .signal-bar { width:2px; background:#0a0; opacity:0.5; }
+.voice-dot { position:fixed; top:12px; right:12px; width:8px; height:8px; border-radius:50%; background:#0f0; opacity:0; z-index:1000; }
+.voice-dot.speaking { opacity:1; animation:pulse 0.3s infinite; }
+.signal-bars { position:fixed; top:12px; left:12px; display:flex; gap:2px; align-items:flex-end; z-index:1000; }
+.signal-bar { width:2px; background:#0a0; opacity:0.5; }
+.connection-status { position:fixed; bottom:12px; left:12px; font-size:9px; z-index:1000; letter-spacing:0.1em; }
+.connection-status.connected { color:#0a0; }
+.connection-status.disconnected { color:#300; }
 </style>
 </head>
 <body>
@@ -172,43 +140,79 @@
   <div class="signal-bar" style="height:4px"></div><div class="signal-bar" style="height:8px"></div>
   <div class="signal-bar" style="height:6px"></div><div class="signal-bar" style="height:12px"></div>
 </div>
+<div class="connection-status" id="conn-status"></div>
 
 <!-- LOBBY -->
 <div class="screen active lobby" id="screen-lobby">
   <div class="classified">■ CLASSIFIED TRANSMISSION ■</div>
   <div class="crest">▸ JOINT SPECIAL OPERATIONS COMMAND</div>
   <div class="title">ECHO<br>SIERRA</div>
-  <div class="subtitle">FIELD OPERATIONS TERMINAL v2</div>
+  <div class="subtitle">FIELD OPERATIONS TERMINAL v4</div>
   <input class="input" id="team-name" placeholder="CALLSIGN" maxlength="12">
-  <button class="btn" onclick="showBriefing()">REQUEST BRIEFING</button>
-  <p style="color:#020;font-size:9px;margin-top:16px;letter-spacing:0.15em;">
-    HEADPHONES REQUIRED<br>GPS + CAMERA ACCESS NEEDED
-  </p>
+  <button class="btn" onclick="toTeamLobby('create')">CREATE TEAM</button>
+  <button class="btn blue" onclick="toTeamLobby('join')">JOIN TEAM</button>
+  <button class="btn ghost" onclick="deploySolo()">SOLO DEPLOY</button>
+  <p style="color:#020;font-size:9px;margin-top:16px;letter-spacing:0.15em;">HEADPHONES REQUIRED<br>GPS + CAMERA ACCESS NEEDED</p>
   <div id="gps-status" style="color:#300;font-size:9px;margin-top:4px;"></div>
 </div>
 
-<!-- BRIEFING -->
-<div class="screen" id="screen-briefing">
-  <div class="briefing" style="width:100%;height:100%;">
-    <div class="classified">■ MISSION BRIEFING ■</div>
-    <div class="intel-card" style="margin-top:16px;">
-      <div class="label">OPERATION</div>
-      <div class="value" style="font-size:16px;font-weight:900;" id="brief-op">NIGHTFALL</div>
-      <div class="label">OBJECTIVE</div>
-      <div class="value" id="brief-obj">Recover 4 intel caches from enemy territory. Photograph each. Return to extraction.</div>
-      <div class="label">THREAT LEVEL</div>
-      <div class="threat-level" id="brief-threat">MODERATE</div>
-      <div class="label">ENEMY ACTIVITY</div>
-      <div class="value" id="brief-enemy">Patrols detected in sector. Stay low. Avoid open ground.</div>
-      <div class="label">EXTRACTION WINDOW</div>
-      <div class="value">20 MINUTES</div>
-      <div class="label">WAYPOINTS</div>
-      <div class="value" id="brief-wp"></div>
+<!-- TEAM LOBBY -->
+<div class="screen team-lobby" id="screen-team">
+  <div class="classified">■ TEAM ASSEMBLY ■</div>
+  <div id="team-create-ui" style="display:none;width:100%;align-items:center;flex-direction:column;gap:12px;">
+    <p style="font-size:10px;color:#050;">SHARE THIS CODE WITH YOUR TEAM</p>
+    <div class="room-code" id="room-code">----</div>
+    <div class="role-picker" id="role-picker">
+      <div class="role-card" onclick="selectRole('scout')" id="role-scout">
+        <div class="role-icon">🔭</div>
+        <div class="role-name">SCOUT</div>
+        <div class="role-desc">Extended radar +80m</div>
+      </div>
+      <div class="role-card selected" onclick="selectRole('operative')" id="role-operative">
+        <div class="role-icon">🎯</div>
+        <div class="role-name">OPERATIVE</div>
+        <div class="role-desc">Balanced +25 pts bonus</div>
+      </div>
+      <div class="role-card" onclick="selectRole('sniper')" id="role-sniper">
+        <div class="role-icon">🔭</div>
+        <div class="role-name">SNIPER</div>
+        <div class="role-desc">+50m capture range</div>
+      </div>
     </div>
-    <div style="font-size:9px;color:#300;margin-top:12px;letter-spacing:0.1em;">■ ENCRYPTED CHANNEL ■</div>
-    <button class="btn" onclick="deploy()" style="margin-top:12px;">DEPLOY TEAM</button>
-    <button class="btn ghost" onclick="switchScreen('screen-lobby')">BACK</button>
   </div>
+  <div id="team-join-ui" style="display:none;width:100%;align-items:center;flex-direction:column;gap:12px;">
+    <p style="font-size:10px;color:#050;">ENTER ROOM CODE FROM TEAM LEADER</p>
+    <input class="input" id="join-code" placeholder="CODE" maxlength="4" style="max-width:140px;font-size:24px;">
+    <button class="btn blue" onclick="joinTeam()">JOIN</button>
+  </div>
+  <div class="teammate-list" id="teammate-list"></div>
+  <button class="btn" onclick="teamDeploy()" id="team-deploy-btn" disabled>REQUEST BRIEFING</button>
+  <button class="btn ghost" onclick="leaveTeam()">LEAVE TEAM</button>
+  <button class="btn ghost" onclick="switchScreen('screen-lobby')">BACK</button>
+</div>
+
+<!-- BRIEFING -->
+<div class="screen briefing" id="screen-briefing">
+  <div class="classified">■ MISSION BRIEFING ■</div>
+  <div class="intel-card" style="margin-top:16px;">
+    <div class="label">OPERATION</div>
+    <div class="value" style="font-size:16px;font-weight:900;" id="brief-op">NIGHTFALL</div>
+    <div class="label">OBJECTIVE</div>
+    <div class="value" id="brief-obj">Recover 4 intel caches from enemy territory. Photograph each. Return to extraction.</div>
+    <div class="label">THREAT LEVEL</div>
+    <div class="threat-level" id="brief-threat">MODERATE</div>
+    <div class="label">ENEMY ACTIVITY</div>
+    <div class="value" id="brief-enemy">Patrols detected in sector. Stay low.</div>
+    <div class="label">EXTRACTION WINDOW</div>
+    <div class="value">20 MINUTES</div>
+    <div class="label">WAYPOINTS</div>
+    <div class="value" id="brief-wp"></div>
+    <div class="map-real" id="brief-map-source"></div>
+    <div class="map-loading" id="brief-map-loader" style="display:none;">◈ FETCHING SATELLITE INTEL...</div>
+  </div>
+  <div style="font-size:9px;color:#300;margin-top:12px;letter-spacing:0.1em;">■ ENCRYPTED CHANNEL ■</div>
+  <button class="btn" onclick="deploy()">DEPLOY</button>
+  <button class="btn ghost" onclick="switchScreen('screen-team')">BACK</button>
 </div>
 
 <!-- MISSION -->
@@ -221,6 +225,7 @@
     </div>
     <div class="timer" id="timer">20:00</div>
   </div>
+  <div class="team-bar" id="team-bar"></div>
 
   <div class="compass-area">
     <div class="compass-ring" id="compass-ring">
@@ -229,6 +234,7 @@
       <div class="compass-inner">
         <div class="compass-arrow" id="compass-arrow"></div>
       </div>
+      <div id="teammate-markers"></div>
     </div>
   </div>
 
@@ -237,6 +243,7 @@
     <div class="bearing-text" id="bearing-label">CALIBRATING...</div>
     <div class="wp-name" id="wp-name"></div>
     <div class="wp-intel" id="wp-intel"></div>
+    <div class="voice-char" id="voice-char-label"></div>
   </div>
 
   <div class="heartbeat" id="heartbeat">▓▓▓ PROXIMITY ALERT ▓▓▓</div>
@@ -260,9 +267,7 @@
   <div class="camera-capture">
     <button class="capture-btn" onclick="capturePhoto()"></button>
   </div>
-  <button class="btn ghost" onclick="closeCamera()" style="position:absolute;top:16px;right:16px;font-size:10px;padding:6px 12px;">
-    BACK
-  </button>
+  <button class="btn ghost" onclick="closeCamera()" style="position:absolute;top:16px;right:16px;font-size:10px;padding:6px 12px;">BACK</button>
 </div>
 
 <!-- COMPLETE -->
@@ -274,10 +279,15 @@
   <div class="stats" id="final-stats"></div>
   <div class="photos" id="final-photos"></div>
   <div style="font-size:9px;color:#300;margin-top:8px;letter-spacing:0.1em;">■ TRANSMISSION END ■</div>
-  <button class="btn" onclick="location.reload()" style="margin-top:12px;">NEW OPERATION</button>
+  <button class="btn" onclick="location.reload()">NEW OPERATION</button>
 </div>
 
+<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <script>
+// ============================================================
+// ECHO SIERRA v4 — REAL MAPS · VOICE CAST · TEAM MULTIPLAYER
+// ============================================================
+
 // ======== AUDIO ENGINE ========
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
@@ -285,30 +295,30 @@ let audioCtx = null;
 function initAudio() {
   if (audioCtx) return audioCtx;
   audioCtx = new AudioCtx();
-  
+
   // Dark ambient drone
   const drone = audioCtx.createOscillator();
   const droneGain = audioCtx.createGain();
-  drone.type = 'sine';
-  drone.frequency.value = 55; // Low A
-  droneGain.gain.value = 0.03;
+  drone.type = 'sawtooth';
+  drone.frequency.value = 55;
+  droneGain.gain.value = 0.02;
   drone.connect(droneGain);
   droneGain.connect(audioCtx.destination);
   drone.start();
   window._droneGain = droneGain;
-  
-  // Second layer - sub bass
+
+  // Sub bass
   const sub = audioCtx.createOscillator();
   const subGain = audioCtx.createGain();
   sub.type = 'sine';
-  sub.frequency.value = 27.5; // Sub A
-  subGain.gain.value = 0.02;
+  sub.frequency.value = 27.5;
+  subGain.gain.value = 0.01;
   sub.connect(subGain);
   subGain.connect(audioCtx.destination);
   sub.start();
   window._subGain = subGain;
-  
-  // Heartbeat thump oscillator
+
+  // Heartbeat thump
   const hbOsc = audioCtx.createOscillator();
   const hbGain = audioCtx.createGain();
   hbOsc.type = 'sine';
@@ -318,13 +328,13 @@ function initAudio() {
   hbGain.connect(audioCtx.destination);
   hbOsc.start();
   window._heartbeatThump = hbGain;
-  
-  // Crackle/noise generator
+
+  // Noise buffer for static/crackle
   const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
   const data = noiseBuffer.getChannelData(0);
   for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.02;
   window._noiseBuffer = noiseBuffer;
-  
+
   return audioCtx;
 }
 
@@ -335,53 +345,284 @@ function playNoise(duration = 0.3, vol = 0.005) {
   src.buffer = window._noiseBuffer;
   gain.gain.setValueAtTime(vol, audioCtx.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-  src.connect(gain);
-  gain.connect(audioCtx.destination);
-  src.start();
+  src.connect(gain); gain.connect(audioCtx.destination); src.start();
 }
 
 function setTension(level) {
   if (!audioCtx) return;
-  // 0 = calm, 1 = panic
   const drone = 0.02 + level * 0.10;
   const sub = 0.01 + level * 0.07;
   if (window._droneGain) window._droneGain.gain.value = drone;
   if (window._subGain) window._subGain.gain.value = sub;
-  // Crackle increases with tension
   if (level > 0.3 && Math.random() < level * 0.4) playNoise(0.15 + level * 0.5, 0.005 + level * 0.03);
-  // Heartbeat thump at high tension
   if (level > 0.6 && window._heartbeatThump && Math.random() < level * 0.3) {
     window._heartbeatThump.gain.setValueAtTime(level * 0.15, audioCtx.currentTime);
     window._heartbeatThump.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
   }
 }
 
-// ======== NARRATOR ========
+// ======== VOICE CAST ========
 const synth = window.speechSynthesis;
-let voice = null;
+let voiceHQ = null, voiceOps = null, voiceEnemy = null, voiceAlly = null;
 
-function initVoice() {
+function initVoices() {
   const voices = synth.getVoices();
-  voice = voices.find(v => v.lang === 'en-GB' && v.name.includes('Daniel')) ||
-          voices.find(v => v.lang === 'en-GB') ||
-          voices.find(v => v.lang.startsWith('en') && v.name.includes('Male')) ||
-          voices.find(v => v.lang.startsWith('en'));
+  if (!voices.length) return;
+  // HQ: deep authoritative male
+  voiceHQ = voices.find(v => v.name.includes('Daniel')) ||
+            voices.find(v => v.lang === 'en-GB' && v.name.includes('Male')) ||
+            voices.find(v => v.name.includes('Arthur')) ||
+            voices.find(v => v.lang.startsWith('en') && v.name.includes('Male')) ||
+            voices[0];
+  // Ops: sharp female
+  voiceOps = voices.find(v => v.name.includes('Samantha')) ||
+             voices.find(v => v.name.includes('Fiona')) ||
+             voices.find(v => v.lang.startsWith('en') && v.name.includes('Female')) ||
+             voices[Math.min(1, voices.length-1)];
+  // Enemy: any voice (we'll distort with pitch/rate)
+  voiceEnemy = voices.find(v => v.name.includes('Fred')) ||
+               voices.find(v => v.lang === 'en-US' && v.name.includes('Male')) ||
+               voiceHQ;
+  // Ally: distinct from others
+  voiceAlly = voices.find(v => v.name.includes('Karen')) ||
+              voices.find(v => v.name.includes('Moira')) ||
+              voices.find(v => v.lang === 'en-IE') ||
+              voiceOps;
 }
 
-function speak(text, rate = 0.85, pitch = 0.7, urgency = 0) {
+function speak(text, character = 'hq', urgency = 0) {
   synth.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.voice = voice;
-  // urgency 0 = calm HQ, 1 = field commander under fire
-  u.rate = rate + urgency * 0.3;
-  u.pitch = pitch - urgency * 0.15;
   u.volume = 0.9 + urgency * 0.1;
+
+  switch (character) {
+    case 'hq':
+      u.voice = voiceHQ;
+      u.rate = 0.75 + urgency * 0.15;
+      u.pitch = 0.55 - urgency * 0.1;
+      break;
+    case 'ops':
+      u.voice = voiceOps;
+      u.rate = 0.9 + urgency * 0.2;
+      u.pitch = 0.85 - urgency * 0.1;
+      break;
+    case 'enemy':
+      u.voice = voiceEnemy;
+      u.rate = 0.55 + urgency * 0.1;
+      u.pitch = 0.3 - urgency * 0.1;
+      break;
+    case 'ally':
+      u.voice = voiceAlly;
+      u.rate = 0.85 + urgency * 0.15;
+      u.pitch = 0.7 - urgency * 0.05;
+      break;
+    default:
+      u.voice = voiceHQ;
+      u.rate = 0.85;
+      u.pitch = 0.7;
+  }
+
   document.getElementById('voice-dot').classList.add('speaking');
   u.onend = () => document.getElementById('voice-dot').classList.remove('speaking');
+
+  // Show who's speaking
+  const ch = {hq:'COMMAND', ops:'FIELD OPS', enemy:'⚠ HOSTILE', ally:'TEAMMATE'};
+  document.getElementById('voice-char-label').textContent = '▸ ' + (ch[character] || 'COMMAND');
+
   if (audioCtx) {
-    playNoise(0.1 + urgency * 0.2, 0.003 + urgency * 0.01); // Radio squelch
+    const cv = character === 'enemy' ? 0.02 : 0.005;
+    playNoise(0.15 + urgency * 0.2, cv + urgency * 0.01);
   }
   synth.speak(u);
+}
+
+// ======== MULTIPLAYER ========
+let peer = null, peerId = null, teamPeers = {}, teamRole = 'operative';
+let isTeamLeader = false, teamRoomCode = '';
+const TEAM_PREFIX = 'echosierra-';
+
+function initPeer() {
+  return new Promise((resolve, reject) => {
+    try {
+      const id = TEAM_PREFIX + (isTeamLeader ? teamRoomCode : crypto.randomUUID().slice(0, 8));
+      peer = new Peer(id, {
+        host: '0.peerjs.com', port: 443, secure: true,
+        debug: 0
+      });
+      peer.on('open', (id) => {
+        peerId = id;
+        updateConnStatus(true);
+        resolve(id);
+      });
+      peer.on('connection', (conn) => handleConnection(conn));
+      peer.on('call', (call) => handleIncomingCall(call));
+      peer.on('error', (err) => {
+        console.warn('Peer error:', err);
+        updateConnStatus(false);
+        reject(err);
+      });
+      peer.on('disconnected', () => {
+        updateConnStatus(false);
+        if (peer && !peer.destroyed) peer.reconnect();
+      });
+    } catch(e) { reject(e); }
+  });
+}
+
+function handleConnection(conn) {
+  conn.on('open', () => {
+    teamPeers[conn.peer] = { conn, lat: null, lng: null, role: 'operative', name: 'UNKNOWN' };
+    conn.on('data', (data) => handleTeamData(conn.peer, data));
+    conn.on('close', () => { delete teamPeers[conn.peer]; renderTeammates(); });
+    // Send our info
+    conn.send({ type: 'intro', name: state.teamName, role: teamRole, lat: state.gpsLat, lng: state.gpsLng });
+    renderTeammates();
+  });
+}
+
+function handleTeamData(peerId, data) {
+  if (!teamPeers[peerId]) return;
+  switch (data.type) {
+    case 'intro':
+      teamPeers[peerId].name = data.name;
+      teamPeers[peerId].role = data.role;
+      teamPeers[peerId].lat = data.lat;
+      teamPeers[peerId].lng = data.lng;
+      break;
+    case 'position':
+      teamPeers[peerId].lat = data.lat;
+      teamPeers[peerId].lng = data.lng;
+      break;
+    case 'wp-captured':
+      // Remote teammate captured a waypoint — mirror it locally
+      captureWaypointRemote(data.wpIndex);
+      break;
+    case 'mission-complete':
+      endMissionRemote(data.score, data.photos, data.elapsed);
+      break;
+    case 'voice-proximity':
+      teamPeers[peerId].voiceProximity = data.distance;
+      break;
+  }
+  if (state.missionActive) updateTeammateMarkers();
+}
+
+function handleIncomingCall(call) {
+  // Auto-answer voice calls from teammates
+  call.answer(); // mute by default, only unmute when close
+  call.on('stream', (remoteStream) => {
+    teamPeers[call.peer] = teamPeers[call.peer] || { conn: null, lat: null, lng: null, role: 'operative', name: 'UNKNOWN' };
+    teamPeers[call.peer].audioStream = remoteStream;
+    teamPeers[call.peer].audioEl = new Audio();
+    teamPeers[call.peer].audioEl.srcObject = remoteStream;
+    teamPeers[call.peer].audioEl.volume = 0;
+    teamPeers[call.peer].audioEl.play().catch(()=>{});
+  });
+}
+
+function broadcast(data) {
+  Object.values(teamPeers).forEach(p => {
+    if (p.conn && p.conn.open) p.conn.send(data);
+  });
+}
+
+function broadcastPosition() {
+  if (!state.gpsLat) return;
+  broadcast({ type: 'position', lat: state.gpsLat, lng: state.gpsLng });
+}
+
+function startVoiceBroadcast() {
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    Object.keys(teamPeers).forEach(pid => {
+      if (!teamPeers[pid].audioCall) {
+        const call = peer.call(pid, stream);
+        call.on('stream', (remoteStream) => {
+          teamPeers[pid].audioStream = remoteStream;
+          teamPeers[pid].audioEl = new Audio();
+          teamPeers[pid].audioEl.srcObject = remoteStream;
+          teamPeers[pid].audioEl.volume = 0;
+          teamPeers[pid].audioEl.play().catch(()=>{});
+        });
+        teamPeers[pid].audioCall = call;
+      }
+    });
+  }).catch(() => {
+    // Mic denied — team chat unavailable
+  });
+}
+
+function updateProximityVoice() {
+  if (!state.gpsLat) return;
+  Object.values(teamPeers).forEach(p => {
+    if (!p.lat || !p.audioEl) return;
+    const d = dist(state.gpsLat, state.gpsLng, p.lat, p.lng);
+    const vol = d < 20 ? 1.0 : d < 50 ? 0.6 : d < 100 ? 0.25 : d < 200 ? 0.08 : 0;
+    p.audioEl.volume = vol;
+    // Notify them of our proximity for their volume adjustment
+    if (p.conn && p.conn.open) p.conn.send({ type: 'voice-proximity', distance: d });
+  });
+}
+
+function updateConnStatus(connected) {
+  const el = document.getElementById('conn-status');
+  if (connected) { el.textContent = '● TEAM NET'; el.className = 'connection-status connected'; }
+  else { el.textContent = '○ NET DOWN'; el.className = 'connection-status disconnected'; }
+}
+
+// ======== REAL MAPS (OpenStreetMap Overpass API) ========
+const WP_MILITARY_NAMES = {
+  viewpoint: 'OBSERVATION POST',
+  monument: 'DEAD DROP',
+  fountain: 'SIGNAL RELAY',
+  memorial: 'INTEL CACHE',
+  park: 'RENDEZVOUS POINT',
+  sculpture: 'BLACK SITE',
+  artwork: 'CONCEALMENT POINT',
+  default: 'WAYPOINT'
+};
+
+async function fetchNearbyPOIs(lat, lng) {
+  const query = `[out:json];(node["tourism"="viewpoint"](around:600,${lat},${lng});node["historic"="monument"](around:600,${lat},${lng});node["amenity"="fountain"](around:600,${lat},${lng});node["historic"="memorial"](around:600,${lat},${lng});node["leisure"="park"](around:600,${lat},${lng});node["tourism"="artwork"](around:600,${lat},${lng}););out 6;`;
+  try {
+    const resp = await fetch('https://overpass-api.de/api/interpreter', {
+      method: 'POST', body: query, headers: { 'Content-Type': 'text/plain' }
+    });
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    if (!data.elements || data.elements.length < 2) return null;
+    return data.elements.map(el => {
+      const tags = el.tags || {};
+      const type = (tags.tourism || tags.historic || tags.amenity || tags.leisure || 'default').replace(/_/g,' ');
+      const wpName = WP_MILITARY_NAMES[type] || WP_MILITARY_NAMES.default;
+      const realName = tags.name || '';
+      return {
+        name: wpName + (realName ? ` (${realName})` : ''),
+        intel: realName ? `Real-world location: ${realName}. ${tags.description || 'No further intel.'}` : `Marked location. ${tags.description || 'Proceed with caution.'}`,
+        lat: el.lat, lng: el.lon, points: 100,
+        real: true
+      };
+    }).slice(0, 4);
+  } catch(e) {
+    return null;
+  }
+}
+
+// ======== FALLBACK WAYPOINTS ========
+const fallbackWaypoints = [
+  { name:'OBSERVATION POST ALPHA', intel:'Rooftop vantage. Watch for patrols.' },
+  { name:'DEAD DROP BRAVO', intel:'Concealed near a landmark. Look for the mark.' },
+  { name:'SIGNAL RELAY CHARLIE', intel:'High ground. Radio equipment cached there.' },
+  { name:'EXTRACTION ZONE DELTA', intel:'Rendezvous point. Stay hidden until pickup.' },
+];
+
+function generateFallbackWaypoints() {
+  if (!state.gpsLat) {
+    return fallbackWaypoints.map((w,i) => ({...w, lat:47.33+Math.random()*0.005, lng:9.41+Math.random()*0.005, points:100+i*60}));
+  }
+  const offsets = [[0.002,0.001],[0.001,-0.002],[-0.002,-0.001],[-0.001,0.002]];
+  return fallbackWaypoints.map((w,i) => ({
+    ...w, lat:state.gpsLat+offsets[i][0], lng:state.gpsLng+offsets[i][1], points:100+i*60
+  }));
 }
 
 // ======== STATE ========
@@ -389,7 +630,7 @@ let state = {
   teamName: '', missionId: '', waypoints: [], currentWP: 0,
   score: 0, startTime: null, elapsed: 0, photos: [],
   gpsLat: null, gpsLng: null, heading: 0, missionActive: false,
-  enemyProximity: 0, lastNavCall: 0,
+  lastNavCall: 0, isTeamMission: false, capturedRemotely: new Set(),
 };
 
 // ======== GPS ========
@@ -402,7 +643,7 @@ function startGPS() {
       state.gpsLng = pos.coords.longitude;
       document.getElementById('gps-status').textContent = '● GPS LOCKED';
       document.getElementById('gps-status').style.color = '#0a0';
-      if (state.missionActive) updateNavigation();
+      if (state.missionActive) { updateNavigation(); broadcastPosition(); updateProximityVoice(); }
     },
     err => {
       document.getElementById('gps-status').textContent = 'GPS: ' + err.message;
@@ -417,29 +658,11 @@ function startCompass() {
   window.addEventListener('deviceorientation', e => {
     if (e.webkitCompassHeading !== undefined) state.heading = e.webkitCompassHeading;
     else if (e.alpha !== null) state.heading = 360 - e.alpha;
-    if (state.missionActive) updateNavigation();
+    if (state.missionActive) { updateNavigation(); updateTeammateMarkers(); }
   });
 }
 
-// ======== WAYPOINTS ========
-const waypointNames = [
-  { name:'OBSERVATION POST', intel:'Rooftop vantage. Watch for patrols.' },
-  { name:'DEAD DROP ALPHA', intel:'Concealed near a landmark. Look for the mark.' },
-  { name:'SIGNAL RELAY', intel:'High ground. Radio equipment cached there.' },
-  { name:'EXTRACTION ZONE', intel:'Rendezvous point. Stay hidden until pickup.' },
-];
-
-function generateWaypoints() {
-  if (!state.gpsLat) {
-    return waypointNames.map((w,i) => ({...w, lat:47.33+Math.random()*0.004, lng:9.41+Math.random()*0.004, points:100+i*60}));
-  }
-  const offsets = [[0.002,0.001],[0.001,-0.002],[-0.002,-0.001],[-0.001,0.002]];
-  return waypointNames.map((w,i) => ({
-    ...w, lat:state.gpsLat+offsets[i][0], lng:state.gpsLng+offsets[i][1], points:100+i*60
-  }));
-}
-
-// ======== NAVIGATION ========
+// ======== NAVIGATION MATH ========
 function bearing(l1,lng1,l2,lng2){
   const φ1=l1*Math.PI/180,φ2=l2*Math.PI/180,Δλ=(lng2-lng1)*Math.PI/180;
   const y=Math.sin(Δλ)*Math.cos(φ2),x=Math.cos(φ1)*Math.sin(φ2)-Math.sin(φ1)*Math.cos(φ2)*Math.cos(Δλ);
@@ -451,72 +674,101 @@ function dist(l1,lng1,l2,lng2){
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
+// ======== NAVIGATION ========
 function updateNavigation() {
   if (!state.missionActive || state.currentWP >= state.waypoints.length) return;
   const wp = state.waypoints[state.currentWP];
   if (!state.gpsLat) return;
-  
+
   const d = dist(state.gpsLat, state.gpsLng, wp.lat, wp.lng);
   const bear = bearing(state.gpsLat, state.gpsLng, wp.lat, wp.lng);
   const rel = ((bear - state.heading) + 720) % 360;
-  
+
   // Compass
   document.getElementById('compass-arrow').style.transform = `translate(-50%,-100%) rotate(${rel}deg)`;
   document.getElementById('compass-ring').style.transform = `rotate(${-state.heading}deg)`;
-  
+  updateTeammateMarkers();
+
   // Distance
   const dEl = document.getElementById('distance');
   if (d < 20) { dEl.textContent = 'ARR'; dEl.style.color = '#0f0'; }
   else if (d < 1000) { dEl.textContent = Math.round(d); dEl.style.color = '#0f0'; }
-  else { dEl.textContent = (d/1000).toFixed(1); }
-  
+  else { dEl.textContent = (d/1000).toFixed(1); dEl.style.color = '#0a0'; }
+
   // Direction
   const dirs = ['AHEAD','SLIGHT RIGHT','RIGHT','HARD RIGHT','BEHIND','HARD LEFT','LEFT','SLIGHT LEFT'];
   const dir = dirs[Math.round(rel/45) % 8];
   document.getElementById('bearing-label').textContent = dir;
   document.getElementById('wp-name').textContent = wp.name;
   document.getElementById('wp-intel').textContent = wp.intel;
-  
+
   // Tension
   const tension = d < 30 ? 1.0 : d < 60 ? 0.75 : d < 120 ? 0.4 : d < 250 ? 0.2 : 0.05;
   setTension(tension);
-  
-  // Heartbeat visual
+
+  // Heartbeat
   const hb = document.getElementById('heartbeat');
-  if (d < 60) { hb.classList.add('active'); hb.style.color = d < 30 ? '#f00' : '#f80'; } 
+  if (d < 60) { hb.classList.add('active'); hb.style.color = d < 30 ? '#f00' : '#f80'; }
   else { hb.classList.remove('active'); }
-  
-  // Alert banner — more frequent when close
+
+  // Alert banner
   const alert = document.getElementById('alert-banner');
-  if (d < 80 && Math.random() < (d < 30 ? 0.15 : 0.04)) { 
+  if (d < 80 && Math.random() < (d < 30 ? 0.12 : 0.04)) {
     alert.textContent = d < 30 ? '⚠ ENEMY CLOSE — TAKE COVER' : '⚠ PATROL DETECTED — STAY LOW';
-    alert.classList.add('active'); 
-    setTimeout(()=>alert.classList.remove('active'), 2000); 
+    alert.className = 'alert-banner active';
+    setTimeout(() => { if (alert.classList.contains('active')) alert.classList.remove('active'); }, 2000);
   }
-  
+
   // Arrival
   if (d < 20 && document.getElementById('photo-btn').style.display === 'none') {
     document.getElementById('photo-btn').style.display = 'block';
     playNoise(0.6, 0.02);
-    speak('Target acquired. Take the shot. NOW.', 1.0, 0.55, 0.8);
+    speak('Target acquired. Take the shot. NOW.', 'ops', 0.8);
   }
-  
-  // Nav calls — more frequent and urgent when close
+
+  // Nav calls
   const now = Date.now();
   const interval = d < 50 ? 6000 : d < 150 ? 10000 : 15000;
   if (now - state.lastNavCall > interval && d > 15) {
     state.lastNavCall = now;
     const urgency = d < 50 ? 0.7 : d < 150 ? 0.3 : 0;
+    const character = d < 50 ? 'ops' : 'hq';
     let msg;
     if (d < 40) msg = `${Math.round(d)} meters. ${dir}. GO.`;
     else if (d < 100) msg = `${Math.round(d)} meters, ${dir.toLowerCase()}. Stay sharp.`;
     else msg = `${Math.round(d)} meters, ${dir.toLowerCase()}.`;
-    speak(msg, 1.05 - urgency * 0.15, 0.7 - urgency * 0.1, urgency);
+    speak(msg, character, urgency);
   }
 }
 
-// ======== MISSION ========
-let timerInterval, navInterval, tensionInterval, radioInterval;
+function updateTeammateMarkers() {
+  const container = document.getElementById('teammate-markers');
+  const ringEl = document.getElementById('compass-ring');
+  if (!state.gpsLat || !ringEl) return;
+
+  const ringRect = ringEl.getBoundingClientRect();
+  const cx = ringRect.width / 2, cy = ringRect.height / 2;
+  const radius = ringRect.width * 0.42;
+
+  const marks = Object.entries(teamPeers).filter(([_,p]) => p.lat && p.lng).map(([pid, p]) => {
+    const d = dist(state.gpsLat, state.gpsLng, p.lat, p.lng);
+    if (d > 500) return null; // Too far to show
+    const bear = bearing(state.gpsLat, state.gpsLng, p.lat, p.lng);
+    const rel = ((bear - state.heading) + 720) % 360;
+    const rad = rel * Math.PI / 180;
+    // Scale: closer teammates appear near edge
+    const r = Math.min(d / 500 * radius, radius * 0.9);
+    const x = cx + Math.sin(rad) * r;
+    const y = cy - Math.cos(rad) * r;
+    const color = p.role === 'scout' ? '#0af' : p.role === 'sniper' ? '#f0f' : '#0f0';
+    return `<div class="teammate-marker" style="left:${x}px;top:${y}px;background:${color};box-shadow:0 0 8px ${color};" title="${p.name} · ${Math.round(d)}m"></div>`;
+  }).filter(Boolean).join('');
+
+  container.innerHTML = marks;
+}
+
+// ======== MISSION FLOW ========
+let timerInterval, navInterval, tensionInterval, radioInterval, posInterval, proximityInterval;
 const radioChatter = [
   'Be advised. Enemy patrols increasing.',
   'HQ to all units. Report status.',
@@ -524,29 +776,150 @@ const radioChatter = [
   'Break. Break. Movement at your six.',
   'Comms check. Acknowledge.',
   'Satellite shows heat signature near your position.',
-  'New intel: extraction may be compromised. Proceed with caution.',
+  'New intel: extraction may be compromised.',
   'Alert. Unknown contact bearing south.',
 ];
 
-function showBriefing() {
+// TEAM LOBBY
+async function toTeamLobby(mode) {
   const name = document.getElementById('team-name').value.trim() || 'GHOST';
   state.teamName = name;
-  state.missionId = 'NIGHTFALL-' + Math.random().toString(36).slice(2,5).toUpperCase();
-  state.waypoints = generateWaypoints();
-  
-  document.getElementById('brief-op').textContent = state.missionId;
-  document.getElementById('brief-wp').textContent = state.waypoints.map(w=>w.name).join(' → ');
-  
-  switchScreen('screen-briefing');
   initAudio();
-  speak(`Team ${state.teamName}. Stand by for briefing.`, 0.9, 0.7);
-  setTimeout(() => speak(`${state.waypoints.length} waypoints. Threat level moderate. Extraction in 20 minutes.`, 0.85, 0.7), 2000);
+
+  switchScreen('screen-team');
+  document.getElementById('teammate-list').innerHTML = '';
+  document.getElementById('team-deploy-btn').disabled = true;
+
+  if (mode === 'create') {
+    isTeamLeader = true;
+    teamRoomCode = crypto.randomUUID().slice(0, 4).toUpperCase();
+    document.getElementById('room-code').textContent = teamRoomCode;
+    document.getElementById('team-create-ui').style.display = 'flex';
+    document.getElementById('team-join-ui').style.display = 'none';
+    try {
+      await initPeer();
+      document.getElementById('team-deploy-btn').disabled = false;
+    } catch(e) {
+      document.getElementById('room-code').textContent = 'ERROR';
+    }
+  } else {
+    isTeamLeader = false;
+    document.getElementById('team-create-ui').style.display = 'none';
+    document.getElementById('team-join-ui').style.display = 'flex';
+  }
+}
+
+async function joinTeam() {
+  const code = document.getElementById('join-code').value.trim().toUpperCase();
+  if (!code || code.length !== 4) return;
+  teamRoomCode = code;
+  try {
+    await initPeer();
+    // Connect to team leader
+    const conn = peer.connect(TEAM_PREFIX + code, { reliable: true });
+    teamPeers[TEAM_PREFIX + code] = { conn, lat: null, lng: null, role: 'operative', name: 'LEADER' };
+    conn.on('open', () => {
+      conn.on('data', (data) => handleTeamData(TEAM_PREFIX + code, data));
+      conn.on('close', () => { delete teamPeers[TEAM_PREFIX + code]; renderTeammates(); });
+      conn.send({ type: 'intro', name: state.teamName, role: teamRole, lat: state.gpsLat, lng: state.gpsLng });
+      renderTeammates();
+      document.getElementById('team-deploy-btn').disabled = false;
+      startVoiceBroadcast();
+    });
+    document.getElementById('team-join-ui').style.display = 'none';
+    document.getElementById('joiner-role-picker').style.display = 'flex';
+  } catch(e) {
+    alert('Failed to join team. Check the code.');
+  }
+}
+
+function selectRole(role) {
+  teamRole = role;
+  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('role-' + role)?.classList.add('selected');
+  broadcast({ type: 'intro', name: state.teamName, role: teamRole, lat: state.gpsLat, lng: state.gpsLng });
+  renderTeammates();
+}
+
+function renderTeammates() {
+  const list = document.getElementById('teammate-list');
+  const entries = [
+    { name: state.teamName + ' (YOU)', role: teamRole, online: true },
+    ...Object.values(teamPeers).map(p => ({
+      name: p.name, role: p.role, online: true
+    }))
+  ];
+  list.innerHTML = entries.map(e => `
+    <div class="teammate">
+      <span class="dot ${e.online ? 'online' : 'offline'}"></span>
+      <span>${e.name}</span>
+      <span class="role-badge">${e.role.toUpperCase()}</span>
+    </div>
+  `).join('');
+}
+
+function leaveTeam() {
+  if (peer && !peer.destroyed) peer.destroy();
+  peer = null; peerId = null; teamPeers = {}; isTeamLeader = false;
+  updateConnStatus(false);
+  switchScreen('screen-lobby');
+}
+
+async function teamDeploy() {
+  state.isTeamMission = true;
+  // Broadcast mission start to teammates
+  broadcast({ type: 'mission-start' });
+  showBriefing();
+}
+
+async function deploySolo() {
+  const name = document.getElementById('team-name').value.trim() || 'GHOST';
+  state.teamName = name;
+  state.isTeamMission = false;
+  showBriefing();
+}
+
+async function showBriefing() {
+  state.missionId = 'NIGHTFALL-' + Math.random().toString(36).slice(2,5).toUpperCase();
+  initAudio();
+
+  document.getElementById('brief-op').textContent = state.missionId;
+
+  // Try real map data first
+  if (state.gpsLat) {
+    document.getElementById('brief-map-loader').style.display = 'block';
+    document.getElementById('brief-map-source').textContent = '';
+    const pois = await fetchNearbyPOIs(state.gpsLat, state.gpsLng);
+    document.getElementById('brief-map-loader').style.display = 'none';
+    if (pois && pois.length >= 2) {
+      state.waypoints = pois.map((p, i) => ({ ...p, points: 100 + i * 60 }));
+      document.getElementById('brief-map-source').textContent = '◈ SATELLITE INTEL: REAL LOCATIONS CONFIRMED';
+    } else {
+      state.waypoints = generateFallbackWaypoints();
+      document.getElementById('brief-map-source').textContent = '◈ GENERATED WAYPOINTS (NO SATELLITE DATA)';
+    }
+  } else {
+    state.waypoints = generateFallbackWaypoints();
+  }
+
+  document.getElementById('brief-wp').textContent = state.waypoints.map(w => w.name).join(' → ');
+  switchScreen('screen-briefing');
+
+  // Briefing narration — multiple voices
+  speak(`Team ${state.teamName}. Stand by for briefing.`, 'hq', 0);
+  setTimeout(() => {
+    speak(`${state.waypoints.length} waypoints locked. Threat level: moderate.`, 'ops', 0.1);
+  }, 2000);
+  setTimeout(() => {
+    speak('Extraction window: 20 minutes. Do not be late.', 'hq', 0.2);
+  }, 4000);
 }
 
 function deploy() {
   state.currentWP = 0; state.score = 0; state.photos = [];
   state.startTime = Date.now(); state.missionActive = true; state.lastNavCall = 0;
-  
+  state.capturedRemotely = new Set();
+
   document.getElementById('mission-id').textContent = state.missionId;
   document.getElementById('mission-obj').textContent = 'RECOVER INTEL';
   document.getElementById('timer').textContent = '20:00';
@@ -554,27 +927,58 @@ function deploy() {
   document.getElementById('photo-btn').style.display = 'none';
   document.getElementById('heartbeat').classList.remove('active');
   document.getElementById('alert-banner').classList.remove('active');
-  
+  document.getElementById('voice-char-label').textContent = '';
+
   document.getElementById('wp-list').innerHTML = state.waypoints.map((_,i) =>
     `<div class="wp-dot ${i===0?'current':''}" id="wp-dot-${i}">${i+1}</div>`).join('');
-  
+
+  // Team bar
+  document.getElementById('team-bar').innerHTML = state.isTeamMission ? Object.values(teamPeers).map(p => {
+    const col = p.role === 'scout' ? '#0af' : p.role === 'sniper' ? '#f0f' : '#0f0';
+    return `<span class="team-dot" style="background:${col};box-shadow:0 0 4px ${col};" title="${p.name} · ${p.role}"></span>`;
+  }).join('') : '';
+
   switchScreen('screen-mission');
+
+  // Intervals
   timerInterval = setInterval(updateTimer, 1000);
   navInterval = setInterval(() => { if(state.missionActive) updateNavigation(); }, 2000);
   tensionInterval = setInterval(() => { if(state.missionActive) setTension(Math.random()*0.1); }, 5000);
-  // Random radio interruptions
+  posInterval = setInterval(() => { if(state.missionActive) broadcastPosition(); }, 3000);
+  proximityInterval = setInterval(() => { if(state.missionActive) updateProximityVoice(); }, 2000);
+
+  // Radio interruptions
   radioInterval = setInterval(() => {
     if (!state.missionActive) return;
     const wp = state.waypoints[state.currentWP];
     const d = state.gpsLat ? dist(state.gpsLat, state.gpsLng, wp.lat, wp.lng) : 500;
-    if (d < 150 && Math.random() < 0.25) {
+    if (d < 150 && Math.random() < 0.2) {
       const msg = radioChatter[Math.floor(Math.random() * radioChatter.length)];
-      speak(msg, 1.05, 0.55, 0.6);
+      speak(msg, Math.random() > 0.7 ? 'enemy' : 'hq', 0.5);
       playNoise(0.3, 0.015);
     }
   }, 15000);
-  
-  speak(`Deploy. First waypoint: ${state.waypoints[0].name}. ${state.waypoints[0].intel} Move out.`, 0.85, 0.7);
+
+  // Enemy intercepts — spooky
+  setInterval(() => {
+    if (!state.missionActive) return;
+    const wp = state.waypoints[state.currentWP];
+    if (!state.gpsLat) return;
+    const d = dist(state.gpsLat, state.gpsLng, wp.lat, wp.lng);
+    if (d < 100 && Math.random() < 0.08) {
+      speak('We see you. Abort your mission.', 'enemy', 0.8);
+      playNoise(0.8, 0.03);
+    }
+  }, 25000);
+
+  // Deploy voice — ops takes over
+  speak(`Deploy. First waypoint: ${state.waypoints[0].name}.`, 'ops', 0.1);
+  setTimeout(() => speak(state.waypoints[0].intel + ' Move out.', 'ops', 0.3), 1500);
+
+  // If team, also start voice broadcast
+  if (state.isTeamMission && Object.keys(teamPeers).length > 0) {
+    startVoiceBroadcast();
+  }
 }
 
 function updateTimer() {
@@ -585,10 +989,30 @@ function updateTimer() {
   tEl.textContent = `${m}:${s.toString().padStart(2,'0')}`;
   if (remaining < 180) tEl.className = 'timer critical';
   else if (remaining < 600) tEl.className = 'timer warn';
-  if (remaining === 300) speak('Five minutes. Extraction window closing. Move faster.', 1.1, 0.6, 0.6);
-  if (remaining === 120) speak('Two minutes! You are running out of time!', 1.2, 0.5, 0.9);
+  if (remaining === 300) speak('Five minutes. Extraction window closing. Move faster.', 'ops', 0.6);
+  if (remaining === 120) speak('Two minutes! You are running out of time!', 'ops', 0.9);
   if (remaining <= 0) endMission(false);
   state.elapsed = 1200 - remaining;
+}
+
+function captureWaypointRemote(wpIndex) {
+  if (wpIndex >= state.waypoints.length || state.capturedRemotely.has(wpIndex)) return;
+  state.capturedRemotely.add(wpIndex);
+  const dot = document.getElementById(`wp-dot-${wpIndex}`);
+  if (dot) { dot.classList.add('done'); dot.classList.remove('current'); }
+  if (wpIndex === state.currentWP) {
+    state.currentWP++;
+    if (state.currentWP >= state.waypoints.length) {
+      // Check if all done
+      const capped = state.capturedRemotely.size + state.photos.length;
+      if (capped >= state.waypoints.length) endMission(true);
+    } else {
+      document.getElementById(`wp-dot-${state.currentWP}`)?.classList.add('current');
+      document.getElementById('photo-btn').style.display = 'none';
+      speak('Teammate confirmed. Moving to next waypoint.', 'hq', 0.1);
+    }
+  }
+  playNoise(0.3, 0.01);
 }
 
 function takePhoto() {
@@ -618,32 +1042,37 @@ function capturePhoto() {
 
 function processPhoto(dataUrl) {
   const wp = state.waypoints[state.currentWP];
+  const captureRange = teamRole === 'sniper' ? 70 : 40;
   const d = state.gpsLat ? dist(state.gpsLat,state.gpsLng,wp.lat,wp.lng) : 0;
-  
-  if (d < 40 || !state.gpsLat) {
+
+  if (d < captureRange || !state.gpsLat) {
     const bonus = Math.max(0, 100-Math.round(d));
-    state.score += wp.points + bonus;
+    const roleBonus = teamRole === 'operative' ? 25 : 0;
+    state.score += wp.points + bonus + roleBonus;
     state.photos.push(dataUrl);
-    
+
     document.getElementById(`wp-dot-${state.currentWP}`).classList.add('done');
     document.getElementById(`wp-dot-${state.currentWP}`).classList.remove('current');
     state.currentWP++;
-    
+
     setTension(0);
     playNoise(0.5, 0.015);
-    
+
+    // Broadcast to team
+    broadcast({ type: 'wp-captured', wpIndex: state.currentWP - 1 });
+
     if (state.currentWP >= state.waypoints.length) {
       endMission(true);
     } else {
       document.getElementById(`wp-dot-${state.currentWP}`).classList.add('current');
       document.getElementById('photo-btn').style.display = 'none';
       const next = state.waypoints[state.currentWP];
-      speak(`Intel confirmed. Next: ${next.name}. ${next.intel}`, 0.95, 0.65, 0.2);
-      // Brief return to calm before ramping up again
+      speak(`Intel confirmed. Next: ${next.name}.`, 'ops', 0.2);
+      setTimeout(() => speak(next.intel, 'hq', 0), 1500);
       setTimeout(() => setTension(0.3), 1000);
     }
   } else {
-    speak(`Too far. ${Math.round(d)} meters from target. Get closer.`, 1.0, 0.7);
+    speak(`Too far. ${Math.round(d)} meters from target. Get closer.`, 'ops', 0.4);
   }
   switchScreen('screen-mission');
 }
@@ -656,40 +1085,53 @@ function closeCamera() {
 
 function abortMission() {
   if(confirm('ABORT MISSION? ALL INTEL LOST.')) {
-    speak('Mission aborted. RTB.', 1.0, 0.7);
+    speak('Mission aborted. RTB.', 'hq', 0);
     endMission(false);
   }
 }
 
 function endMission(success) {
+  endMissionCommon(success, state.score, state.photos, state.elapsed);
+}
+
+function endMissionRemote(score, photos, elapsed) {
+  // Remote teammate's mission ended — just log it
+}
+
+function endMissionCommon(success, finalScoreVal, photosArr, elapsedVal) {
   state.missionActive = false;
-  clearInterval(timerInterval); clearInterval(navInterval); clearInterval(tensionInterval); clearInterval(radioInterval);
+  clearInterval(timerInterval); clearInterval(navInterval);
+  clearInterval(tensionInterval); clearInterval(radioInterval);
+  clearInterval(posInterval); clearInterval(proximityInterval);
   synth.cancel(); setTension(0);
-  
-  const timeBonus = success ? Math.max(0, 600 - state.elapsed) : 0;
-  const finalScore = success ? state.score + timeBonus : Math.round(state.score * 0.4);
-  
+
+  const timeBonus = success ? Math.max(0, 600 - elapsedVal) : 0;
+  const finalScore = success ? finalScoreVal + timeBonus : Math.round(finalScoreVal * 0.4);
+
   let grade = 'FAILED';
   if (success && state.currentWP >= state.waypoints.length) {
-    if (finalScore > 700) grade = 'S — EXCEPTIONAL';
-    else if (finalScore > 500) grade = 'A — OUTSTANDING';
-    else if (finalScore > 300) grade = 'B — SOLID';
+    if (finalScore > 800) grade = 'S — LEGENDARY';
+    else if (finalScore > 650) grade = 'S — EXCEPTIONAL';
+    else if (finalScore > 450) grade = 'A — OUTSTANDING';
+    else if (finalScore > 250) grade = 'B — SOLID';
     else grade = 'C — COMPLETE';
   }
-  
+
   document.getElementById('final-score').textContent = finalScore;
   document.getElementById('final-grade').textContent = grade;
   document.getElementById('final-grade').style.color = grade.startsWith('S')||grade.startsWith('A') ? '#0f0' : '#0a0';
   document.getElementById('final-stats').innerHTML = `
     TEAM: ${state.teamName} | OP: ${state.missionId}<br>
-    WAYPOINTS: ${state.currentWP}/${state.waypoints.length} | TIME: ${Math.floor(state.elapsed/60)}:${(state.elapsed%60).toString().padStart(2,'0')}<br>
-    STATUS: ${success?'COMPLETED':'ABORTED'} | TIME BONUS: +${timeBonus}
+    WAYPOINTS: ${state.currentWP}/${state.waypoints.length} | TIME: ${Math.floor(elapsedVal/60)}:${(elapsedVal%60).toString().padStart(2,'0')}<br>
+    STATUS: ${success?'COMPLETED':'ABORTED'} | ROLE: ${teamRole.toUpperCase()} | TIME BONUS: +${timeBonus}<br>
+    ${state.isTeamMission && Object.keys(teamPeers).length > 0 ? 'TEAM OPS: YES | NETWORK: SECURE' : 'TEAM OPS: SOLO'}
   `;
-  document.getElementById('final-photos').innerHTML = state.photos.map(p=>`<img src="${p}">`).join('');
-  
+  document.getElementById('final-photos').innerHTML = photosArr.map(p=>`<img src="${p}">`).join('');
+
   switchScreen('screen-complete');
-  if(grade.startsWith('S')) speak('Outstanding work. Team '+state.teamName+'. RTB.', 0.85, 0.7);
-  else if(success) speak('Mission complete. Debrief at base.', 0.9, 0.7);
+  if(grade.startsWith('S')) speak('Outstanding work. Team '+state.teamName+'. RTB.', 'hq', 0);
+  else if(success) speak('Mission complete. Debrief at base.', 'hq', 0);
+  else speak('Mission failed. All units return to base.', 'hq', 0);
 }
 
 function switchScreen(id) {
@@ -698,10 +1140,10 @@ function switchScreen(id) {
 }
 
 // ======== INIT ========
-initVoice();
+initVoices();
 startGPS();
 startCompass();
-if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = initVoice;
+if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = initVoices;
 </script>
 </body>
 </html>
